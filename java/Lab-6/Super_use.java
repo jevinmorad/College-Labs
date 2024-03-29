@@ -1,4 +1,4 @@
-class Animal {
+class AnimalMove {
     static void move(int x, int y){
         System.out.println("animal moved "+x+" in x and " +y+ " in y");
     }
@@ -7,6 +7,6 @@ class Animal {
 public class Super_use {
     public static void main(String[] args) {
         // I can invoke method without creaing object of a class.
-        Animal.move(5,6);
+        AnimalMove.move(5,6);
     }
 }
