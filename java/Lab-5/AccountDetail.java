@@ -30,7 +30,7 @@ class Bank_Account{
         System.out.println("accountBalance : "+accountBalance);
     }
 }
-public class Account {
+public class AccountDetail {
     public static void main(String[] args) {
         Bank_Account a1 = new Bank_Account();
         a1.getAccountDetails();
