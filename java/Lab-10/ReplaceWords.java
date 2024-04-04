@@ -1,13 +1,11 @@
 import java.io.*;
 
-public class Replace {
+public class ReplaceWords {
     public static void main(String[] args) {
-        String inputFile = "file1.txt";
-        String outputFile = "file2.txt";
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-            BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+            BufferedReader reader = new BufferedReader(new FileReader("file1.txt"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("file2.txt"));
 
             String line;
 

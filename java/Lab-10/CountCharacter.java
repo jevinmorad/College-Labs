@@ -1,6 +1,6 @@
 import java.io.*;
 
-public class Count {
+public class CountCharacter {
     public static void main(String[] args) {
         FileInputStream in = null;
         try {
