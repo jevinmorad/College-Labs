@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.Scanner;
 
-public class StudentsData {
+public class ScanStudentsData {
     public static void main(String[] args) {
         // With File IO classes
         // try {

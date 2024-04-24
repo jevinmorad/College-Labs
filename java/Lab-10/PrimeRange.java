@@ -1,7 +1,7 @@
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class Prime {
+public class PrimeRange {
     public static void main(String[] args) {
         try {
             FileWriter writer = new FileWriter("prime.txt");
