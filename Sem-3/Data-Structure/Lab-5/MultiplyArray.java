@@ -13,27 +13,24 @@ public class MultiplyArray {
                 a[i][j] = sc.nextInt();
             }
         }
-        System.out.println("Enter array b");
+        System.out.println("\nEnter array b");
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
                 System.out.print("b["+i+"]["+j+"] : ");
                 b[i][j] = sc.nextInt();
             }
         }  
-        int sum = 0;
         for (int i = 0; i < 3; i++) {
-            int k = 0;
-            for (int j = 0; j < 2; j++) {
-                sum += a[i][j] + b[k][j];
+            for (int j = 0; j < 3; j++) {
+                for (int k = 0; k < 2; k++) {
+                    c[i][j] += a[i][k] * b[k][j];
+                }
             }
-            c[i][k] = sum;
-            k++;
         }
-        System.out.print("c(a+b) : { ");
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                c[i][j] = a[i][j] + b[i][j];
-                System.out.print(c[i][j]+",");
+        System.out.print("\nC(a*b) : {\n");
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.print(+c[i][j]+",");
             }
             System.out.println();
         }
