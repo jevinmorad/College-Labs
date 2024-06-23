@@ -17,7 +17,7 @@ public class AddSorted {
         int i=0;
         int arr2[] = new int[arr.length + 1];
 
-        while (arr[i]<val) {
+        while (i<arr.length && arr[i]<val) {
             arr2[i] = arr[i];
             i++;
         }
