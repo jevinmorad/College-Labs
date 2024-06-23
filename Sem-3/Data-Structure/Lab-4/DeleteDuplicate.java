@@ -28,10 +28,6 @@ public class DeleteDuplicate {
         }
 
         int newArr[] = new int[size];
-        for (int i = 0; i < size; i++) {
-            newArr[i] = arr[i];
-            System.out.print(arr[i] + " ");
-        }
         System.out.print("\nNew array : ");
         for (int i = 0; i < size; i++) {
             newArr[i] = arr[i];
