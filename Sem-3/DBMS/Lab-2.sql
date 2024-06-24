@@ -1,4 +1,3 @@
-USE CSE_3A_227
 --Part – A:
 --From the above given tables perform the following queries:
 --1. Retrieve all data from table DEPOSIT.
