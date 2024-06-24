@@ -1,5 +1,5 @@
 USE CSE_3A_227
---Part – A:
+--Part â€“ A:
 --From the above given tables perform the following queries:
 --1. Retrieve all data from table DEPOSIT.
 SELECT * FROM DEPOSIT
@@ -11,7 +11,7 @@ SELECT * FROM CUSTOMERS
 SELECT ACTNO,CNAME,AMOUNT FROM DEPOSIT 
 --5. Display Loan No, Amount from BORROW.
 SELECT LOANNO,AMOUNT FROM BORROW
---6. Display loan details of all customers who belongs to ‘ANDHERI’ branch from borrow table.
+--6. Display loan details of all customers who belongs to â€˜ANDHERIâ€™ branch from borrow table.
 SELECT * FROM BORROW WHERE BNAME='ANDHERI'
 --7. Give account no and amount of depositor, whose account no is equals to 106 from deposit table.
 SELECT ACTNO,AMOUNT FROM DEPOSIT WHERE ACTNO=106
@@ -21,31 +21,31 @@ SELECT CNAME FROM BORROW WHERE AMOUNT>5000
 SELECT CNAME FROM DEPOSIT WHERE ADATE>'1996-12-1'
 --10. Display name of customers whose account no is less than 105 from deposit table.
 SELECT CNAME FROM DEPOSIT WHERE ACTNO<105
---11. Display name of customer who belongs to either ‘NAGPUR’ or ‘DELHI’ from customer table. (OR & IN)
+--11. Display name of customer who belongs to either â€˜NAGPURâ€™ or â€˜DELHIâ€™ from customer table. (OR & IN)
 SELECT CNAME FROM CUSTOMERS WHERE CITY='NAGPUR' OR CITY='DELHI'
 SELECT CNAME FROM CUSTOMERS WHERE CITY IN ('NAGPUR','DELHI')
 --12. Display name of customers with branch whose amount is greater than 4000 and account no is less than 105 from deposit table.
 SELECT CNAME,BNAME FROM DEPOSIT WHERE AMOUNT>4000 AND ACTNO<105
 --13. Find all borrowers whose amount is greater than equals to 3000 & less than equals to 8000 from borrow table. (AND & BETWEEN)
 SELECT * FROM BORROW WHERE AMOUNT BETWEEN 3000 AND 8000
---14. Find all depositors who do not belongs to ‘ANDHERI’ branch from deposit table.
+--14. Find all depositors who do not belongs to â€˜ANDHERIâ€™ branch from deposit table.
 SELECT * FROM DEPOSIT WHERE BNAME<>'ANDHERI'
---15. Display Account No, Customer Name & Amount of such customers who belongs to ‘AJNI’, ‘KAROLBAGH’ Or ‘M.G.ROAD’ and Account No is less than 104 from deposit table.
+--15. Display Account No, Customer Name & Amount of such customers who belongs to â€˜AJNIâ€™, â€˜KAROLBAGHâ€™ Or â€˜M.G.ROADâ€™ and Account No is less than 104 from deposit table.
 SELECT ACTNO,CNAME,AMOUNT FROM DEPOSIT WHERE BNAME IN ('AJNI','KAROLBAGH','M.G. ROAD') AND ACTNO<104
 
---Part – B:
+--Part â€“ B:
 --1. Display all the details of first five customers from deposit table.
 SELECT TOP 5 * FROM DEPOSIT
 --2. Display all the details of first three depositors whose amount is greater than 1000.
 SELECT TOP 3 * FROM DEPOSIT WHERE AMOUNT>1000
---3. Display Loan No, Customer Name of first five borrowers whose branch name does not belongs to ‘ANDHERI’ from borrow table.
+--3. Display Loan No, Customer Name of first five borrowers whose branch name does not belongs to â€˜ANDHERIâ€™ from borrow table.
 SELECT TOP 5 LOANNO,CNAME FROM BORROW WHERE BNAME!='ANDHERI'
 --4. Retrieve all unique cities using DISTINCT. (Use Customers Table)
 SELECT DISTINCT CITY FROM CUSTOMERS
 --5. Retrieve all unique branches using DISTINCT. (Use Branch Table)
 SELECT DISTINCT BNAME FROM BRANCH
 
---Part – C:
+--Part â€“ C:
 --1. Retrieve top 50% record from table BORROW.
 SELECT TOP 50 PERCENT * FROM BORROW
 --2. Display top 10% amount from table DEPOSIT.
@@ -59,4 +59,6 @@ SELECT DISTINCT CNAME,CITY FROM CUSTOMERS
 --6. Retrieve all Loan records with one more column in Loan Amount as 10% extra amount.
 SELECT *,(AMOUNT+AMOUNT*0.1) AS 'EXTRA AMOUNT' FROM BORROW
 SELECT *,(AMOUNT+AMOUNT*0.1) [EXTRA AMOUNT] FROM BORROW
---7. Retrieve all odd/even value loan number from Borrow table.SELECT * FROM BORROW WHERE LOANNO%2!=0SELECT * FROM BORROW WHERE LOANNO%2=0
+--7. Retrieve all odd/even value loan number from Borrow table.
+SELECT * FROM BORROW WHERE LOANNO%2!=0
+SELECT * FROM BORROW WHERE LOANNO%2=0
