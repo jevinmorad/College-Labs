@@ -1,0 +1,64 @@
+*{
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    color: white;
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+.button{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 8px;
+}
+button{
+    padding: 10px;
+    font-size: 30px;
+    background-color: #212121;
+    border-radius: 30px;
+    border: 1px solid #212121;
+}
+button:active{
+    background-color: #3b3a3a;
+    animation: button 0.4s;
+}
+.min{
+    padding: 0px;
+    font-size: 40px;
+}
+#g{
+    color: #00ff00;
+}
+#C{
+    color: #ff6666;
+}
+#equ{
+    background-color: #22cc22;
+}
+#equ:active{
+    animation: button 0.4s;
+    background-color: #0fe60f;
+}
+input{
+    padding: 12px 10px;
+    margin: 7px 0;
+    font-size: 25px;
+    width: 250px;
+    border: none;
+    color: white;
+    text-align: right;
+}
+
+@keyframes button{
+    from{
+        font-size: 30px;
+    }
+    to{
+        font-size: 20px;
+    }
+}

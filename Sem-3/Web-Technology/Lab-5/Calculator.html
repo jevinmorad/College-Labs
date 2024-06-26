@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="Calculator.css">
+</head>
+
+<body>
+    <div class="container">
+        <input type="text" id="display" value=""/>
+    <div class="button">
+
+            <button id="C" onclick="cls()">C</button>
+            <button id="g">()</button>
+            <button id="g" onclick="add('%')">%</button>
+            <button id="g" onclick="add('/')">÷</button>
+
+            <button onclick="add('7')">7</button>
+            <button onclick="add('8')">8</button>
+            <button onclick="add('9')">9</button>
+            <button id="g" class="X" onclick="add('x')">x</button>
+
+            <button onclick="add('4')">4</button>
+            <button onclick="add('5')">5</button>
+            <button onclick="add('6')">6</button>
+            <button id="g" class="min" onclick="add('-')">-</button>
+
+            <button onclick="add('1')">1</button>
+            <button onclick="add('2')">2</button>
+            <button onclick="add('3')">3</button>
+            <button id="g" onclick="add('+')">+</button>
+
+            <button >+/-</button>
+            <button onclick="add('0')">0</button>
+            <button onclick="add('.')">.</button>
+            <button id="equ" onclick="equal()">=</button>
+        </div>
+    </div>
+    <script>
+        clear = false
+        function add(val) {
+            ans = document.getElementById('display')
+            if(clear) {
+                ans.value = ""
+                clear = false
+            }
+            ans.value += val
+        }
+        function equal(){
+            ans = document.getElementById('display')
+            disp = eval(ans.value)
+            ans.value = disp
+            clear = true
+        }
+        function cls(){
+            clr = document.getElementById('display')
+            clr.value = " "
+        }
+    </script>
+</body>
+
+</html>
