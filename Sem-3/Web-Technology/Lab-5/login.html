@@ -15,7 +15,7 @@
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #405de6,  #aa57ed);
+            background: linear-gradient(135deg, #405de6, #aa57ed);
             height: 100vh;
             display: flex;
             align-items: center;
@@ -24,7 +24,7 @@
         }
 
         .conatiner {
-            background: linear-gradient(#40e5fb, #4fc2ff, #43b5fb,  #3486f4);
+            background: linear-gradient(#40e5fb, #4fc2ff, #43b5fb, #3486f4);
             display: flex;
             justify-content: center;
             width: 65vw;
@@ -44,12 +44,13 @@
             font-size: x-large;
             font-weight: 700;
         }
-        
+
         .left .welcome {
             margin-top: -70px;
             font-size: 50px;
             font-weight: 600;
         }
+
         .right {
             background-color: white;
             color: rgb(0, 0, 0, 0.45);
@@ -58,6 +59,7 @@
             border-top-right-radius: 5px;
             border-bottom-right-radius: 5px;
         }
+
         .right .txt {
             margin-bottom: 45px;
         }
@@ -71,6 +73,7 @@
             background-color: #3b9af8;
             color: white;
         }
+
         .btn:hover {
             background-color: #3486f4;
             color: white;
@@ -78,11 +81,10 @@
 
         .newuser {
             margin: 30px 0px;
-            display: flex; 
+            display: flex;
             justify-content: space-between;
             font-size: small;
         }
-
     </style>
 </head>
 
@@ -105,17 +107,21 @@
             <form>
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Username</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    <input type="text" class="form-control" id="username" aria-describedby="emailHelp">
                 </div>
-                <div class="mb-1">
+                <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1">
+                    <input type="password" class="form-control" id="pass">
+                </div>
+                <div class="mb-2">
+                    <label for="exampleInputPassword1" class="form-label">Confirm password</label>
+                    <input type="password" class="form-control" id="confirmPass">
                 </div>
                 <div class="mb-4 form-check">
                     <input type="checkbox" class="form-check-input" id="exampleCheck1">
                     <label class="form-check-label" for="exampleCheck1">Remember me</label>
                 </div>
-                <button type="submit" class="btn">LOGIN&nbsp;</button>
+                <button type="submit" class="btn" onclick="validation()">LOGIN&nbsp;</button>
             </form>
             <div class="newuser">
                 <div>
@@ -127,6 +133,31 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function validation() {
+            passPattern = "^[0-9]+[a-zA-z]{1,12}$"
+
+            pass = document.getElementById('pass').value;
+            
+            regexp = new RegExp(passPattern);
+            if (regexp.test(pass)) {
+                alert('valid')
+            }
+            else {
+                alert('invalid')
+            }
+
+            confirmPass = document.getElementById('confirmPass').value
+            if (pass != confirmPass) {
+                alert("Password doesn't match")
+            } else if (pass.match(passPattern)) {
+                alert("Password must contain atleast one number and one alphabet")
+            } else {
+                alert("Password is valid")
+            }
+        }
+    </script>
 </body>
 
 </html>
