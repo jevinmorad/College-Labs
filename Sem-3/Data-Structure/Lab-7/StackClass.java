@@ -64,6 +64,10 @@ class MyStack<T> {
         }
         arr[top - i] = x;
     }
+
+    public int size() {
+        return top;
+    }
 }
 
 public class StackClass {
