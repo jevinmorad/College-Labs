@@ -4,6 +4,7 @@ import java.util.Scanner;
 public class MyLikedList<T> {
 
     Node head = null;
+    int size=0;
 
     public class Node {
 
@@ -18,7 +19,8 @@ public class MyLikedList<T> {
 
     public void insertFirst(T data) {
         Node newNode = new Node(data);
-        if (head == null) {
+        size++;
+        if (isEmpty()) {
             head = newNode;
             return;
         }
@@ -28,7 +30,8 @@ public class MyLikedList<T> {
 
     public void insertLast(T data) {
         Node newNode = new Node(data);
-        if (head == null) {
+        size++;
+        if (isEmpty()) {
             head = newNode;
             return;
         }
@@ -37,6 +40,29 @@ public class MyLikedList<T> {
             curNode = curNode.next;
         }
         curNode.next = newNode;
+    }
+
+    public void remove(T data) {
+        if (isEmpty()) {
+            System.out.println("LinekdList is empty");
+            return;
+        }
+        size--;
+        if (head.data==data) {
+            head = head.next;
+            return;
+        }
+        Node prevNode = head;
+        while (prevNode.next!=null && prevNode.next.data!=data) {
+            prevNode = prevNode.next;
+        }
+        prevNode.next = prevNode.next.next;
+        if (prevNode.next==null) {
+            System.out.println("Number not found");
+        }
+        else {
+            System.out.println("Number deleted");
+        }
     }
 
     public void print() {
@@ -52,13 +78,18 @@ public class MyLikedList<T> {
     public boolean isEmpty() {
         return head==null;
     }
+
+    public int size() {
+        return size;
+    }
+
     public static void main(String[] args) {
         MyLikedList<Integer> list = new MyLikedList<>();
         Scanner sc = new Scanner(System.in);
         int data;
         boolean check = true;
         while (check) {
-            System.out.println("\n[1] Insert at first\n[2] Insert at last\n[3] Print");
+            System.out.println("\n[1] Insert at first\n[2] Insert at last\n[3] Remove\n[4] Print\n[5] Size\n[6] Exit");
             System.out.print("\nEnter your choice : ");
             int choice = sc.nextInt();
             switch (choice) {
@@ -75,10 +106,19 @@ public class MyLikedList<T> {
                     break;
 
                 case 3:
-                    list.print();
+                    System.out.print("Enter number to remove : ");
+                    data = sc.nextInt();
                     break;
 
                 case 4:
+                    list.print();
+                    break;
+
+                case 5:
+                    list.size();
+                    break;
+
+                case 6:
                     check = false;
                     break;
             }
