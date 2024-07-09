@@ -6,7 +6,7 @@ public class MyLikedList<T> {
     Node head = null;
     int size=0;
 
-    public class Node {
+    class Node {
 
         T data;
         Node next;
@@ -14,12 +14,12 @@ public class MyLikedList<T> {
         public Node(T data) {
             this.data = data;
             this.next = null;
+            size++;
         }
     }
 
     public void insertFirst(T data) {
         Node newNode = new Node(data);
-        size++;
         if (isEmpty()) {
             head = newNode;
             return;
@@ -30,7 +30,6 @@ public class MyLikedList<T> {
 
     public void insertLast(T data) {
         Node newNode = new Node(data);
-        size++;
         if (isEmpty()) {
             head = newNode;
             return;
@@ -47,22 +46,22 @@ public class MyLikedList<T> {
             System.out.println("LinekdList is empty");
             return;
         }
-        size--;
         if (head.data==data) {
             head = head.next;
+            size--;
             return;
         }
         Node prevNode = head;
         while (prevNode.next!=null && prevNode.next.data!=data) {
             prevNode = prevNode.next;
         }
-        prevNode.next = prevNode.next.next;
         if (prevNode.next==null) {
             System.out.println("Number not found");
+            return;
         }
-        else {
-            System.out.println("Number deleted");
-        }
+        prevNode.next = prevNode.next.next;
+        size--;
+        System.out.println("Number deleted");
     }
 
     public void print() {
@@ -83,13 +82,30 @@ public class MyLikedList<T> {
         return size;
     }
 
+    public void reverse() {
+        if (isEmpty()) {
+            System.out.println("List is null");
+            return;
+        }
+        Node prevNode = null;
+        Node curNode = head;
+        while (curNode!=null) {
+            Node nxtNode = curNode.next;
+            curNode.next = prevNode;
+            prevNode = curNode;
+            curNode = nxtNode;
+        }
+        head = prevNode;
+        System.out.println("List reversed");
+    }
+
     public static void main(String[] args) {
         MyLikedList<Integer> list = new MyLikedList<>();
         Scanner sc = new Scanner(System.in);
         int data;
         boolean check = true;
         while (check) {
-            System.out.println("\n[1] Insert at first\n[2] Insert at last\n[3] Remove\n[4] Print\n[5] Size\n[6] Exit");
+            System.out.println("\n[1] Insert at first\n[2] Insert at last\n[3] Remove\n[4] Reverse\n[5] Print\n[6] Size\n[7] Exit");
             System.out.print("\nEnter your choice : ");
             int choice = sc.nextInt();
             switch (choice) {
@@ -108,17 +124,22 @@ public class MyLikedList<T> {
                 case 3:
                     System.out.print("Enter number to remove : ");
                     data = sc.nextInt();
+                    list.remove(data);
                     break;
 
                 case 4:
-                    list.print();
+                    list.reverse();
                     break;
 
                 case 5:
-                    list.size();
+                    list.print();
                     break;
 
                 case 6:
+                    System.out.println("Size : "+list.size());
+                    break;
+
+                case 7:
                     check = false;
                     break;
             }
