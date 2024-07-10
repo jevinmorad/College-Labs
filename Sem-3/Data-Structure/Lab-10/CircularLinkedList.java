@@ -1,16 +1,12 @@
-
 import java.util.Scanner;
 
-public class MyLikedList<T> {
-
-    Node head;
+public class CircularLinkedList<T> {
+    Node first, last;
     int size=0;
 
     class Node {
-
         T data;
         Node next;
-
         public Node(T data) {
             this.data = data;
             this.next = null;
@@ -18,102 +14,93 @@ public class MyLikedList<T> {
         }
     }
 
-    public MyLikedList() {
-        head = null;
+    public CircularLinkedList() {
+        first = last = null; 
     }
 
-    public MyLikedList(T data) {
-        head = new Node(data);
+    public CircularLinkedList(T data) {
+        first = last = new Node(data);
     }
 
     public void insertFirst(T data) {
         Node newNode = new Node(data);
-        if (isEmpty()) {
-            head = newNode;
+        if (first==null) {
+            first = newNode;
+            last = newNode;
+            last.next = first;
             return;
         }
-        newNode.next = head;
-        head = newNode;
+        newNode.next = first;
+        last.next = newNode;
+        first = newNode;
     }
 
     public void insertLast(T data) {
         Node newNode = new Node(data);
-        if (isEmpty()) {
-            head = newNode;
+        if (first==null) {
+            last.next = newNode;
+            first.next = last;
             return;
         }
-        Node curNode = head;
-        while (curNode.next != null) {
-            curNode = curNode.next;
-        }
-        curNode.next = newNode;
+        last.next = newNode;
+        newNode.next = first;
+        last = newNode;
     }
 
     public void remove(T data) {
-        if (isEmpty()) {
-            System.out.println("LinkedList is empty");
+        if (first==null) {
+            System.out.println("List is empty.");
             return;
         }
-        if (head.data==data) {
-            head = head.next;
+        if (first.data==data) {
+            first = first.next;
+            last.next = first;
             size--;
             return;
         }
-        Node prevNode = head;
-        while (prevNode.next!=null && prevNode.next.data!=data) {
+        Node prevNode = first.next;
+        while (prevNode.next!=last && prevNode.next.data!=data) {
             prevNode = prevNode.next;
         }
-        if (prevNode.next==null) {
+        if (prevNode==last) {
             System.out.println("Number not found");
             return;
         }
-        prevNode.next = prevNode.next.next;
         size--;
-        System.out.println("Number deleted");
+        if (prevNode.next==last) {
+            last = prevNode;
+            prevNode.next = first;
+            return;
+        }
+        prevNode.next = prevNode.next.next;
     }
 
     public void print() {
-        Node curNode = head;
-        System.out.print("list : { ");
-        while (curNode != null) {
+        if (first==null) {
+            System.out.println("LinkedList is empty.");
+            return;
+        }
+        System.out.print("List : { ");
+        Node curNode = first;
+        while (curNode!=last) {
             System.out.print(curNode.data+" ");
             curNode = curNode.next;
         }
+        System.out.print(last.data + " ");
         System.out.println("}");
-    }
-
-    public boolean isEmpty() {
-        return head==null;
     }
 
     public int size() {
         return size;
     }
 
-    public void reverse() {
-        if (isEmpty()) {
-            System.out.println("List is null");
-            return;
-        }
-        Node prevNode = null;
-        Node curNode = head;
-        while (curNode!=null) {
-            Node nxtNode = curNode.next;
-            curNode.next = prevNode;
-            prevNode = curNode;
-            curNode = nxtNode;
-        }
-        head = prevNode;
-        System.out.println("List reversed");
-    }
-
     public static void main(String[] args) {
-        MyLikedList<Integer> list = new MyLikedList<>();
+        CircularLinkedList<Integer> list = new CircularLinkedList<>();
         Scanner sc = new Scanner(System.in);
         int data;
         boolean check = true;
         while (check) {
-            System.out.println("\n[1] Insert at first\n[2] Insert at last\n[3] Remove\n[4] Reverse\n[5] Print\n[6] Size\n[7] Exit");
+            System.out.println("\n[1] Insert at first\n[2] Insert at last\n[3] Remove\n[4] Print\n[5] Size\n[6] Exit");
             System.out.print("\nEnter your choice : ");
             int choice = sc.nextInt();
             switch (choice) {
@@ -134,14 +121,12 @@ public class MyLikedList<T> {
                     data = sc.nextInt();
                     list.remove(data);
                 }
+                
+                case 4 -> list.print();
 
-                case 4 -> list.reverse();
+                case 5 -> System.out.println("Size : "+list.size());
 
-                case 5 -> list.print();
-
-                case 6 -> System.out.println("Size : "+list.size());
-
-                case 7 -> check = false;
+                case 6 -> check = false;
             }
         }
         sc.close();
