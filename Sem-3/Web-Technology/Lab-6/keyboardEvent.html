@@ -9,7 +9,6 @@
         div {
             font-size: 50px;
             position: absolute;
-            width: 60px;
         }
     </style>
 </head>
@@ -31,7 +30,7 @@
                 document.getElementById('div').style.top = topValue+"px";
             }
             else if (e.key == 'ArrowDown') {
-                if (topValue<window.innerHeight-100) {
+                if (topValue<window.innerHeight-10) {
                     topValue+=10
                     document.getElementById('div').style.top = topValue+"px";
                 }
@@ -43,7 +42,7 @@
                 }
             }
             else if (e.key == 'ArrowRight') {
-                if (leftValue<window.innerWidth-100) {
+                if (leftValue<window.innerWidth-10) {
                     leftValue+=10
                     document.getElementById('div').style.left = leftValue+"px";
                 }
