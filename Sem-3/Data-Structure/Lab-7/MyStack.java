@@ -48,6 +48,10 @@ public class MyStack<T> {
         System.out.println("]");
     }
 
+    public T peek() {
+        return arr[top];
+    }
+
     public T peep(int i) {
         if (top - i < 0) {
             System.out.println("Index not found");
