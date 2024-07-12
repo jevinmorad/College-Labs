@@ -8,11 +8,11 @@ public class MyLikedList<T> {
 
     class Node {
 
-        T data;
+        T val;
         Node next;
 
-        public Node(T data) {
-            this.data = data;
+        public Node(T val) {
+            this.val = val;
             this.next = null;
             size++;
         }
@@ -22,12 +22,20 @@ public class MyLikedList<T> {
         head = null;
     }
 
-    public MyLikedList(T data) {
-        head = new Node(data);
+    public MyLikedList(T val) {
+        head = new Node(val);
     }
 
-    public void insertFirst(T data) {
-        Node newNode = new Node(data);
+    public boolean isEmpty() {
+        return head==null;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public void insertFirst(T val) {
+        Node newNode = new Node(val);
         if (isEmpty()) {
             head = newNode;
             return;
@@ -36,8 +44,8 @@ public class MyLikedList<T> {
         head = newNode;
     }
 
-    public void insertLast(T data) {
-        Node newNode = new Node(data);
+    public void insertLast(T val) {
+        Node newNode = new Node(val);
         if (isEmpty()) {
             head = newNode;
             return;
@@ -49,18 +57,35 @@ public class MyLikedList<T> {
         curNode.next = newNode;
     }
 
-    public void remove(T data) {
+    /* Not applicable for this structure */
+    // public void compareTo(Node head1, Node head2) {
+    //     while (head1!=null && head2!=null) {
+    //         if (head1.val!=head2.val) {
+    //             System.out.println("Both list are not same.");
+    //             return;
+    //         }
+    //         head1 = head1.next;
+    //         head2 = head2.next;
+    //     }
+    //     if (head1!=null || head2!=null) {
+    //         System.out.println("Both list are not same.");
+    //         return;
+    //     }
+    //     System.out.println("Both list are same.");
+    // }
+
+    public void remove(T val) {
         if (isEmpty()) {
             System.out.println("LinkedList is empty");
             return;
         }
-        if (head.data==data) {
+        if (head.val==val) {
             head = head.next;
             size--;
             return;
         }
         Node prevNode = head;
-        while (prevNode.next!=null && prevNode.next.data!=data) {
+        while (prevNode.next!=null && prevNode.next.val!=val) {
             prevNode = prevNode.next;
         }
         if (prevNode.next==null) {
@@ -76,19 +101,12 @@ public class MyLikedList<T> {
         Node curNode = head;
         System.out.print("list : { ");
         while (curNode != null) {
-            System.out.print(curNode.data+" ");
+            System.out.print(curNode.val+" ");
             curNode = curNode.next;
         }
         System.out.println("}");
     }
 
-    public boolean isEmpty() {
-        return head==null;
-    }
-
-    public int size() {
-        return size;
-    }
 
     public void reverse() {
         if (isEmpty()) {
@@ -110,7 +128,7 @@ public class MyLikedList<T> {
     public static void main(String[] args) {
         MyLikedList<Integer> list = new MyLikedList<>();
         Scanner sc = new Scanner(System.in);
-        int data;
+        int val;
         boolean check = true;
         while (check) {
             System.out.println("\n[1] Insert at first\n[2] Insert at last\n[3] Remove\n[4] Reverse\n[5] Print\n[6] Size\n[7] Exit");
@@ -118,21 +136,21 @@ public class MyLikedList<T> {
             int choice = sc.nextInt();
             switch (choice) {
                 case 1 -> {
-                    System.out.print("Enter data : ");
-                    data = sc.nextInt();
-                    list.insertFirst(data);
+                    System.out.print("Enter val : ");
+                    val = sc.nextInt();
+                    list.insertFirst(val);
                 }
 
                 case 2 -> {
-                    System.out.print("Enter data : ");
-                    data = sc.nextInt();
-                    list.insertLast(data);
+                    System.out.print("Enter val : ");
+                    val = sc.nextInt();
+                    list.insertLast(val);
                 }
 
                 case 3 -> {
                     System.out.print("Enter number to remove : ");
-                    data = sc.nextInt();
-                    list.remove(data);
+                    val = sc.nextInt();
+                    list.remove(val);
                 }
 
                 case 4 -> list.reverse();
