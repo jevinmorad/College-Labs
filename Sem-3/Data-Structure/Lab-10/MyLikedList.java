@@ -1,4 +1,3 @@
-
 import java.util.Scanner;
 
 public class MyLikedList<T> {
@@ -57,23 +56,6 @@ public class MyLikedList<T> {
         curNode.next = newNode;
     }
 
-    /* Not applicable for this structure */
-    // public void compareTo(Node head1, Node head2) {
-    //     while (head1!=null && head2!=null) {
-    //         if (head1.val!=head2.val) {
-    //             System.out.println("Both list are not same.");
-    //             return;
-    //         }
-    //         head1 = head1.next;
-    //         head2 = head2.next;
-    //     }
-    //     if (head1!=null || head2!=null) {
-    //         System.out.println("Both list are not same.");
-    //         return;
-    //     }
-    //     System.out.println("Both list are same.");
-    // }
-
     public void remove(T val) {
         if (isEmpty()) {
             System.out.println("LinkedList is empty");
@@ -99,7 +81,7 @@ public class MyLikedList<T> {
 
     public void print() {
         Node curNode = head;
-        System.out.print("list : { ");
+        System.out.print("{ ");
         while (curNode != null) {
             System.out.print(curNode.val+" ");
             curNode = curNode.next;
@@ -123,6 +105,27 @@ public class MyLikedList<T> {
         }
         head = prevNode;
         System.out.println("List reversed");
+    }
+
+    public void compareTo(MyLikedList<T> list2) {
+        Node current1 = this.head;
+        Node current2 = list2.head;
+
+        while (current1 != null && current2 != null) {
+            if (current1.val != current2.val) {
+                System.out.println("Both Linked List are not same");
+                return;
+            }
+            current1 = current1.next;
+            current2 = current2.next;
+        }
+
+        if (current1 != null || current2 != null) {
+            System.out.println("Both LinkedList are not same");
+            return;
+        }
+
+        System.out.println("Both LinkedList are same");
     }
 
     public static void main(String[] args) {
