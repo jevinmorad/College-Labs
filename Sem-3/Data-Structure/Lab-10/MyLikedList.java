@@ -108,6 +108,10 @@ public class MyLikedList<T> {
     }
 
     public void compareTo(MyLikedList<T> list2) {
+        if (this.size()!=list2.size()) {
+            System.out.println("Both Linked List are not same");
+            return;
+        }
         Node current1 = this.head;
         Node current2 = list2.head;
 
@@ -118,11 +122,6 @@ public class MyLikedList<T> {
             }
             current1 = current1.next;
             current2 = current2.next;
-        }
-
-        if (current1 != null || current2 != null) {
-            System.out.println("Both LinkedList are not same");
-            return;
         }
 
         System.out.println("Both LinkedList are same");
