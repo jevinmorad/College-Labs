@@ -71,17 +71,18 @@
             let tempString = "";
             if (data.length!=0) {
                 tempString = '<table class="table table-dark table-striped"><thead><tr><th scope="col">First Name</th><th scope="col">Last Name</th><th scope="col">Semester</th><th scope="col">Roll No</th><th scope="col">Action</th></tr></thead><tbody>';
-            for (let i = 0; i < data.length; i++) {
-                tempString += "<tr>";
-                tempString += "<td>" + data[i].fname + "</td>";
-                tempString += "<td>" + data[i].lname + "</td>";
-                tempString += "<td>" + data[i].sem + "</td>";
-                tempString += "<td>" + data[i].rno + "</td>";
-                tempString += '<td><button class="btn btn-sm btn-warning" onclick="edit(' + i + ')">Edit</button> ';
-                tempString += '<button class="btn btn-sm btn-danger" onclick="deleteData(' + i + ')">Delete</button></td>';
-                tempString += "</tr>";
+                for (let i = 0; i < data.length; i++) {
+                    tempString += "<tr>";
+                    tempString += "<td>" + data[i].fname + "</td>";
+                    tempString += "<td>" + data[i].lname + "</td>";
+                    tempString += "<td>" + data[i].sem + "</td>";
+                    tempString += "<td>" + data[i].rno + "</td>";
+                    tempString += '<td><button class="btn btn-sm btn-warning" onclick="edit(' + i + ')">Edit</button> ';
+                    tempString += '<button class="btn btn-sm btn-danger" onclick="deleteData(' + i + ')">Delete</button></td>';
+                    tempString += "</tr>";
+                }
+                tempString += "</tbody></table>";
             }
-            tempString += "</tbody></table>";
             temp.innerHTML = tempString;
         }
 
