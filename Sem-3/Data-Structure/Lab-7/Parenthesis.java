@@ -18,7 +18,7 @@ public class Parenthesis {
             }
             else {
                 if (st.isEmpty()) {
-                    return 0;
+                    return 1;
                 }
                 char paren = st.pop();
                 if (c==')' && paren!='(' || c==']' && paren!='[' || c=='}' && paren!='{') {
