@@ -68,7 +68,9 @@
 
         function display() {
             const temp = document.getElementById("form");
-            let tempString = '<table class="table table-dark table-striped"><thead><tr><th scope="col">First Name</th><th scope="col">Last Name</th><th scope="col">Semester</th><th scope="col">Roll No</th><th scope="col">Action</th></tr></thead><tbody>';
+            let tempString = "";
+            if (data.length!=0) {
+                tempString = '<table class="table table-dark table-striped"><thead><tr><th scope="col">First Name</th><th scope="col">Last Name</th><th scope="col">Semester</th><th scope="col">Roll No</th><th scope="col">Action</th></tr></thead><tbody>';
             for (let i = 0; i < data.length; i++) {
                 tempString += "<tr>";
                 tempString += "<td>" + data[i].fname + "</td>";
