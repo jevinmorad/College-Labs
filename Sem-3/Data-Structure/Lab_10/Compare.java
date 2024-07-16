@@ -1,7 +1,8 @@
+package Lab_10;
 public class Compare {
     public static void main(String[] args) {
-        MyLikedList<Integer> list1 = new MyLikedList<>();
-        MyLikedList<Integer> list2 = new MyLikedList<>();
+        MyLinkedList<Integer> list1 = new MyLinkedList<>();
+        MyLinkedList<Integer> list2 = new MyLinkedList<>();
 
         for(int i=0; i<5; i++) {
             list1.insertFirst(i);

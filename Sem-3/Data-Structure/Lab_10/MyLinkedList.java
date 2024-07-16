@@ -1,6 +1,7 @@
+package Lab_10;
 import java.util.Scanner;
 
-public class MyLikedList<T> {
+public class MyLinkedList<T> {
 
     Node head;
     int size=0;
@@ -17,11 +18,11 @@ public class MyLikedList<T> {
         }
     }
 
-    public MyLikedList() {
+    public MyLinkedList() {
         head = null;
     }
 
-    public MyLikedList(T val) {
+    public MyLinkedList(T val) {
         head = new Node(val);
     }
 
@@ -107,28 +108,45 @@ public class MyLikedList<T> {
         System.out.println("List reversed");
     }
 
-    public void compareTo(MyLikedList<T> list2) {
+    public void compareTo(MyLinkedList<T> list2) {
         if (this.size()!=list2.size()) {
             System.out.println("Both Linked List are not same");
             return;
         }
-        Node current1 = this.head;
-        Node current2 = list2.head;
+        Node curNode1 = this.head;
+        Node curNode2 = list2.head;
 
-        while (current1 != null && current2 != null) {
-            if (current1.val != current2.val) {
+        while (curNode1 != null && curNode2 != null) {
+            if (curNode1.val != curNode2.val) {
                 System.out.println("Both Linked List are not same");
                 return;
             }
-            current1 = current1.next;
-            current2 = current2.next;
+            curNode1 = curNode1.next;
+            curNode2 = curNode2.next;
         }
 
         System.out.println("Both LinkedList are same");
     }
 
+    public void removeDuplicates() {
+        if (head == null) return;
+
+        Node curNode = head;
+        while (curNode != null) {
+            Node checkNode = curNode;
+            while (checkNode.next != null) {
+                if (checkNode.next.val == curNode.val) {
+                    checkNode.next = checkNode.next.next;
+                } else {
+                    checkNode = checkNode.next;
+                }
+            }
+            curNode = curNode.next;
+        }
+    }
+
     public static void main(String[] args) {
-        MyLikedList<Integer> list = new MyLikedList<>();
+        MyLinkedList<Integer> list = new MyLinkedList<>();
         Scanner sc = new Scanner(System.in);
         int val;
         boolean check = true;
