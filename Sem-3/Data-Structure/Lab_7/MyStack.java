@@ -1,5 +1,4 @@
 package Lab_7;
-
 import java.util.Scanner;
 
 public class MyStack<T> {
@@ -102,7 +101,7 @@ public class MyStack<T> {
                 case 3 -> {
                     System.out.print("Enter index : ");
                     int i = sc.nextInt();
-                    System.out.println("Numer at index " + i + " : " + st.peep(i));
+                    System.out.println("Number at index " + i + " : " + st.peep(i));
                 }
 
                 case 4 -> st.display();
