@@ -1,7 +1,5 @@
 import java.util.Scanner;
 
-import Lab_10.MyLinkedList;
-
 public class RemoveDuplicate {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
