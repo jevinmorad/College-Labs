@@ -1,4 +1,3 @@
-package Lab_10;
 public class Compare {
     public static void main(String[] args) {
         MyLinkedList<Integer> list1 = new MyLinkedList<>();

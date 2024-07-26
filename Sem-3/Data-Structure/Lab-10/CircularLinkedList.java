@@ -1,4 +1,3 @@
-package Lab_10;
 import java.util.Scanner;
 
 public class CircularLinkedList<T> {
@@ -83,11 +82,10 @@ public class CircularLinkedList<T> {
         }
         System.out.print("List : { ");
         Node curNode = first;
-        while (curNode!=last) {
+        do {
             System.out.print(curNode.val+" ");
             curNode = curNode.next;
-        }
-        System.out.print(last.val + " ");
+        } while (curNode!=first);
         System.out.println("}");
     }
 
