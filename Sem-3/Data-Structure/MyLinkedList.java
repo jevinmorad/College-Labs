@@ -205,15 +205,7 @@ public class MyLinkedList<T> {
         kFNode.val = kLNode.val;
         kLNode.val = temp;
     }
-
-    public void swapConsecutive() {
-        MyLinkedList<Integer> dummy = new MyLinkedList<>(0);
-
-        MyLinkedList<Integer>.Node dummyHead = dummy.head;
-
-        
-    }
-
+    
     public static void main(String[] args) {
         MyLinkedList<Integer> list = new MyLinkedList<>();
         Scanner sc = new Scanner(System.in);
