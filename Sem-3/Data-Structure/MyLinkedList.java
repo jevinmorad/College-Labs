@@ -1,5 +1,3 @@
-
-
 import java.util.Scanner;
 
 public class MyLinkedList<T> {
@@ -58,6 +56,26 @@ public class MyLinkedList<T> {
         curNode.next = newNode;
     }
 
+    public void insertAt(int ind, T val) {
+        Node newNode = new Node(val);
+        int len = this.size();
+        if (ind>len) {
+            System.out.println("Can't access index");
+            return;
+        }
+        if (ind==0) {
+            head = newNode;
+            return;
+        }
+
+        Node curNode = head;
+        for(int i=0; i<ind-1; i++) {
+            curNode = curNode.next;
+        }
+        curNode.next = newNode;
+        newNode.next = curNode.next.next;
+    }
+
     public void remove(T val) {
         if (isEmpty()) {
             System.out.println("LinkedList is empty");
@@ -96,10 +114,9 @@ public class MyLinkedList<T> {
             System.out.println("List is null");
             return;
         }
-        Node prevNode = null;
-        Node curNode = head;
+        Node prevNode = null, curNode = head, nxtNode = null;
         while (curNode != null) {
-            Node nxtNode = curNode.next;
+            nxtNode = curNode.next;
             curNode.next = prevNode;
             prevNode = curNode;
             curNode = nxtNode;
@@ -146,9 +163,33 @@ public class MyLinkedList<T> {
         }
     }
 
+    public MyLinkedList<T> cloneList() {
+        MyLinkedList<T> copiedList = new MyLinkedList<>();
+
+        if (isEmpty()) {
+            return copiedList;
+        }
+
+        copiedList.head = new Node(head.val);
+        Node thisNode = head.next;
+
+        while (thisNode != null) {
+            copiedList.insertLast(thisNode.val);
+            thisNode = thisNode.next;
+        }
+
+        return copiedList;
+    }
+
     public void swap(int k) {
+        if (isEmpty()) {
+            System.out.println("List is empty");
+            return;
+        }
+        if (head.next==null) {
+            return;
+        }
         int len = this.size();
-        System.out.println("fewf");
         Node curNode = head;
         Node kFNode = null, kLNode = null;
         for (int i = 0; i < len; i++) {
@@ -163,6 +204,14 @@ public class MyLinkedList<T> {
         T temp = kFNode.val;
         kFNode.val = kLNode.val;
         kLNode.val = temp;
+    }
+
+    public void swapConsecutive() {
+        MyLinkedList<Integer> dummy = new MyLinkedList<>(0);
+
+        MyLinkedList<Integer>.Node dummyHead = dummy.head;
+
+        
     }
 
     public static void main(String[] args) {
