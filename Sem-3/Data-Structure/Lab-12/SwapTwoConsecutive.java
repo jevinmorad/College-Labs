@@ -23,51 +23,47 @@ class NewMyLinkedList {
             head = newNode;
             return;
         }
-        Node curNode = head;
-        while (curNode.next != null) {
-            curNode = curNode.next;
+        Node curNodeNode = head;
+        while (curNodeNode.next != null) {
+            curNodeNode = curNodeNode.next;
         }
-        curNode.next = newNode;
-    }
-
-    
-    public void sort() {
-        if (head==null) {
-            System.out.println("List is empty");
-            return;
-        }
-        if (head.next == null) {
-            return;
-        }
-        Node curNode = head;
-
-        while (curNode != null) {
-            Node fNode = curNode, sNode = curNode.next;
-            while (sNode != null) {
-                if (sNode.val < fNode.val) {
-                    int temp = fNode.val;
-                    fNode.val = sNode.val;
-                    sNode.val = temp;
-                }
-                sNode = sNode.next;
-                fNode = fNode.next;
-            }
-            curNode = curNode.next;
-        }
+        curNodeNode.next = newNode;
     }
 
     public void print() {
-        Node curNode = head;
+        Node curNodeNode = head;
         System.out.print("{ ");
-        while (curNode != null) {
-            System.out.print(curNode.val + " ");
-            curNode = curNode.next;
+        while (curNodeNode != null) {
+            System.out.print(curNodeNode.val + " ");
+            curNodeNode = curNodeNode.next;
         }
         System.out.println("}");
     }
-}
 
-public class Sort {
+    public void swap() {
+        if (head==null || head.next==null) {
+            return;
+        }
+        
+        Node dummy = new Node(0);
+        dummy.next = head;
+        Node prevNode = dummy;
+        Node curNode = head;
+
+        while (curNode != null && curNode.next != null) {
+            Node nxtNode = curNode.next;
+
+            curNode.next = nxtNode.next;
+            nxtNode.next = curNode;
+            prevNode.next = nxtNode;
+
+            prevNode = curNode;
+            curNode = curNode.next;
+        }
+        head = dummy.next;
+    }
+}
+public class SwapTwoConsecutive {
     public static void main(String[] args) {
         NewMyLinkedList list = new NewMyLinkedList();
         Scanner sc = new Scanner(System.in);
@@ -80,7 +76,7 @@ public class Sort {
         System.out.print("Before : ");
         list.print();
 
-        list.sort();
+        list.swap();
 
         System.out.print("After : ");
         list.print();

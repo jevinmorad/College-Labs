@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Swap {
+public class RemoveDuplicate {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         MyLinkedList<Integer> list = new MyLinkedList<>();
@@ -13,21 +13,13 @@ public class Swap {
             list.insertLast(sc.nextInt());
         }
 
-        System.out.print("\nEnter k : ");
-        int k = sc.nextInt();
-        if (k>n && k<1) {
-            System.out.println("Node not found");
-            System.exit(0);
-        }
-
         System.out.print("Before : ");
         list.print();
 
-        list.swap(k);
-
-        System.out.print("After : ");
-        list.print();
+        list.removeDuplicates();
         
+        System.out.print("After : ");
+        list.print();        
         sc.close();
     }
 }

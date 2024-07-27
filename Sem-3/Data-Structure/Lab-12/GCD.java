@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 class NewMyLinkedList {
 
-    Node head;
+    Node head = null;
     int size = 0;
 
     class Node {
@@ -17,9 +17,17 @@ class NewMyLinkedList {
         }
     }
 
+    public boolean isEmpty() {
+        return head == null;
+    }
+
+    public int size() {
+        return size;
+    }
+
     public void insertLast(int val) {
         Node newNode = new Node(val);
-        if (head==null) {
+        if (isEmpty()) {
             head = newNode;
             return;
         }
@@ -29,31 +37,31 @@ class NewMyLinkedList {
         }
         curNode.next = newNode;
     }
-
     
-    public void sort() {
-        if (head==null) {
-            System.out.println("List is empty");
+    public void gcd() {
+        if (isEmpty() || head.next==null) {
             return;
         }
-        if (head.next == null) {
-            return;
-        }
-        Node curNode = head;
 
-        while (curNode != null) {
-            Node fNode = curNode, sNode = curNode.next;
-            while (sNode != null) {
-                if (sNode.val < fNode.val) {
-                    int temp = fNode.val;
-                    fNode.val = sNode.val;
-                    sNode.val = temp;
-                }
-                sNode = sNode.next;
-                fNode = fNode.next;
-            }
-            curNode = curNode.next;
+        Node curNode = head, nxtNode = head.next;
+        while(nxtNode!=null) {
+            Node gcd = new Node(calculateGCD(curNode.val, nxtNode.val));
+
+            curNode.next = gcd;
+            gcd.next = nxtNode;
+
+            curNode = nxtNode;
+            nxtNode = nxtNode.next;
         }
+    }
+    public int calculateGCD(int a, int b) {
+        if (b == 0) {
+            return a;
+        }
+        if (a < b) {
+            return calculateGCD(b, a);
+        }
+        return calculateGCD(b, a % b);
     }
 
     public void print() {
@@ -66,21 +74,20 @@ class NewMyLinkedList {
         System.out.println("}");
     }
 }
-
-public class Sort {
+public class GCD {
     public static void main(String[] args) {
         NewMyLinkedList list = new NewMyLinkedList();
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter total number of elements : ");
         int n = sc.nextInt();
         for (int i = 1; i <= n; i++) {
-            System.out.print("Enter element " + i + ": ");
+            System.out.print("Enter element "+i+": ");
             list.insertLast(sc.nextInt());
         }
         System.out.print("Before : ");
         list.print();
 
-        list.sort();
+        list.gcd();
 
         System.out.print("After : ");
         list.print();
