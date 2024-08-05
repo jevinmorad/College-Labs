@@ -13,12 +13,12 @@ public class RemoveDuplicate {
             list.insertLast(sc.nextInt());
         }
 
-        System.out.println("Before : ");
+        System.out.print("Before : ");
         list.print();
 
         list.removeDuplicates();
         
-        System.out.println("After : ");
+        System.out.print("After : ");
         list.print();        
         sc.close();
     }
