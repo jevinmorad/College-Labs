@@ -1,6 +1,3 @@
-/* Compile: javac -d out -sourcepath . Lab_7\MyStack.java Lab-8\InfixToPostfix.java */
-/* Run: java -cp out InfixToPostfix */
-
 import java.util.Scanner;
 
 public class InfixToPostfix {

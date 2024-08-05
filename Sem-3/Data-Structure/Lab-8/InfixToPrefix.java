@@ -1,6 +1,3 @@
-/* Compile: javac -d out -sourcepath . Lab_7\MyStack.java Lab-8\InfixToPrefix.java */
-/* Run: java -cp out InfixToPrefix */
-
 import java.util.Scanner;
 
 public class InfixToPrefix {
