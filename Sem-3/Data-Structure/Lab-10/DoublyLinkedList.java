@@ -1,4 +1,6 @@
+import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.stream.Gatherer.Integrator;
 
 public class DoublyLinkedList<T> {
     public Node head;
@@ -120,6 +122,8 @@ public class DoublyLinkedList<T> {
         return head==null;
     }
 
+    
+
     public static void main(String[] args) {
         DoublyLinkedList<Integer> l1 = new DoublyLinkedList<>();
         Scanner sc = new Scanner(System.in);
@@ -162,6 +166,8 @@ public class DoublyLinkedList<T> {
                     System.out.println("Invalid choice");
             }
             sc.close();
+
+            LinkedList<Integer> list = new LinkedList<>();
         }
     }
 }
