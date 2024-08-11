@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class SelectionSort {
+public class InsertionSort {
     static int a[] = new int[5];
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -13,7 +13,7 @@ public class SelectionSort {
         for (int i = 0; i < a.length; i++) {
             System.out.print(a[i]+" ");
         }
-        SelectionSort.selectionSort(a);
+        InsertionSort.selectionSort(a);
         System.out.print("\nSorted : ");
         for (int i = 0; i < a.length; i++) {
             System.out.print(a[i]+" ");
