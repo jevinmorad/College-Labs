@@ -1,6 +1,5 @@
 import java.util.LinkedList;
 import java.util.Scanner;
-import java.util.stream.Gatherer.Integrator;
 
 public class DoublyLinkedList<T> {
     public Node head;
