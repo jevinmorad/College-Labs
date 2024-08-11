@@ -1,19 +1,19 @@
 import java.util.Scanner;
 
-class DoublyLinkedList<T> {
+class LinkedList<T> {
     Node head;
     Node tail;
     int size;
     Node curSong;
 
-    public DoublyLinkedList() {
+    public LinkedList() {
         head = null;
         tail = null;
         size = 0;
         curSong = null;
     }
 
-    public DoublyLinkedList(T val) {
+    public LinkedList(T val) {
         this.head = this.tail = this.curSong = new Node(val);
         head.next = tail;
         tail.prev = head;
@@ -167,7 +167,7 @@ class DoublyLinkedList<T> {
 
 public class MusicPlayer {
     public static void main(String[] args) {
-        DoublyLinkedList<String> list = new DoublyLinkedList<>();
+        LinkedList<String> list = new LinkedList<>();
         Scanner sc = new Scanner(System.in);
 
         boolean exit = false;
