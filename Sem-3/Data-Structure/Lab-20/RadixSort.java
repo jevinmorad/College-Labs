@@ -1,6 +1,4 @@
-import java.util.PriorityQueue;
 import java.util.Scanner;
-import java.util.stream.Gatherer.Integrator;
 
 public class RadixSort {
     public static void main(String[] args) {
@@ -16,9 +14,7 @@ public class RadixSort {
             System.out.print(arr[i] + " ");
         }
 
-        int len = getMaxLength(arr);
-        RadixSort.radixSort(arr,len,arr.length,1);
-
+        RadixSort.radixSort(arr);
 
         System.out.print("\nSorted : ");
         for (int i = 0; i < arr.length; i++) {
@@ -27,24 +23,35 @@ public class RadixSort {
         sc.close();
     }
 
-    public static void radixSort(int[] arr,int len,int n,int divide) {
-        while (len/divide>0) {
-            PriorityQueue<Integer>[] pque = new PriorityQueue[10];
-            for (int i = 0; i < arr.length; i++) {
-                
-            }
+    public static void radixSort(int arr[]) {
+        int max = getMax(arr);
+
+        for (int divide = 1; max / divide > 0; divide *= 10) {
+            countSort(arr, divide);
         }
     }
 
-    public static int getMaxLength(int[] arr) {
-        int max=0;
+    public static void countSort(int[] arr, int divide) {
+        int count[] = new int[arr.length + 1];
         for (int i = 0; i < arr.length; i++) {
-            int count = 0;
-            for (int j = 0; j < arr.length; j++) {
-                count++;
-            }
-            if (max<count) {
-                max=count;
+            count[arr[i]]++;
+        }
+        for (int i = 1; i < count.length; i++) {
+            count[i] += count[i - 1];
+        }
+        int[] newArray = new int[arr.length];
+        for (int i = arr.length - 1; i >= 0; i--) {
+            newArray[count[(arr[i] / divide) % 10] - 1] = arr[i];
+            count[(arr[i] / divide) % 10]--;
+        }
+        System.arraycopy(newArray, 0, arr, 0, arr.length);
+    }
+
+    public static int getMax(int[] arr) {
+        int max = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (max < arr[i]) {
+                max = arr[i];
             }
         }
         return max;
