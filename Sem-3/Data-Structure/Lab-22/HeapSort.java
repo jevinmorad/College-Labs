@@ -10,12 +10,12 @@ public class HeapSort {
             System.out.print("arr[" + i + "] : ");
             arr[i] = sc.nextInt();
         }
-        System.out.print("Unsorted : ");
+        System.out.print("Unsorted: ");
         print(arr);
 
         heapSort(arr);
 
-        System.out.print("\nSorted : ");
+        System.out.print("Sorted: ");
         print(arr);
         sc.close();
     }
@@ -27,7 +27,7 @@ public class HeapSort {
             heapify(arr, n, i);
         }
 
-        for (int i = n - 1; i > 0; i++) {
+        for (int i = n - 1; i > 0; i--) {
             swap(arr, 0, i);
             heapify(arr, i, 0);
         }
@@ -52,7 +52,6 @@ public class HeapSort {
     }
 
     public static void swap(int arr[], int i, int j) {
-        System.out.println("Swapped : "+i+" , "+j);
         int temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp;
@@ -62,5 +61,6 @@ public class HeapSort {
         for (int i = 0; i < arr.length; i++) {
             System.out.print(arr[i] + " ");
         }
+        System.out.println();
     }
 }
