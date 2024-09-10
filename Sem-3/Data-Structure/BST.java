@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.LinkedList;
 
 public class BST {
 
@@ -74,6 +73,37 @@ public class BST {
         }
         return root;
     }
+
+    public Node createHeap(int[] arr, int i) {
+        Node root = null;
+        if (i < arr.length) {
+            root = new Node(arr[i]);
+            root.left = createHeap(arr, i*2 + 1);
+            root.right = createHeap(arr, i*2 + 2);
+        }
+        return root;
+    }
+
+    public boolean isSymmetric(Node root) {
+        if (root==null) {
+            return false;
+        }
+
+        return checkSymmetric(root.left, root.right);
+    }
+
+    public boolean checkSymmetric(Node root1, Node root2) {
+        if(root1==null && root2==null) {
+            return true;
+        }
+        if(root1==null || root2==null) {
+            return false;
+        }
+        if(root1.val != root2.val) {
+            return false;
+        }
+        return checkSymmetric(root1.left, root2.right) && checkSymmetric(root1.right, root2.left);
+    } 
 
     public void printPreorder(Node root) {
         if (root == null) {
