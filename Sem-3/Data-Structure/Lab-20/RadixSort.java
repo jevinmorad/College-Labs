@@ -32,17 +32,18 @@ public class RadixSort {
     }
 
     public static void countSort(int[] arr, int divide) {
-        int count[] = new int[arr.length + 1];
+        int count[] = new int[10];
         for (int i = 0; i < arr.length; i++) {
-            count[arr[i]]++;
+            count[(arr[i]/divide)%10]++;
         }
-        for (int i = 1; i < count.length; i++) {
+        for (int i = 1; i < 10; i++) {
             count[i] += count[i - 1];
         }
         int[] newArray = new int[arr.length];
         for (int i = arr.length - 1; i >= 0; i--) {
-            newArray[count[(arr[i] / divide) % 10] - 1] = arr[i];
-            count[(arr[i] / divide) % 10]--;
+            int digit = (arr[i] / divide) % 10;
+            newArray[count[digit] - 1] = arr[i];
+            count[digit]--;
         }
         System.arraycopy(newArray, 0, arr, 0, arr.length);
     }
