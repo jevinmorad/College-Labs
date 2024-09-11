@@ -1,25 +1,31 @@
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+  const Faculty = [
+    {
+      Name: "Arjun Bala",
+      Subject: "WT",
+      img: "https://du-website.s3.ap-south-1.amazonaws.com/U01/Faculty-Photo/15---28-04-2023-02-07-35.jpg",
+    },
+    {
+      Name: "Pradyumansinh Jadeja",
+      Subject: "DS",
+      img: "https://du-website.s3.ap-south-1.amazonaws.com/U01/Faculty-Photo/6---28-04-2023-02-06-07.jpg",
+    },
+    {
+      Name: "Shruti Maniar",
+      Subject: "DS",
+      img: "https://du-website.s3.ap-south-1.amazonaws.com/U01/Faculty-Photo/336---28-04-2023-01-34-37.jpg",
+    },
+    {
+      Name: "Firoz Sherasiya",
+      Subject: "OAT",
+      img: "https://du-website.s3.ap-south-1.amazonaws.com/U01/Faculty-Photo/12---28-04-2023-02-06-51.jpg",
+    },
+    {
+      Name: "Dixita Kagathara",
+      Subject: "DBMS",
+      img: "https://du-website.s3.ap-south-1.amazonaws.com/U01/Faculty-Photo/9---28-04-2023-02-06-37.jpg",
+    },
+  ]
 
-export default App;
+export default Faculty;
