@@ -3,7 +3,7 @@ import {Link, Outlet} from "react-router-dom"
 function Layout() {
     return (
         <>
-            <header className="bg-light py-3 mb-4">
+            <header className="bg-light text-dark py-3 mb-4">
                 <div className="container">
                     <div className="row align-items-center">
                         <div className="col-4">
@@ -12,13 +12,13 @@ function Layout() {
                         <div className="col">
                             <nav>
                                 <ul className="nav">
-                                    <li className="nav-item">
+                                    <li className="nav-item fs-5">
                                         <Link className="nav-link" to="/home">Home</Link>
                                     </li>
-                                    <li className="nav-item">
+                                    <li className="nav-item fs-5">
                                         <Link className="nav-link" to="/about">About us</Link>
                                     </li>
-                                    <li className="nav-item">
+                                    <li className="nav-item fs-5">
                                         <Link className="nav-link" to="/contact">Contact us</Link>
                                     </li>
                                 </ul>
@@ -27,10 +27,10 @@ function Layout() {
                     </div>
                 </div>
             </header>
-            <main className="container">
+            <main className="main mx-5">
                 <div className="row">
-                    <div className="col-md-3">
-                        <aside className="bg-light p-3">
+                    <div className="bg-light text-dark  col-md-3">
+                        <aside className="p-3 text-center">
                             <h2 className="h5">Sidebar</h2>
                             <ul className="list-unstyled">
                                 <li>Option 1</li>

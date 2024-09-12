@@ -1,0 +1,65 @@
+.card-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 20px;
+}
+
+.card {
+    width: 300px; /* Fixed width for the card */
+    position: relative;
+}
+
+.left-arrow, .right-arrow {
+    cursor: pointer;
+    font-size: 3rem; /* Adjust size for responsiveness */
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #007bff;
+    transition: color 0.3s ease;
+    z-index: 2; /* Ensure arrows are above the card */
+}
+
+/* Responsive arrow positioning */
+.left-arrow {
+    left: calc(50px + 1rem); /* Position the arrow closer to the card */
+}
+
+.right-arrow {
+    right: calc(50px + 1rem); /* Position the arrow closer to the card */
+}
+
+.left-arrow:hover, .right-arrow:hover {
+    color: #0056b3;
+}
+
+/* Adjust sizes and positioning for smaller screens */
+@media (max-width: 768px) {
+    .left-arrow, .right-arrow {
+        font-size: 2.5rem;
+    }
+
+    .left-arrow {
+        left: calc(30px + 1rem);
+    }
+
+    .right-arrow {
+        right: calc(30px + 1rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .left-arrow, .right-arrow {
+        font-size: 2rem;
+    }
+
+    .left-arrow {
+        left: calc(20px + 1rem);
+    }
+
+    .right-arrow {
+        right: calc(20px + 1rem);
+    }
+}

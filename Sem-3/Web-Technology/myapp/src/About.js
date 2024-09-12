@@ -1,22 +1,25 @@
-import Faculty from './App'
+import { useState } from 'react';
+import './About.css'
+import Faculty from './Data';
 
 function About() {
-    const facFormat = Faculty.map((fac) => (
-        <div class="col-md-4 mb-4" key={fac.Name}>
-            <div class="card">
-                <img class="card-img-top" src={fac.img} alt="Card image cap" />
-                <div class="card-body">
-                    <h5 class="card-title">{fac.Name}</h5>
-                    <p class="card-text">Subject: {fac.Subject}</p>
-                </div>
-            </div>
-        </div>
-    ));
-
+    let [index, setIndex] = useState(0);
     return (
-        <div class="container mt-3">
-            <div class="row">{facFormat}</div>
-        </div>
+        <>
+            <div className="card-container">
+                <span className="left-arrow" onClick={() => setIndex((index - 1 + Faculty.length) % Faculty.length)}><i class="fa-solid fa-circle-chevron-left"></i></span>
+
+                <div className="card">
+                    <img className="card-img-top" src={Faculty[index].img} alt="Card image cap" />
+                    <div className="card-body">
+                        <h5 className="card-title">{Faculty[index].Name}</h5>
+                        <p className="card-text">Subject: {Faculty[index].Subject}</p>
+                    </div>
+                </div>
+
+                <span className="right-arrow" onClick={() => setIndex((index + 1) % Faculty.length)}><i class="fa-solid fa-circle-chevron-right"></i></span>
+            </div>
+        </>
     )
 }
 
