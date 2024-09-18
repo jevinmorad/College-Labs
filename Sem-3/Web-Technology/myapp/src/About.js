@@ -7,7 +7,13 @@ function About() {
     return (
         <>
             <div className="card-container">
-                <span className="left-arrow" onClick={() => setIndex((index - 1 + Faculty.length) % Faculty.length)}><i class="fa-solid fa-circle-chevron-left"></i></span>
+                <span className="left-arrow"
+                    onClick={() => {
+                        if (index === 0) index++;
+                        setIndex(--index);
+                    }}
+                ><i class="fa-solid fa-circle-chevron-left"></i>
+                </span>
 
                 <div className="card">
                     <img className="card-img-top" src={Faculty[index].img} alt="Card image cap" />
@@ -17,7 +23,11 @@ function About() {
                     </div>
                 </div>
 
-                <span className="right-arrow" onClick={() => setIndex((index + 1) % Faculty.length)}><i class="fa-solid fa-circle-chevron-right"></i></span>
+                <span className="right-arrow"
+                    onClick={() => {
+                        if (index === Faculty.length-1) --index;
+                        setIndex(++index)
+                    }}><i class="fa-solid fa-circle-chevron-right"></i></span>
             </div>
         </>
     )

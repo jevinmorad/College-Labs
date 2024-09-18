@@ -27,9 +27,9 @@ function Layout() {
                     </div>
                 </div>
             </header>
-            <main className="main mx-5">
+            <main className="main mx-5" style={{minHeight: '100vh'}}>
                 <div className="row">
-                    <div className="bg-light text-dark  col-md-3">
+                    <div className="bg-light text-dark col-md-3 h-100">
                         <aside className="p-3 text-center">
                             <h2 className="h5">Sidebar</h2>
                             <ul className="list-unstyled">
@@ -40,7 +40,7 @@ function Layout() {
                         </aside>
                     </div>
                     <div className="col-md-9">
-                        <div className="p-3">
+                        <div className="align-item-center p-3 text-center">
                             <Outlet />
                         </div>
                     </div>
