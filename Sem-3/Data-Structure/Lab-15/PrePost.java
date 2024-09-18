@@ -43,6 +43,8 @@ public class PrePost {
         printPreorder(root);
         System.out.print("\npostorder: ");
         printPostorder(root);
+
+        sc.close();
     }
 
     public static Node createFromPrePost(int[] pre, int[] post) {
