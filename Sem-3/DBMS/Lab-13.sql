@@ -80,15 +80,6 @@ INSERT INTO Emp_DETAILS(Eid, Ename, Did, Cid, Salary, Experience) VALUES
 
 ----------------------- PART C -----------------------
 
---Create table as per following schema with proper validation and try to insert data which violate your validation.
---1.	Emp(Eid, Ename, Did, Cid, Salary, Experience)
---		Dept(Did, Dname)
---		City(Cid, Cname, Did))
---		District(Did, Dname, Sid)
---		State(Sid, Sname, Cid)
---		Country(Cid, Cname)
-
-
 CREATE TABLE Country_INFO (
     Cid INT PRIMARY KEY,
     Cname VARCHAR(100) NOT NULL
@@ -172,3 +163,4 @@ INSERT INTO Emp_INFO (Eid, Ename, Did, Cid, Salary, Experience) VALUES
 (3, 'Mike Johnson', 3, 3, 60000.00, 3),
 (4, 'Alice Brown', 4, 4, 45000.00, 2),
 (5, 'Bob Green', 5, 5, 40000.00, 4);
+
