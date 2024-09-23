@@ -3,7 +3,7 @@ CREATE TABLE Dept (
     DepartmentName VARCHAR(100) NOT NULL UNIQUE,
     DepartmentCode VARCHAR(50) NOT NULL UNIQUE,
     Location VARCHAR(50) NOT NULL
-);
+)
 
 CREATE TABLE Person (
     PersonID INT PRIMARY KEY,
@@ -59,17 +59,45 @@ SELECT City , Min(Salary) as MIN_Salary , Max(Salary) as MAX_Salary, Sum(Salary)
 --11. Find the average salary of a person who belongs to Ahmedabad city.
 SELECT City, Avg(Salary) as AVG_Salary from Person group by City having City = 'Ahmedabad' 
 --12. Produce Output Like: <PersonName> lives in <City> and works in <DepartmentName> Department. (In single column)
-SELECT PersonName + ' lives in ' + City + ' and works in ' + DepartmentName + ' Department.' from Person join Dept on Person.DepartmentId = Dept.DepartmentId
+SELECT PersonName + ' lives in ' + City + ' and works in ' + DepartmentName + ' Department.' as Details from Person join Dept on Person.DepartmentId = Dept.DepartmentId
 
 --Part – B:
 --1. Produce Output Like: <PersonName> earns <Salary> from <DepartmentName> department monthly. (In single column)
-SELECT PersonName + ' earns ' + CAST(Salary as VARCHAR) + ' from ' + DepartmentName + ' department monthly.' from Person join Dept on Person.DepartmentId = Dept.DepartmentId
+SELECT PersonName + ' earns ' + CAST(Salary as VARCHAR) + ' from ' + DepartmentName + ' department monthly.' as Details 
+from Person 
+join Dept 
+on Person.DepartmentId = Dept.DepartmentId
 --2. Find city & department wise total, average & maximum salaries.
-
+SELECT City, DepartmentName, Sum(Salary) as Total_Salary, Avg(Salary) as AVG_Salary, Max(Salary) as Max_Salary 
+from Person 
+join Dept 
+on Person.DepartmentID = Dept.DepartmentId
+group by City, DepartmentName
 --3. Find all persons who do not belong to any department.
+SELECT PersonName from Person where DepartmentID is NULL
 --4. Find all departments whose total salary is exceeding 100000.
+SELECT DepartmentName 
+from Dept 
+join Person 
+on Person.DepartmentId = Dept.DepartmentId 
+group by DepartmentName 
+having Sum(Salary)>10000
 
 --Part – C:
 --1. List all departments who have no person.
+SELECT Dept.DepartmentName
+FROM Dept
+LEFT JOIN Person ON Dept.DepartmentID = Person.DepartmentID
+WHERE Person.PersonID IS NULL;
 --2. List out department names in which more than two persons are working.
---3. Give a 10% increment in the computer department employee’s salary. (Use Update
+SELECT Dept.DepartmentName 
+FROM Dept
+JOIN Person ON Dept.DepartmentID = Person.DepartmentID
+group by DepartmentName
+having Count(Person.PersonID)>2
+--3. Give a 10% increment in the computer department employee’s salary. (Use Update)
+Update Person
+SET Salary=Salary+(Salary*.1)
+FROM Person
+JOIN Dept ON Person.DepartmentID = Dept.DepartmentID
+where DepartmentName = 'Computer'
