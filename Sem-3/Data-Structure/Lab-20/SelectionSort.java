@@ -13,14 +13,14 @@ public class SelectionSort {
         for (int i = 0; i < a.length; i++) {
             System.out.print(a[i]+" ");
         }
-        SelectionSort.insertionSort(a);
+        SelectionSort.selectionSort(a);
         System.out.print("\nSorted : ");
         for (int i = 0; i < a.length; i++) {
             System.out.print(a[i]+" ");
         }
         sc.close();
     }
-    public static void insertionSort(int a[]) {
+    public static void selectionSort(int a[]) {
         for (int i = 0; i < a.length-1; i++) {
             int minIndex = i, minElement = a[i];
             for (int j = i+1; j < a.length; j++) {
