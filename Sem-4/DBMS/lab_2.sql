@@ -181,9 +181,88 @@ BEGIN
 	where PersonID = @PersonID
 END
 
---Select Top 3 from Person
+EXEC PR_JOIN 101
+
+--4. Select Top 3 from Person
 CREATE OR ALTER PROC PR_TOP3
 AS
 BEGIN
 	Select Top 3 * from Person
 END
+
+EXEC PR_TOP3
+
+-- Part – B 
+-- 5. Create a Procedure that takes the department name as input and returns a table with all workers working in that department.
+CREATE OR ALTER PR_WORKER
+	@DepartmentName varchar(100)
+AS
+BEGIN
+	Select p.*, d.* from Person p
+	Join Department d
+	on	p.DepartmentID = d.DepartmentID
+	where d.DepartmentName = @DepartmentName
+END
+
+EXEC PR_WORKER 101
+
+-- 6. Create Procedure that takes department name & designation name as input and returns a table with worker’s first name, salary, joining date & department name. 
+CREATE OR ALTER PR_DEPT_DESIG
+	@DepartmentName varchar(100),
+	@DesignationName varchar(100)
+AS
+BEGIN
+	Select p.FirstName, p.Salary, p.JoiningDate, d.DepartmentName from Person p
+	Join Department dept
+	on dept.DepartmentID = p.DepartmentID
+	Join Designation desig
+	on desig.DesignationID = p.DesignationID
+	where dept.DepartmentName = @DepartmentName and desig.DesignationName = @DesignationName
+END
+
+EXEC PR_DEPT_DESIG 101, 12
+
+-- 7. Create a Procedure that takes the first name as an input parameter and display all the details of the worker with their department & designation name. 
+CREATE OR ALTER PR_FNAME
+	@Fname varchar(50)
+AS
+BEGIN
+	Select p.*, dept.*, desig.* from Person p
+	Join Department dept
+	on dept.DepartmentID = p.DepartmentID
+	Join Designation desig
+	on desig.DesignationID = p.DesignationID
+	where p.FirstName = @Fname
+END
+
+EXEC PR_FNAME 'RAHUl'
+
+-- 8. Create Procedure which displays department wise maximum, minimum & total salaries.
+CREATE OR ALTER PR_DEPT
+AS
+BEGIN
+	Select MAX(Salary) as MAX_SALARY, MIN(Salary) as MIN_SALARY, SUM(Salary) as Total_Salary
+	from Person
+	Join DEpartment d 
+	on d.DepartmentID = p.DepartmentID
+	Group by DepartmentName
+END
+
+EXEC PR_DEPT
+
+-- 9. Create Procedure which displays designation wise average & total salaries.
+CREATE OR ALTER PR_DESIG
+AS
+BEGIN
+	Select AVG(Salary) as AVERAGE_SALARY, SUM(Salary) as Total_Salary
+	from Department dept
+	Join Designation desig
+	Group by DepartmentName
+END
+-- Part – C 
+-- 10. Create Procedure that Accepts Department Name and Returns Person Count.
+-- 11. Create a procedure that takes a salary value as input and returns all workers with a salary greater than input salary value along with their department and designation details.
+-- 12. Create a procedure to find the department(s) with the highest total salary among all departments.
+-- 13. Create a procedure that takes a designation name as input and returns a list of all workers under that designation who joined within the last 10 years, along with their department.
+-- 14. Create a procedure to list the number of workers in each department who do not have a designation assigned.
+-- 15. Create a procedure to retrieve the details of workers in departments where the average salary is above 12000.
