@@ -25,7 +25,7 @@ BEGIN
 END
 
 --Delete
-CREATE OR ALTER PROC PR_DEPARTMENT_UPDATE
+CREATE OR ALTER PROC PR_DEPARTMENT_DELETE
 	@DepartmentID INT
 AS
 BEGIN
@@ -161,4 +161,29 @@ BEGIN
 	where PersonID = @PersonID
 END
 
-EXECUTE PR_PERSON_INSERT 'Rahul', 'Anshu', 56000, '1990-01-01', 1, 12EXECUTE PR_PERSON_INSERT 'Hardik', 'Hinsu', 18000, '1990-09-25', 2, 11EXECUTE PR_PERSON_INSERT 'Bhavin', 'Kamani', 25000, '1991-5-14', NULL, 11EXECUTE PR_PERSON_INSERT 'Bhoomi', 'Patel', 39000, '2024-02-20', 1, 13EXECUTE PR_PERSON_INSERT 'Rohit', 'Rajgor', 17000, '1990-07-23', 2, 15EXECUTE PR_PERSON_INSERT 'Priya', 'Mehta', 25000, '1990-10-18', 2, NULLEXECUTE PR_PERSON_INSERT 'Neha', 'Trivedi', 18000, '2014-02-20', 3, 15
+EXECUTE PR_PERSON_INSERT 'Rahul', 'Anshu', 56000, '1990-01-01', 1, 12
+EXECUTE PR_PERSON_INSERT 'Hardik', 'Hinsu', 18000, '1990-09-25', 2, 11
+EXECUTE PR_PERSON_INSERT 'Bhavin', 'Kamani', 25000, '1991-5-14', NULL, 11
+EXECUTE PR_PERSON_INSERT 'Bhoomi', 'Patel', 39000, '2024-02-20', 1, 13
+EXECUTE PR_PERSON_INSERT 'Rohit', 'Rajgor', 17000, '1990-07-23', 2, 15
+EXECUTE PR_PERSON_INSERT 'Priya', 'Mehta', 25000, '1990-10-18', 2, NULL
+EXECUTE PR_PERSON_INSERT 'Neha', 'Trivedi', 18000, '2014-02-20', 3, 15
+
+--3. Join if foreign key is available
+CREATE OR ALTER PROC PR_JOIN
+	@PersonID INT
+AS
+BEGIN
+	Select dept.*, desig.*, per.*
+	from Person per
+	Join Department dept on dept.DepartmentID = per.DepartmentID
+	Join Designation desig on desig.DesignationID = per.DesignationID
+	where PersonID = @PersonID
+END
+
+--Select Top 3 from Person
+CREATE OR ALTER PROC PR_TOP3
+AS
+BEGIN
+	Select Top 3 * from Person
+END
