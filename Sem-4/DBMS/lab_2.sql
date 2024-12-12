@@ -174,7 +174,7 @@ CREATE OR ALTER PROC PR_JOIN
 	@PersonID INT
 AS
 BEGIN
-	Select dept.*, desig.*, per.*
+	Select dept.DepartmentName, desig.DesignationName, concat(per.FirstName , ' ', per.LastName) as FullName, per.Salary
 	from Person per
 	Join Department dept on dept.DepartmentID = per.DepartmentID
 	Join Designation desig on desig.DesignationID = per.DesignationID
@@ -204,7 +204,7 @@ BEGIN
 	where d.DepartmentName = @DepartmentName
 END
 
-EXEC PR_WORKER 101
+EXEC PR_WORKER 'IT'
 
 -- 6. Create Procedure that takes department name & designation name as input and returns a table with worker’s first name, salary, joining date & department name. 
 CREATE OR ALTER PROC PR_DEPT_DESIG
@@ -212,7 +212,7 @@ CREATE OR ALTER PROC PR_DEPT_DESIG
 	@DesignationName varchar(100)
 AS
 BEGIN
-	Select p.FirstName, p.Salary, p.JoiningDate, d.DepartmentName from Person p
+	Select p.FirstName, p.Salary, p.JoiningDate, dept.DepartmentName from Person p
 	Join Department dept
 	on dept.DepartmentID = p.DepartmentID
 	Join Designation desig
@@ -220,14 +220,14 @@ BEGIN
 	where dept.DepartmentName = @DepartmentName and desig.DesignationName = @DesignationName
 END
 
-EXEC PR_DEPT_DESIG 101, 12
+EXEC PR_DEPT_DESIG 'IT', 'CEO'
 
 -- 7. Create a Procedure that takes the first name as an input parameter and display all the details of the worker with their department & designation name. 
 CREATE OR ALTER PROC PR_FNAME
 	@Fname varchar(50)
 AS
 BEGIN
-	Select p.*, dept.*, desig.* from Person p
+	Select p.*, dept.DepartmentName, desig.DesignationName from Person p
 	Join Department dept
 	on dept.DepartmentID = p.DepartmentID
 	Join Designation desig
@@ -241,8 +241,8 @@ EXEC PR_FNAME 'RAHUl'
 CREATE OR ALTER PROC PR_DEPT
 AS
 BEGIN
-	Select MAX(Salary) as MAX_SALARY, MIN(Salary) as MIN_SALARY, SUM(Salary) as Total_Salary
-	from Person
+	Select d.DepartmentName, MAX(Salary) as MAX_SALARY, MIN(Salary) as MIN_SALARY, SUM(Salary) as Total_Salary
+	from Person p
 	Join DEpartment d 
 	on d.DepartmentID = p.DepartmentID
 	Group by DepartmentName
@@ -254,10 +254,11 @@ EXEC PR_DEPT
 CREATE OR ALTER PROC PR_DESIG
 AS
 BEGIN
-	Select AVG(Salary) as AVERAGE_SALARY, SUM(Salary) as Total_Salary
-	from Department dept
-	Join Designation desig
-	Group by DepartmentName
+	Select desig.DesignationName, AVG(Salary) as AVERAGE_SALARY, SUM(Salary) as Total_Salary
+	from Designation desig
+	Join Person p
+	on p.DesignationId = desig.DesignationID
+	Group by DesignationName
 END
 
 EXEC PR_DESIG
@@ -284,7 +285,7 @@ CREATE OR ALTER PROC PR_SALARY
 	@salary DECIMAL(8,2)
 AS
 BEGIN
-	Select dept.*, desig.*, @salary from Person p
+	Select dept.*, desig.*, Salary from Person p
 	Join Department dept
 	on dept.DepartmentID = p.DepartmentID
 	Join Designation desig
@@ -292,7 +293,7 @@ BEGIN
 	where p.Salary > @salary
 END
 
-EXEC PR_SALARY
+EXEC PR_SALARY 1800
 
 -- 12. Create a procedure to find the department(s) with the highest total salary among all departments.
 CREATE OR ALTER PROC PR_HIGHEST_SALARY_DEPARTMENT
@@ -328,11 +329,11 @@ BEGIN
 	Join Department dept
 	on dept.DepartmentID = p.DepartmentID
 	Join Designation desig
-	on design.DesignationID = p.DesignationID
+	on desig.DesignationID = p.DesignationID
 	where 
 		desig.DesignationName = @DesigName 
 		and
-		DATEDIFF(YEAR, desig.JoiningDate, GETDATE()) > 10
+		DATEDIFF(YEAR, p.JoiningDate, GETDATE()) > 10
 END
 
 EXEC PR_DESIGNATION_SELECT 'Jobber'
@@ -346,6 +347,7 @@ BEGIN
 	Join Person p
 	on p.DepartmentID = dept.DepartmentID
 	where p.DesignationID IS NULL
+	Group by dept.DepartmentName
 END
 
 EXEC PR_WORKERS_WITHOUT_DESIGNATION
@@ -354,12 +356,11 @@ EXEC PR_WORKERS_WITHOUT_DESIGNATION
 CREATE OR ALTER PROC PR_AVERAGE_SALARY_DEPARTMENT
 AS
 BEGIN
-	SELECT concat(p.FirstName, ' ', p.LastName) AS FullName, AVG(p.Salary) AS AverageSalary
+	SELECT p.*, d.DepartmentName
     from Person p 
     Join Department d
 	ON d.DepartmentID = p.DepartmentID
-	Group by d.DepartmentID
-	HAVING AVG(p.salary)>12000
+	where d.DepartmentID IN (Select DepartmentID from Person Group by DepartmentID having AVG(Salary)>25000)
 END
 
 EXEC PR_AVERAGE_SALARY_DEPARTMENT
