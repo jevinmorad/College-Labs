@@ -173,12 +173,12 @@ CREATE OR ALTER PROC PR_GetDataFromDepartmentName
 AS
 BEGIN
 	Select e.* from Employee e
-	Join Department d
+	Join Departments d
 	on e.DepartmentID = d.DepartmentID
 	where d.DepartmentName = @DeptName
 END
 
-EXEC PR_GetDataFromDepartmentName 'IT' 
+EXEC PR_GetDataFromDepartmentName 'IT'
 
 --3. Create a Procedure that accepts Project Name & Department Name and based on that you must give all the project related details.
 CREATE OR ALTER PROC PR_GetProjects
@@ -201,7 +201,7 @@ CREATE OR ALTER PROC PR_GetDataFromInt
 AS
 BEGIN
 	Select * from Employee
-	where @IntValue1 < Salary and @IntValue2 > Salary
+	where Salary BETWEEN @IntValue1 and @IntValue2
 END
 
 EXEC PR_GetDataFromInt 70000, 80000
@@ -219,8 +219,75 @@ EXEC PR_GetDataOnDate '2010-6-15'
 
 --Part B
 --6. Create a Procedure that accepts Gender's first letter only and based on that employee details will be served.
+CREATE OR ALTER PROC PR_GetOnGender
+	@Gender char(1)
+AS
+BEGIN
+	Select * from Employee
+	where LEFT(Gender,1) = @Gender
+END
+
+EXEC PR_GetOnGender 'F'
+
 --7. Create a Procedure that accepts First Name or Department Name as input and based on that employee data will come.
+CREATE OR ALTER PROC PR_GetOnFirstNameOrDepartmentName
+	@FName varchar(100) = NULL,
+	@DeptName varchar(100) = NULL
+AS
+BEGIN
+	Select * from Employee e
+	Join Departments d
+	on e.DepartmentID = d.DepartmentID
+	where 
+		(FirstName = @FName OR @FName IS NULL) 
+        AND 
+        (DepartmentName = @DeptName OR @DeptName IS NULL);
+END
+
+EXEC PR_GetOnFirstNameOrDepartmentName 'John', 'IT'
+EXEC PR_GetOnFirstNameOrDepartmentName 'John'
+EXEC PR_GetOnFirstNameOrDepartmentName 'John', NULL
+EXEC PR_GetOnFirstNameOrDepartmentName NULL, 'IT'
+
 --8. Create a procedure that will accepts location, if user enters a location any characters, then he/she will get all the departments with all data.
+CREATE OR ALTER PROC PR_GetOnLocation
+	@location varchar(50)
+AS
+BEGIN
+	Select CONCAT(e.FirstName, ' ', e.LastName) as Name, d.DepartmentName, Salary, d.Location from Departments d
+	Join Employee e
+	on d.DepartmentID = e.DepartmentID
+	where d.Location like '%' + @location + '%'
+END
+
+EXEC PR_GetOnLocation 'c'
+
 --Part C
 --9. Create a procedure that will accepts From Date & To Date and based on that he/she will retrieve Project related data.
+CREATE OR ALTER PROC PR_GetOnDate
+	@startDate DATETIME,
+	@endDate DATETIME
+AS
+BEGIN
+	Select * from Projects
+	where StartDate=@startDate and EndDate = @endDate
+END
+
+EXEC PR_GetOnDate '2022-01-01', '2022-12-31'
+
 --10. Create a procedure in which user will enter project name & location and based on that you must provide all data with Department Name, Manager Name with Project Name & Starting Ending Dates.
+CREATE OR ALTER PROC PR_GetData
+	@project varchar(100),
+	@location varchar(100)
+AS
+BEGIN
+	Select DepartmentName, (FirstName + ' ' + LastName) AS ManagerName, ProjectName, StartDate, EndDate
+	from Projects p
+	Join Departments d
+	on d.DepartmentID = p.DepartmentID
+	Join Employee e
+	on e.DepartmentID = d.DepartmentID
+	where ProjectName = @project and Location = @location
+END
+
+EXEC PR_GetData 'Project Alpha', 'New York'
