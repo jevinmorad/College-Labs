@@ -53,3 +53,24 @@
 27. db.employee.find({ename: {$regex: /^[^aeiou]*[aeiou][^aeiou]*$/i}})
 
 28. db.employee.find({ename: {$regex: /^[A-Z][a-z]/}})
+
+B.
+1. db.student.find({sname: /^K/})
+
+2. db.student.find({sname: /^[Z,D]/})
+
+3. db.student.find({city: /^[A,R]/})
+
+4. db.student.find({sname: /^P.*i$/})
+
+5. db.student.find({department: /^C/})
+
+6. db.student.find({city: /.*med.*/},{sname:1, sem:1, fees:1, department:1})
+
+7. db.student.find({city: {$not: /.[rajkot,baroda]./}},{sname:1, sem:1, fees:1, department:1})
+
+8. db.student.find({sname: /^K.*/})
+
+9. db.student.find({sname: /a$/})
+
+10. db.student.find({sname: /.*ri.*/})
