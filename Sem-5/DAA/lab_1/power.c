@@ -1,40 +1,30 @@
 #include<stdio.h>
 
-float withIterative(float n, float m) {
-	int ans = 1, i;
-	for(i=0; i<m; i++) {
+float withIterative(double n, int n) {
+	float ans = 1.0, i;
+	int absM = abs(m);
+	for(i=0; i<absM; i++) {
 		ans = ans * n;
 	}
-	return ans;
+	return (n > 0) ? ans : (1 / ans);
 }
 
-float withRecurison(float n, float m) {
-	if(m==0) {
-		return 1;
-	}
-	else if(m>0) {
-		if(m==1) {
-			return n;
-		}
-		return n*withRecurison(n, m-1);
-	} else {
-		if(m==-1) {
-			return 1/n;
-		}
-		return 1/withRecurison(n, -m);
-	}
+float withRecurison(double n, double m) {
+	if(m==0) return 1;
+	else if(m>0) return n*withRecurison(n, m-1);
+	else return 1/withRecurison(n, -m);
 }
 
 int main() {
 	printf("Enter base: ");
-	float n; 
-	scanf("%f",&n);
+	double n; 
+	scanf("%lf",&n);
 	printf("Enter power: ");
-	float m; 
-	scanf("%f",&m);
+	int m; 
+	scanf("%d",&m);
 	
-	printf("Ans with iterative approach %d\n",withIterative(n,m));
-	printf("Ans with recursive approach %d",withRecurison(n,m));
+	printf("Ans with iterative approach %.6lf\n",withIterative(n,m));
+	printf("Ans with recursive approach %.6lf\n",withIterative(n,m));
 
 	return 0;
 }
