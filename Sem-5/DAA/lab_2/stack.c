@@ -1,109 +1,144 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* head = NULL;
 int size = 0;
-struct Node
-{
-	int data;
-	struct Node *next;
-} *head = NULL;
 
-void push(int n)
-{
-	struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
-	newNode->next = NULL;
-	newNode->data = n;
-	if (head == NULL)
-	{
-		head = newNode;
-		return;
-	}
-	newNode->next = head;
-	head = newNode;
-	size++;
+void push(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = head;
+    head = newNode;
+    size++;
+    printf("Element %d pushed to stack.\n", value);
 }
 
-int pop()
-{
-	if (head == NULL)
-	{
-		return -1;
-	}
-	int val = head->data;
-	head = head->next;
-	size--;
-	return val;
+int pop() {
+    if (head == NULL) {
+        printf("Stack underflow! Nothing to pop.\n");
+        return -1;
+    }
+    int value = head->data;
+    struct Node* temp = head;
+    head = head->next;
+    free(temp);
+    size--;
+    printf("%d popped.\n", value);
+    return value;
 }
 
-void display()
-{
-	struct Node *node = head;
-	while (node != NULL)
-	{
-		printf("%d ", node->data);
-		node = node->next;
-	}
+int peek() {
+    if (head == NULL) {
+        printf("Stack is empty.\n");
+        return -1;
+    }
+    printf("Top element is: %d\n", head->data);
+    return head->data;
 }
 
-int peep(int ind)
-{
-	struct Node *node = head;
-	if (ind > size)
-	{
-		printf("Out of range");
-		return 0;
-	}
-	while (ind >= 0)
-	{
-		node = node->next;
-		ind--;
-	}
-	int val = node->data;
-	return val;
+void display() {
+    if (head == NULL) {
+        printf("Stack is empty.\n");
+        return;
+    }
+    struct Node* current = head;
+    printf("Stack is:\n");
+    while (current != NULL) {
+        printf("          %d\n", current->data);
+        current = current->next;
+    }
+    printf("\n");
 }
 
-int main()
-{
-	bool isContinue = true;
-	while (isContinue)
-	{
-		printf("\n\n[1] Push\n [2] Pop\n [3] Peep\n [4] Display\n [5] Exit");
-		printf("\n\nEnter your choice : ");
-		int choice;
-		scanf("%d", &choice);
-		switch (choice)
-		{
-		case 1:
-			scanf("Enter element to push : ");
-			int n;
-			scanf("%d", &n);
-			push(n);
-			break;
+bool isEmpty() {
+    return head == NULL;
+}
 
-		case 2:
-			int val = pop();
-			printf("\nPoped elemet = %d\n", val);
-			break;
+int getSize() {
+    return size;
+}
 
-		case 3:
-			scanf("Enter ind to get : ");
-			int n;
-			scanf("%d", &n);
-			int val = peep(n);
-			break;
+void clear() {
+    struct Node* current = head;
+    while(current != NULL) {
+        struct Node* temp = current;
+        current = current->next;
+        free(temp);
+    }
+    head = NULL;
+    size = 0;
+    printf("Stack cleared")
+}
 
-		case 4:
-			display();
-			printf("\n\n");
-			break;
+int main() {
+    int choice, value;
+    bool running = true;
 
-		case 5:
-			isContinue = false;
-			break;
+    printf("==== STACK IMPLEMENTATION ====\n");
 
-		default:
-			printf("\nInvalid choice\n");
-			break;
-		}
-	}
-	return 0;
+    while (running) {
+        printf("\nChoose an operation:\n");
+        printf("1. Push\n");
+        printf("2. Pop\n");
+        printf("3. Peek\n");
+        printf("4. Display Stack\n");
+        printf("5. Check if Stack is Empty\n");
+        printf("6. Get Stack Size\n");
+        printf("7. Clear stack\n");
+        printf("8. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter the value to push: ");
+                scanf("%d", &value);
+                push(value);
+                break;
+
+            case 2:
+                pop();
+                break;
+
+            case 3:
+                peek();
+                break;
+
+            case 4:
+                display();
+                break;
+
+            case 5:
+                if (isEmpty())
+                    printf("Yes, the stack is empty.\n");
+                else
+                    printf("No, the stack is not empty.\n");
+                break;
+                
+            case 6:
+                printf("Current stack size: %d\n", getSize());
+                break;
+                
+            case 7:
+                clear();
+                break;
+
+            case 8:
+                printf("Exiting program. Goodbye!\n");
+                clear();
+                running = false;
+                break;
+
+            default:
+                printf("Invalid choice. Please enter a number between 1 and 8.\n");
+                break;
+        }
+    }
+    return 0;
 }
