@@ -4,9 +4,6 @@
 #include <time.h>
 #include "sorting_algo.h"
 
-#define MAX_NUMBERS 100000
-#define MAX_LINELENGTH 1000000
-
 const int sizes[] = {100, 1000, 10000, 100000};
 const char *cases[] = {"best", "average", "worst"};
 
