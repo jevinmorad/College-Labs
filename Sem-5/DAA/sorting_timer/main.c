@@ -78,6 +78,7 @@ int main()
         printf("0. Exit\n");
         printf("1. Bubble Sort\n");
         printf("2. Insertion Sort\n");
+        printf("3. Seletion Sort\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -93,6 +94,10 @@ int main()
 
         case 2:
             display_table("Insertion sort", insertion_sort);
+            break;
+
+        case 3:
+            display_table("Selection sort", selection_sort);
             break;
 
         default:
