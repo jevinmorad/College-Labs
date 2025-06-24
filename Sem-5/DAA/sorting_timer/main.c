@@ -4,9 +4,6 @@
 #include <time.h>
 #include "sorting_algo.h"
 
-#define MAX_NUMBERS 100000
-#define MAX_LINELENGTH 1000000
-
 const int sizes[] = {100, 1000, 10000, 100000};
 const char *cases[] = {"best", "average", "worst"};
 
@@ -81,6 +78,7 @@ int main()
         printf("0. Exit\n");
         printf("1. Bubble Sort\n");
         printf("2. Insertion Sort\n");
+        printf("3. Seletion Sort\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -96,6 +94,10 @@ int main()
 
         case 2:
             display_table("Insertion sort", insertion_sort);
+            break;
+
+        case 3:
+            display_table("Selection sort", selection_sort);
             break;
 
         default:
