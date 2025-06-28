@@ -5,17 +5,17 @@ void bubble_sort(int *arr, int n)
 {
     for (int i = 0; i < n - 1; ++i)
     {
-        bool isSwaped = false;
+        bool isSwapped = false;
         for (int j = 0; j < n - i - 1; ++j)
         {
             if (arr[j] > arr[j + 1])
             {
-                isSwaped = true;
+                isSwapped = true;
                 int tmp = arr[j];
                 arr[j] = arr[j + 1];
                 arr[j + 1] = tmp;
             }
-            if (!isSwaped)
+            if (!isSwapped)
                 break;
         }
     }
@@ -54,5 +54,47 @@ void selection_sort(int *arr, int n)
             arr[min_ind] = arr[i];
             arr[i] = temp;
         }
+    }
+}
+
+void heapify(int *arr, int i, int n)
+{
+    int max_ind = i;
+    int left_child_ind = 2 * i - 1;
+    int right_child_ind = 2 * i + 1;
+
+    if (left_child_ind < n && arr[left_child_ind] < arr[max_ind])
+    {
+        max_ind = left_child_ind;
+    }
+    if (right_child_ind < n && arr[right_child_ind] < arr[max_ind])
+    {
+        max_ind = right_child_ind;
+    }
+
+    if (max_ind != i)
+    {
+        int temp = arr[i];
+        arr[i] = arr[max_ind];
+        arr[max_ind] = temp;
+
+        heapify(arr, n, max_ind);
+    }
+}
+
+void heap_sort(int *arr, int n)
+{
+    for (int i = n / 2 - 1; i >= 0; i--)
+    {
+        heapify(arr, n, i);
+    }
+
+    for (int i = n - 1; i > 0; i--)
+    {
+        int temp = arr[0];
+        arr[0] = arr[i];
+        arr[i] = temp;
+
+        heapify(arr, i, 0);
     }
 }
