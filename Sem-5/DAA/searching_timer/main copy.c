@@ -45,7 +45,7 @@ void display_table(const char *algo_name, void (*sort_fun)(int *, int))
 
         for (int j = 0; j < 3; j++)
         {
-            sprintf(filename, "./arrays/%s_%d.txt", cases[j], sizes[i]);
+            sprintf(filename, "./arrays/%s_%d.txt", cases[j], sizes[j]);
             arrays[j] = malloc(count * sizeof(int));
             read_input_file(arrays[j], filename, count);
         }

@@ -2,10 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "sorting_algo.h"
+#include "searching_algo.h"
 
 const int sizes[] = {100, 1000, 10000, 100000};
-const char *cases[] = {"best", "average", "worst"};
 
 void read_input_file(int *array, const char *filename, int count)
 {
@@ -22,16 +21,18 @@ void read_input_file(int *array, const char *filename, int count)
     fclose(f);
 }
 
-double measure_time(void (*sort_fun)(int *, int), int *data, int n)
+double measure_time(int (*sort_fun)(int *, int, int), int *data, int n,  int target)
 {
     clock_t start = clock();
-    sort_fun(data, n);
+    int ind = sort_fun(data, target, n);
     clock_t end = clock();
+
+    printf("\n\n %d is at %d index\n", target, ind);
 
     return (double)(end - start) / CLOCKS_PER_SEC;
 }
 
-void display_table(const char *algo_name, void (*sort_fun)(int *, int))
+void display_table(const char *algo_name, int (*sort_fun)(int *, int, int))
 {
     printf("\n------- %s -------\n\n", algo_name);
     printf("%-20s %-10s | %-10s | %-10s\n", "Number of Inputs", "   Best", "  Average", "  Worst");
@@ -45,7 +46,7 @@ void display_table(const char *algo_name, void (*sort_fun)(int *, int))
 
         for (int j = 0; j < 3; j++)
         {
-            sprintf(filename, "./arrays/%s_%d.txt", cases[j], sizes[i]);
+            sprintf(filename, "./arrays/best_%d.txt", sizes[i]);
             arrays[j] = malloc(count * sizeof(int));
             read_input_file(arrays[j], filename, count);
         }
@@ -53,7 +54,8 @@ void display_table(const char *algo_name, void (*sort_fun)(int *, int))
         double times[3];
         for (int j = 0; j < 3; j++)
         {
-            times[j] = measure_time(sort_fun, arrays[j], count);
+            int target = (j==1) ? 1 : ((j==2) ? (sizes[i]/2) : sizes[i]);
+            times[j] = measure_time(sort_fun, arrays[j], count, target);
         }
 
         printf("%-20d %-9.6lfs | %-9.6lfs | %-9.6lfs\n", count, times[0], times[1], times[2]);
@@ -72,10 +74,8 @@ int main()
         int choice;
         printf("\nChoose a sorting algorithm:\n");
         printf("0) Exit\n");
-        printf("1) Bubble Sort\n");
-        printf("2) Insertion Sort\n");
-        printf("3) Selection Sort\n");
-        printf("4) Heap Sort\n");
+        printf("1) Linear Search\n");
+        printf("2) Binary Search\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -86,19 +86,11 @@ int main()
             return 0;
 
         case 1:
-            display_table("Bubble sort", bubble_sort);
+            display_table("Linear Search", linear_search);
             break;
 
         case 2:
-            display_table("Insertion sort", insertion_sort);
-            break;
-
-        case 3:
-            display_table("Selection sort", selection_sort);
-            break;
-
-        case 4:
-            display_table("Heap sort", heap_sort);
+            display_table("Binary Search", binary_search);
             break;
 
         default:
