@@ -21,50 +21,61 @@ void read_input_file(int *array, const char *filename, int count)
     fclose(f);
 }
 
-double measure_time(int (*sort_fun)(int *, int, int), int *data, int n,  int target)
+double measure_time(int (*search_func)(int *, int, int), int *data, int n, int target, int *found_index)
 {
     clock_t start = clock();
-    int ind = sort_fun(data, target, n);
+    *found_index = search_func(data, target, n);
     clock_t end = clock();
-
-    printf("\n\n %d is at %d index\n", target, ind);
-
     return (double)(end - start) / CLOCKS_PER_SEC;
 }
 
-void display_table(const char *algo_name, int (*sort_fun)(int *, int, int))
+void display_table(const char *algo_name, int (*search_func)(int *, int, int))
 {
     printf("\n------- %s -------\n\n", algo_name);
-    printf("%-20s %-10s | %-10s | %-10s\n", "Number of Inputs", "   Best", "  Average", "  Worst");
-    printf("%-20s %-10s | %-10s | %-10s\n", "-----------------", "----------", "----------", "----------");
-
     for (int i = 0; i < 4; i++)
     {
         int count = sizes[i];
-        int *arrays[3];
+        int *arrays;
         char filename[100];
 
-        for (int j = 0; j < 3; j++)
-        {
-            sprintf(filename, "./arrays/best_%d.txt", sizes[i]);
-            arrays[j] = malloc(count * sizeof(int));
-            read_input_file(arrays[j], filename, count);
-        }
+        sprintf(filename, "./arrays/best_%d.txt", sizes[i]);
+        arrays = malloc(count * sizeof(int));
+        read_input_file(arrays, filename, count);
 
+        printf("\nInput Size: %-10d\n", count);
+        printf("--------------------------------------------------------------------------------------------------------\n");
+
+        printf("        %-30s %-30s %-30s\n", "Best", "Average", "Worst");
+
+        int targets[3], indices[3];
         double times[3];
+
+        targets[0] = 1;
+        targets[1] = sizes[i] / 2;
+        targets[2] = sizes[i];
+
         for (int j = 0; j < 3; j++)
         {
-            int target = (j==1) ? 1 : ((j==2) ? (sizes[i]/2) : sizes[i]);
-            times[j] = measure_time(sort_fun, arrays[j], count, target);
+            times[j] = measure_time(search_func, arrays, count, targets[j], &indices[j]);
         }
 
-        printf("%-20d %-9.6lfs | %-9.6lfs | %-9.6lfs\n", count, times[0], times[1], times[2]);
+        printf("(target %d found at %d)    (target [%d] found at %d)    (target %d found at %d)\n",
+               targets[0], indices[0], targets[1], indices[1], targets[2], indices[2]);
 
-        for (int i = 0; i < 3; i++)
-        {
-            free(arrays[i]);
-        }
+        printf("        %-30.6f %-30.6f %-30.6f\n", times[0], times[1], times[2]);
+        printf("--------------------------------------------------------------------------------------------------------\n");
+
+        free(arrays);
     }
+}
+
+void print_menu()
+{
+    printf("\n\nSEARCH ALGORITHM ANALYZER\n");
+    printf("0) Exit\n");
+    printf("1) Linear Search\n");
+    printf("2) Binary Search\n");
+    printf("Enter your choice: ");
 }
 
 int main()
@@ -72,17 +83,13 @@ int main()
     while (1)
     {
         int choice;
-        printf("\nChoose a sorting algorithm:\n");
-        printf("0) Exit\n");
-        printf("1) Linear Search\n");
-        printf("2) Binary Search\n");
-        printf("Enter your choice: ");
+        print_menu();
         scanf("%d", &choice);
 
         switch (choice)
         {
         case 0:
-            printf("\nExiting....\n");
+            printf("\nExiting program...\n");
             return 0;
 
         case 1:
@@ -94,7 +101,7 @@ int main()
             break;
 
         default:
-            printf("\nSelect valid number\n");
+            printf("\nInvalid choice! Please select 0, 1, or 2.\n");
             break;
         }
     }
