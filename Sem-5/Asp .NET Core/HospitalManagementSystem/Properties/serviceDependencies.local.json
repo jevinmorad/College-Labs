@@ -3,6 +3,15 @@
     "appInsights1": {
       "type": "appInsights.sdk",
       "dynamicId": null
+    },
+    "secrets1": {
+      "type": "secrets.user"
+    },
+    "mssql1": {
+      "secretStore": "LocalSecretsFile",
+      "type": "mssql.onprem",
+      "connectionId": "ConnectionStrings:DbConnectionString1",
+      "dynamicId": null
     }
   }
 }
