@@ -36,7 +36,7 @@
                                     <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" asp-controller="User" asp-action="CreateEditUser" asp-route-id="@user.UserID">
+                                    <a class="dropdown-item" asp-controller="User" asp-action="Edit" asp-route-id="@user.UserID">
                                         <i class="bx bx-edit-alt me-1"></i> Edit
                                     </a>
                                     <form asp-controller="User" asp-action="DeleteUser" asp-route-id="@user.UserID" method="post" style="display:inline;">
@@ -54,8 +54,11 @@
     </div>
 </div>
 
-<a asp-controller="User" asp-action="CreateEditUser" class="fab-add-user" title="Add User">
-    <i class="bx bx-plus"></i>
+<a asp-controller="User" asp-action="Create" class="fab-add-user" title="Create new user">
+    <span class="fab-content">
+        <i class="bx bx-user-plus"></i>
+        <span class="text">Create new user</span>
+    </span>
 </a>
 
 @section Scripts {
@@ -69,19 +72,58 @@
             height: 56px;
             background: #696cff;
             color: #fff;
-            border-radius: 50%;
+            border-radius: 28px;
+            font-size: 1.4rem;
+            box-shadow: 0 2px 8px rgba(105, 108, 255, 0.2);
+            transition: width 0.3s ease, background 0.2s ease;
+            overflow: hidden;
+            white-space: nowrap;
+            text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            box-shadow: 0 2px 8px rgba(105, 108, 255, 0.2);
-            transition: background 0.2s;
-            text-decoration: none;
         }
+
+        .fab-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0 16px;
+        }
+
+        .fab-content i {
+            flex-shrink: 0;
+            font-size: 1.4rem;
+            transition: margin 0.3s ease;
+        }
+
+        .fab-add-user .text {
+            opacity: 0;
+            margin-left: 0;
+            overflow: hidden;
+            max-width: 0;
+            transition: opacity 0.3s ease, max-width 0.3s ease, margin-left 0.3s ease;
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+
         .fab-add-user:hover {
+            width: 200px;
             background: #5a5edb;
-            color: #fff;
-            text-decoration: none;
         }
+
+        .fab-add-user:hover .text {
+            opacity: 1;
+            margin-left: 12px;
+            max-width: 140px;
+        }
+
+        .fab-add-user i,
+        .fab-add-user .text {
+            color: white;
+            transition: color 0.3s ease;
+        }
+
     </style>
 }

@@ -11,56 +11,58 @@ namespace HospitalManagementSystem.Controllers
         {
             _db = db;
         }
-        public IActionResult ListUsers()
+        public IActionResult List()
         {
             List<User> users = _db.Users.ToList();
             return View(users);
         }
 
-        public IActionResult CreateEditUser()
+        public IActionResult Create()
         {
             return View();
         }
 
-        public IActionResult CreateEditUser(int? id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(User obj)
         {
-            if (id == null || id == 0)
-            {
-                // Create new
-                ViewBag.IsEdit = false;
-                return View(new User());
-            }
-            else
-            {
-                // Edit existing
-                var user = _db.Users.FirstOrDefault(u => u.UserID == id);
-                if (user == null)
-                {
-                    return NotFound();
-                }
-                ViewBag.IsEdit = true;
-                return View(user);
-            }
+            _db.Users.Add(obj);
+            _db.SaveChanges();
+            return RedirectToAction("List");
+        }
+
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var user = _db.Users.Find(id);
+            if (user == null)
+                return NotFound();
+
+            return View("Create", user);
         }
 
         [HttpPost]
-        public IActionResult CreateEditUser(User obj)
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(User obj)
         {
             if (obj.UserID == 0)
-            {
-                // New user
-                _db.Users.Add(obj);
-            }
-            else
-            {
-                // Existing user, update
-                _db.Users.Update(obj);
-            }
+                return NotFound();
+
+            var user = _db.Users.Find(obj.UserID);
+            if (user == null)
+                return NotFound();
+
+            user.UserName = obj.UserName;
+            user.Email = obj.Email;
+            user.MobileNo = obj.MobileNo;
+            user.IsActive = obj.IsActive;
+            user.Modified = DateTime.Now;
 
             _db.SaveChanges();
-            return RedirectToAction("ListUsers");
+            return RedirectToAction("List");
         }
-
 
         [HttpPost]
         public IActionResult DeleteUser(int id)
@@ -71,7 +73,7 @@ namespace HospitalManagementSystem.Controllers
                 _db.Users.Remove(user);
                 _db.SaveChanges();
             }
-            return RedirectToAction("ListUsers");
+            return RedirectToAction("List");
         }
     }
 }
