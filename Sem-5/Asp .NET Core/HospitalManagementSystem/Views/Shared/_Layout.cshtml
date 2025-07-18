@@ -21,6 +21,8 @@
 
     <!-- Icons. Uncomment required icon fonts -->
     <link rel="stylesheet" href="~/assets/vendor/fonts/boxicons.css" />
+    <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
+    <link href='https://cdn.boxicons.com/fonts/brands/boxicons-brands.min.css' rel='stylesheet'>
 
     <!-- Core CSS -->
     <link rel="stylesheet" href="~/assets/vendor/css/core.css" class="template-customizer-core-css" />
@@ -45,7 +47,7 @@
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
 
-            <!-- Menu -->
+            <!-- Sidebar -->
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo">
                     <a href="index.html" class="app-brand-link">
@@ -103,14 +105,38 @@
                 <div class="menu-inner-shadow"></div>
 
                 <ul class="menu-inner py-1">
-                    <!-- Dashboard -->
-                    <li class="menu-item active">
+                    <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "User" ? "active" : "")">
                         <a asp-controller="User" asp-action="List" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                            <i class="menu-icon tf-icons bx bx-user"></i>
                             <div data-i18n="Analytics">Users</div>
                         </a>
                     </li>
+                    <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Doctor" ? "active" : "")">
+                        <a asp-controller="Doctor" asp-action="List" class="menu-link">
+                            <i class="menu-icon tf-icons bx-plus-big"></i>
+                            <div data-i18n="Analytics">Doctors</div>
+                        </a>
+                    </li>
+                    <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Patient" ? "active" : "")">
+                        <a asp-controller="Patient" asp-action="List" class="menu-link">
+                            <i class="menu-icon tf-icons bxr bx-pill"></i>
+                            <div data-i18n="Analytics">Patients</div>
+                        </a>
+                    </li>
+                    <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Department" ? "active" : "")">
+                        <a asp-controller="Department" asp-action="List" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-building"></i>
+                            <div data-i18n="Analytics">Departments</div>
+                        </a>
+                    </li>
+                    <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Appointment" ? "active" : "")">
+                        <a asp-controller="Appointment" asp-action="List" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-calendar-check"></i>
+                            <div data-i18n="Analytics">Appointment</div>
+                        </a>
+                    </li>
                 </ul>
+
             </aside>
 
             <!-- ======= Main ======= -->

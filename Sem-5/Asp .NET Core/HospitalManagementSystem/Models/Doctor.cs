@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,19 +10,19 @@ namespace HospitalManagementSystem.Models
         [Key]
         public int DoctorId { get; set; }
 
-        [Required, StringLength(100)]
+        [Required, StringLength(100), DisplayName("Full Name")]
         public string Name { get; set; }
 
-        [Required, StringLength(20)]
+        [Required, StringLength(20), DisplayName("Mobile No")]
         public string Phone { get; set; }
 
-        [Required, StringLength(100)]
+        [Required, StringLength(100), DisplayName("Email")]
         public string Email { get; set; }
 
-        [Required, StringLength(100)]
+        [Required, StringLength(100), DisplayName("Qualifiaction")]
         public string Qualification { get; set; }
 
-        [Required, StringLength(100)]
+        [Required, StringLength(100), DisplayName("Specialization")]
         public string Specialization { get; set; }
 
         [Required]

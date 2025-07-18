@@ -6,17 +6,23 @@ namespace HospitalManagementSystem.Controllers
 {
     public class UserController : Controller
     {
+        #region Configuration
         private readonly AppDbContext _db;
         public UserController(AppDbContext db)
         {
             _db = db;
         }
+        #endregion
+
+        #region List
         public IActionResult List()
         {
             List<User> users = _db.Users.ToList();
             return View(users);
         }
+        #endregion
 
+        #region Create
         public IActionResult Create()
         {
             return View();
@@ -30,7 +36,9 @@ namespace HospitalManagementSystem.Controllers
             _db.SaveChanges();
             return RedirectToAction("List");
         }
+        #endregion
 
+        #region Edit
         public IActionResult Edit(int? id)
         {
             if (id == null)
@@ -63,9 +71,11 @@ namespace HospitalManagementSystem.Controllers
             _db.SaveChanges();
             return RedirectToAction("List");
         }
+        #endregion
 
+        #region Delete
         [HttpPost]
-        public IActionResult DeleteUser(int id)
+        public IActionResult Delete(int id)
         {
             var user = _db.Users.Find(id);
             if (user != null)
@@ -75,5 +85,6 @@ namespace HospitalManagementSystem.Controllers
             }
             return RedirectToAction("List");
         }
+        #endregion
     }
 }
