@@ -1,0 +1,89 @@
+﻿@model Appointment
+
+@{
+    bool isEdit = Model != null && Model.AppointmentID > 0;
+    string formAction = isEdit ? "Edit" : "Create";
+}
+
+<div>
+    <div class="pagetitle my-4">
+        <h1 class="display-6">@(isEdit ? "Edit Appointment" : "Create Appointment")</h1>
+        <p class="text-muted">
+            @(isEdit ? "Update the appointment details below." : "Please fill in the details to create a new appointment.")
+        </p>
+    </div>
+
+    <section class="section">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-4">Appointment Information</h5>
+
+                <form method="post" asp-controller="Appointment" asp-action="@formAction">
+                    @if (isEdit)
+                    {
+                        <input type="hidden" asp-for="AppointmentID" />
+                    }
+
+                    <input type="hidden" asp-for="UserID" value="1" />
+                    <input type="hidden" asp-for="DoctorID" value="1" />
+                    <input type="hidden" asp-for="PatientID" value="9" />
+
+                    <div class="mb-3 row">
+                        <label asp-for="AppointmentDate" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="AppointmentDate" class="form-control" type="datetime-local" required />
+                            <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="AppointmentStatus" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <select asp-for="AppointmentStatus" class="form-select" required>
+                                <option value="">Select Status</option>
+                                <option value="Scheduled">Scheduled</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                            <span asp-validation-for="AppointmentStatus" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Description" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <textarea asp-for="Description" class="form-control" placeholder="Enter appointment details" required></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="SpecialRemarks" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="SpecialRemarks" class="form-control" placeholder="Any special notes" required />
+                            <span asp-validation-for="SpecialRemarks" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="TotalConsultedAmount" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="TotalConsultedAmount" class="form-control" type="number" step="0.01" placeholder="e.g. 150.00" />
+                            <span asp-validation-for="TotalConsultedAmount" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-10 offset-sm-2">
+                            <button type="submit" class="btn btn-primary px-4">
+                                @(isEdit ? "Update Appointment" : "Save Appointment")
+                            </button>
+                            <button type="reset" class="btn btn-secondary ms-2">Reset</button>
+                            <a asp-action="List" class="btn btn-outline-secondary ms-2">Back to List</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>

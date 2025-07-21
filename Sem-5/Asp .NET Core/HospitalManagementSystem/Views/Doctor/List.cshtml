@@ -43,7 +43,7 @@
                                     <a class="dropdown-item" asp-controller="doctor" asp-action="Edit" asp-route-id="@doctor.DoctorId">
                                         <i class="bx bx-edit-alt me-1"></i> Edit
                                     </a>
-                                    <form asp-controller="doctor" asp-action="Deletedoctor" asp-route-id="@doctor.DoctorId" method="post" style="display:inline;">
+                                    <form asp-controller="Doctor" asp-action="Delete" asp-route-id="@doctor.DoctorId" method="post" style="display:inline;">
                                         <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure you want to delete this doctor?');">
                                             <i class="bx bx-trash me-1"></i> Delete
                                         </button>
@@ -113,7 +113,7 @@
         }
 
         .fab-add-doctor:hover {
-            width: 200px;
+            width: 220px;
             background: #5a5edb;
         }
 

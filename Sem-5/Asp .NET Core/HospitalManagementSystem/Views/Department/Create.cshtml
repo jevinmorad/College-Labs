@@ -1,0 +1,68 @@
+﻿@model Department
+
+@{
+    bool isEdit = Model != null && Model.DepartmentID > 0;
+    string formAction = isEdit ? "Edit" : "Create";
+}
+
+<div>
+    <div class="pagetitle my-4">
+        <h1 class="display-6">@(isEdit ? "Edit Department" : "Create Department")</h1>
+        <p class="text-muted">
+            @(isEdit ? "Update the department details below." : "Please fill in the details to create a new department.")
+        </p>
+    </div>
+
+    <section class="section">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-4">Department Information</h5>
+
+                <form method="post" asp-controller="Department" asp-action="@formAction">
+                    @if (isEdit)
+                    {
+                        <input type="hidden" asp-for="DepartmentID" />
+                    }
+
+                    <input type="hidden" asp-for="UserID" value="1" />
+
+                    <div class="mb-3 row">
+                        <label asp-for="DepartmentName" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="DepartmentName" class="form-control" placeholder="Enter department name" required />
+                            <span asp-validation-for="DepartmentName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Description" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <textarea asp-for="Description" class="form-control" placeholder="Optional description (max 250 chars)"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="IsActive" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10 d-flex align-items-center">
+                            <input asp-for="IsActive" class="form-check-input me-2" type="checkbox" />
+                            <span class="form-check-label">Active</span>
+                            <span asp-validation-for="IsActive" class="text-danger ms-3"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-10 offset-sm-2">
+                            <button type="submit" class="btn btn-primary px-4">
+                                @(isEdit ? "Update Department" : "Save Department")
+                            </button>
+                            <button type="reset" class="btn btn-secondary ms-2">Reset</button>
+                            <a asp-action="List" class="btn btn-outline-secondary ms-2">Back to List</a>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </section>
+</div>

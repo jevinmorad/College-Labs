@@ -23,14 +23,58 @@ namespace HospitalManagementSystem.Controllers
         }
         #endregion
 
+        #region Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Create(Department department)
+        {
+            _db.Departments.Add(department);
+            _db.SaveChanges();
+            return RedirectToAction("List");
+        }
+        #endregion
+
+        #region Edit
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+                return NotFound();
+            var department = _db.Departments.Find(id);
+            if (department == null)
+                return NotFound();
+
+            return View("Create", department);
+        }
+        [HttpPost]
+        public IActionResult Edit(Department obj)
+        {
+            if (obj.DepartmentID == 0)
+                return NotFound();
+
+            var department = _db.Departments.Find(obj.DepartmentID);
+            if (department == null)
+                return NotFound();
+
+            department.DepartmentName = obj.DepartmentName;
+            department.Description = obj.Description;
+            department.IsActive = obj.IsActive;
+
+            _db.SaveChanges();
+            return RedirectToAction("List");
+        }
+        #endregion
+
         #region Delete
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            var department = _db.Users.Find(id);
+            var department = _db.Departments.Find(id);
             if (department != null)
             {
-                _db.Users.Remove(department);
+                _db.Departments.Remove(department);
                 _db.SaveChanges();
             }
             return RedirectToAction("List");

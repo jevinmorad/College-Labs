@@ -1,0 +1,144 @@
+﻿@model Patient
+
+@{
+    bool isEdit = Model != null && Model.PatientID > 0;
+    string formAction = isEdit ? "Edit" : "Create";
+}
+
+<div>
+    <div class="pagetitle my-4">
+        <h1 class="display-6">@(isEdit ? "Edit Patient" : "Create Patient")</h1>
+        <p class="text-muted">
+            @(isEdit ? "Update the patient information below." : "Please fill in the details to create a new patient.")
+        </p>
+    </div>
+
+    <section class="section">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-4">Patient Information</h5>
+                <form method="post" asp-controller="Patient" asp-action="@formAction">
+                    @if (isEdit)
+                    {
+                        <input type="hidden" asp-for="PatientID" />
+                    }
+
+                    <input type="hidden" asp-for="UserID" value="1" />
+
+                    <div class="mb-3 row">
+                        <label asp-for="Name" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="Name" class="form-control" placeholder="Enter full name" required />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Email" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="Email" class="form-control" type="email" placeholder="example@domain.com" required />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Phone" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="Phone" class="form-control" placeholder="e.g. 9876543210" required />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="DateOfBirth" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <input asp-for="DateOfBirth" class="form-control" type="date" id="html5-date-input" required />
+                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Gender" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <div class="form-check mt-2">
+                                <input asp-for="Gender" class="form-check-input" type="radio" value="Male" id="genderMale" />
+                                <label class="form-check-label" for="genderMale">Male</label>
+                            </div>
+                            <div class="form-check mt-2">
+                                <input asp-for="Gender" class="form-check-input" type="radio" value="Female" id="genderFemale" />
+                                <label class="form-check-label" for="genderFemale">Female</label>
+                            </div>
+                            <span asp-validation-for="Gender" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="Address" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <textarea asp-for="Address" class="form-control" placeholder="Enter your address" required></textarea>
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="State" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <select asp-for="State" class="form-select" required>
+                                <option value="">Select State</option>
+                                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                <option value="Assam">Assam</option>
+                                <option value="Bihar">Bihar</option>
+                                <option value="Chhattisgarh">Chhattisgarh</option>
+                                <option value="Goa">Goa</option>
+                                <option value="Gujarat">Gujarat</option>
+                                <option value="Haryana">Haryana</option>
+                                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                <option value="Jharkhand">Jharkhand</option>
+                                <option value="Karnataka">Karnataka</option>
+                                <option value="Kerala">Kerala</option>
+                                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                            </select>
+                            <span asp-validation-for="State" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="City" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-10">
+                            <select asp-for="City" class="form-select" required>
+                                <option value="">Select City</option>
+                                <option value="Rajkot">Rajkot</option>
+                                <option value="Ahmedabad">Ahmedabad</option>
+                                <option value="Surat">Surat</option>
+                                <option value="Vadodara">Vadodara</option>
+                                <option value="Tapi">Tapi</option>
+                                <option value="Junagadh">Junagadh</option>
+                                <option value="Bhavnagar">Bhavnagar</option>
+                                <option value="Gandhinagar">Gandhinagar</option>
+                                <option value="Anand">Anand</option>
+                                <option value="Kutch">Kutch</option>
+                                <option value="Patan">Patan</option>
+                                <option value="Kheda">Kheda</option>
+                                <option value="Mehsana">Mehsana</option>
+                                <option value="Navsari">Navsari</option>
+                                <option value="Porbandar">Porbandar</option>
+                            </select>
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-10 offset-sm-2">
+                            <button type="submit" class="btn btn-primary px-4">
+                                @(isEdit ? "Save Edit" : "Save Patient")
+                            </button>
+                            <button type="reset" class="btn btn-secondary ms-2">Reset</button>
+                            <a asp-action="List" class="btn btn-outline-secondary ms-2">Back to List</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
