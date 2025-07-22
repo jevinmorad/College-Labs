@@ -135,8 +135,13 @@
                             <div data-i18n="Analytics">Appointment</div>
                         </a>
                     </li>
+                    <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Employee" ? "active" : "")">
+                        <a asp-controller="Employee" asp-action="List" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-user-circle"></i>
+                            <div data-i18n="Analytics">Employee</div>
+                        </a>
+                    </li>
                 </ul>
-
             </aside>
 
             <!-- ======= Main ======= -->
