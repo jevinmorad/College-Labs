@@ -4,30 +4,50 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-FirstName NVARCHAR(100) NOT NULL,
-    LastName NVARCHAR(100) NOT NULL,
-    Email NVARCHAR(255) UNIQUE,
-    PhoneNumber NVARCHAR(20),
-    DateOfBirth DATE,
-    Gender NVARCHAR(10),
-    HireDate DATE NOT NULL,
-    JobTitle NVARCHAR(100),
-    Department NVARCHAR(100),
-    Salary DECIMAL(18,2),
-    IsActive BIT DEFAULT 1,
-
-<div>
-    <div class="pagetitle my-4">
+<div class="d-flex justify-content-between align-items-center my-4">
+    <div class="pagetitle">
         <h1 class="display-6">User List</h1>
     </div>
+    <div class="dropdown">
+        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bx bx-filter-alt"></i> Filter
+        </button>
+        <ul class="dropdown-menu p-3" style="min-width: 200px;" aria-labelledby="filterDropdown">
+            <li>
+                <strong>Gender</strong><br />
+                <div class="form-check">
+                    <input class="form-check-input filter-gender" type="checkbox" value="Male" id="filterMale">
+                    <label class="form-check-label" for="filterMale">Male</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input filter-gender" type="checkbox" value="Female" id="filterFemale">
+                    <label class="form-check-label" for="filterFemale">Female</label>
+                </div>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+                <strong>Status</strong><br />
+                <div class="form-check">
+                    <input class="form-check-input filter-status" type="checkbox" value="Active" id="filterActive">
+                    <label class="form-check-label" for="filterActive">Active</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input filter-status" type="checkbox" value="Inactive" id="filterInactive">
+                    <label class="form-check-label" for="filterInactive">Inactive</label>
+                </div>
+            </li>
+        </ul>
+    </div>
 </div>
+
 <div class="card">
     <h5 class="card-header">All Users</h5>
     <div class="table-responsive text-nowrap">
         <table class="table">
             <thead class="table-light">
                 <tr>
-                    <th>Name</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
                     <th>Email</th>
                     <th>Phone No</th>
                     <th>Date of Birth</th>
@@ -121,11 +141,11 @@ FirstName NVARCHAR(100) NOT NULL,
             padding: 0 16px;
         }
 
-            .fab-content i {
-                flex-shrink: 0;
-                font-size: 1.4rem;
-                transition: margin 0.3s ease;
-            }
+        .fab-content i {
+            flex-shrink: 0;
+            font-size: 1.4rem;
+            transition: margin 0.3s ease;
+        }
 
         .fab-add-user .text {
             opacity: 0;
@@ -142,11 +162,11 @@ FirstName NVARCHAR(100) NOT NULL,
             background: #5a5edb;
         }
 
-            .fab-add-user:hover .text {
-                opacity: 1;
-                margin-left: 12px;
-                max-width: 140px;
-            }
+        .fab-add-user:hover .text {
+            opacity: 1;
+            margin-left: 12px;
+            max-width: 140px;
+        }
 
         .fab-add-user i,
         .fab-add-user .text {
@@ -154,5 +174,37 @@ FirstName NVARCHAR(100) NOT NULL,
             transition: color 0.3s ease;
         }
 
+        .dropdown-menu {
+            border-radius: 8px;
+            box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-menu strong {
+            font-size: 0.9rem;
+            color: #333;
+        }
     </style>
+
+    <script>
+        document.querySelectorAll('.filter-gender, .filter-status').forEach(cb => {
+            cb.addEventListener('change', applyAdvancedFilters);
+        });
+
+        function applyAdvancedFilters() {
+            const selectedGenders = Array.from(document.querySelectorAll('.filter-gender:checked')).map(cb => cb.value.toLowerCase());
+            const selectedStatuses = Array.from(document.querySelectorAll('.filter-status:checked')).map(cb => cb.value.toLowerCase());
+
+            const rows = document.querySelectorAll("tbody tr");
+
+            rows.forEach(row => {
+                const genderCell = row.children[5].innerText.toLowerCase();     // Gender
+                const statusText = row.children[10].innerText.toLowerCase();   // Status
+
+                const genderMatch = selectedGenders.length === 0 || selectedGenders.includes(genderCell);
+                const statusMatch = selectedStatuses.length === 0 || selectedStatuses.includes(statusText);
+
+                row.style.display = (genderMatch && statusMatch) ? "" : "none";
+            });
+        }
+    </script>
 }

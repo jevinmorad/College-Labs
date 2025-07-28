@@ -22,7 +22,7 @@ namespace HospitalManagementSystem.Controllers
         #region List
         public IActionResult List()
         {
-            string ConnectionString = this._configuration.GetConnectionString(name: "TimeWasteConnectionString");
+            string ConnectionString = this._configuration.GetConnectionString(name: "EmployeeConnectionString");
             using SqlConnection sqlConnection = new SqlConnection(ConnectionString);
             sqlConnection.Open();
 
@@ -47,10 +47,7 @@ namespace HospitalManagementSystem.Controllers
         [HttpPost]
         public IActionResult Create(Employee employee)
         {
-            employee.CreatedAt = DateTime.Now;
-            employee.UpdatedAt = DateTime.Now;
-
-            string ConnectionString = this._configuration.GetConnectionString(name: "TimeWasteConnectionString");
+            string ConnectionString = this._configuration.GetConnectionString(name: "EmployeeConnectionString");
             using SqlConnection sqlConnection = new SqlConnection(ConnectionString);
             sqlConnection.Open();
             SqlCommand command = sqlConnection.CreateCommand();
@@ -61,13 +58,12 @@ namespace HospitalManagementSystem.Controllers
             command.Parameters.AddWithValue("@Email", employee.Email);
             command.Parameters.AddWithValue("@PhoneNumber", employee.PhoneNumber);
             command.Parameters.AddWithValue("@DateOfBirth", employee.DateOfBirth);
-            command.Parameters.AddWithValue("@Gender", employee.Salary);
+            command.Parameters.AddWithValue("@Gender", employee.Gender);
             command.Parameters.AddWithValue("@HireDate", employee.HireDate);
             command.Parameters.AddWithValue("@JobTitle", employee.JobTitle);
             command.Parameters.AddWithValue("@Department", employee.Department);
             command.Parameters.AddWithValue("@Salary", employee.Salary);
             command.Parameters.AddWithValue("@IsActive", employee.IsActive);
-            command.Parameters.AddWithValue("@UpdatedAt", employee.UpdatedAt);
             command.ExecuteNonQuery();
             return RedirectToAction("List");
         }
@@ -80,7 +76,7 @@ namespace HospitalManagementSystem.Controllers
             {
                 return NotFound();
             }
-            string connectionString = this._configuration.GetConnectionString(name: "TimeWasteConnectionString");
+            string connectionString = this._configuration.GetConnectionString(name: "EmployeeConnectionString");
             using SqlConnection sqlConnection = new SqlConnection(connectionString);
             sqlConnection.Open();
 
@@ -107,9 +103,57 @@ namespace HospitalManagementSystem.Controllers
                 employee.IsActive = Convert.ToBoolean(reader["IsActive"]);
                 employee.UpdatedAt = DateTime.Now;
 
-                return View("List");
+                return View("Create", employee);
             }
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Employee employee)
+        {
+            string connectionString = this._configuration.GetConnectionString(name: "EmployeeConnectionString");
+            using SqlConnection sqlConnection = new SqlConnection(connectionString);
+            sqlConnection.Open();
+            using SqlCommand command = sqlConnection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "PR_Employee_Update";
+            command.Parameters.AddWithValue("@EmployeeId", employee.EmployeeId);
+            command.Parameters.AddWithValue("@FirstName", employee.FirstName);
+            command.Parameters.AddWithValue("@LastName", employee.LastName);
+            command.Parameters.AddWithValue("@Email", employee.Email);
+            command.Parameters.AddWithValue("@PhoneNumber", employee.PhoneNumber);
+            command.Parameters.AddWithValue("@DateOfBirth", employee.DateOfBirth);
+            command.Parameters.AddWithValue("@Gender", employee.Gender);
+            command.Parameters.AddWithValue("@HireDate", employee.HireDate);
+            command.Parameters.AddWithValue("@JobTitle", employee.JobTitle);
+            command.Parameters.AddWithValue("@Department", employee.Department);
+            command.Parameters.AddWithValue("@Salary", employee.Salary);
+            command.Parameters.AddWithValue("@IsActive", employee.IsActive);
+
+            command.ExecuteNonQuery();
+            return RedirectToAction("List");
+        }
+        #endregion
+
+        #region Delete
+        [HttpPost]
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            string connectionString = this._configuration.GetConnectionString(name: "EmployeeConnectionString");
+            using SqlConnection sqlConnection = new SqlConnection(connectionString);
+            sqlConnection.Open();
+
+            using SqlCommand command = sqlConnection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "PR_Employee_Delete";
+            command.Parameters.AddWithValue("EmployeeId", id);
+            command.ExecuteNonQuery();
+
+            return RedirectToAction("List");
         }
         #endregion
     }
