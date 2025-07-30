@@ -7,7 +7,8 @@
     string buttonText = isEdit ? "Save Edit" : "Add Employee";
 }
 
-<div>
+
+@* <div>
     <div class="pagetitle my-4">
         <h1 class="display-6">@pageTitle</h1>
         <p class="text-muted">
@@ -103,6 +104,107 @@
                         <div class="col-sm-10 d-flex align-items-center">
                             <input asp-for="IsActive" class="form-check-input me-2" type="checkbox" />
                             <span asp-validation-for="IsActive" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-10 offset-sm-2">
+                            <button type="submit" class="btn btn-primary px-4">@buttonText</button>
+                            <button type="reset" class="btn btn-secondary ms-2">Reset</button>
+                            <a asp-action="List" class="btn btn-outline-secondary ms-2">Back to List</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div> *@
+
+
+
+<div>
+    <div class="pagetitle my-4">
+        <h1 class="display-6">@pageTitle</h1>
+        <p class="text-muted">
+            @(isEdit ? "Update the employee information below." : "Fill in the details below to add a new employee.")
+        </p>
+    </div>
+    <section class="section">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-4">Employee Information</h5>
+                <form method="post" asp-action="@formAction" asp-controller="Employee">
+                    @Html.HiddenFor(m => m.EmployeeId)
+                    <div class="mb-3 row">
+                        @Html.LabelFor(m => m.FirstName, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "First Name" })
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        @Html.LabelFor(m => m.LastName, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Last Name" })
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        @Html.LabelFor(m => m.Email, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", placeholder = "Email" })
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        @Html.LabelFor(m => m.PhoneNumber, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", placeholder = "Phone Number" })
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        @Html.LabelFor(m => m.DateOfBirth, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        @Html.LabelFor(m => m.Gender, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(m => m.Gender,
+                                new SelectList(new[] {
+                                    new { Value = "", Text = "-- Select Gender --" },
+                                    new { Value = "Male", Text = "Male" },
+                                    new { Value = "Female", Text = "Female" },
+                                    new { Value = "Other", Text = "Other" }
+                                }, "Value", "Text", Model.Gender),
+                                new { @class = "form-select" })
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        @Html.LabelFor(m => m.HireDate, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.HireDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        @Html.LabelFor(m => m.JobTitle, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.JobTitle, new { @class = "form-control", placeholder = "Job Title" })
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        @Html.LabelFor(m => m.Department, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.Department, new { @class = "form-control", placeholder = "Department" })
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        @Html.LabelFor(m => m.Salary, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.Salary, new { @class = "form-control", type = "number", step = "0.01", placeholder = "Salary" })
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        @Html.LabelFor(m => m.IsActive, htmlAttributes: new { @class = "col-sm-2 col-form-label" })
+                        <div class="col-sm-10 d-flex align-items-center">
+                            @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input me-2" })
                         </div>
                     </div>
                     <div class="row">

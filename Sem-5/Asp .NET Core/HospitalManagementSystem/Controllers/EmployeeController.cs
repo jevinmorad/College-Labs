@@ -42,7 +42,7 @@ namespace HospitalManagementSystem.Controllers
         #region Create
         public IActionResult Create()
         {
-            return View();
+            return View(new Employee());
         }
         [HttpPost]
         public IActionResult Create(Employee employee)
