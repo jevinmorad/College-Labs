@@ -57,7 +57,7 @@ void selection_sort(int *arr, int n)
     }
 }
 
-void heapify(int *arr, int i, int n)
+void heapify(int *arr, int n, int i)
 {
     int max_ind = i;
     int left_child_ind = 2 * i - 1;
@@ -98,7 +98,7 @@ void heap_sort(int *arr, int n)
         heapify(arr, i, 0);
     }
 }
-
+        
 void quicksort(int *arr, int low, int high)
 {
     if (low < high)
