@@ -47,6 +47,11 @@ namespace HospitalManagementSystem.Controllers
         [HttpPost]
         public IActionResult Create(Employee employee)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(employee);
+            }
+
             string ConnectionString = this._configuration.GetConnectionString(name: "EmployeeConnectionString");
             using SqlConnection sqlConnection = new SqlConnection(ConnectionString);
             sqlConnection.Open();
@@ -76,6 +81,7 @@ namespace HospitalManagementSystem.Controllers
             {
                 return NotFound();
             }
+
             string connectionString = this._configuration.GetConnectionString(name: "EmployeeConnectionString");
             using SqlConnection sqlConnection = new SqlConnection(connectionString);
             sqlConnection.Open();
@@ -111,6 +117,13 @@ namespace HospitalManagementSystem.Controllers
         [HttpPost]
         public IActionResult Edit(Employee employee)
         {
+            if (employee.EmployeeId == 0)
+            {
+                return NotFound();
+            }
+            if (!ModelState.IsValid) {
+                return View("Create", employee);
+            }
             string connectionString = this._configuration.GetConnectionString(name: "EmployeeConnectionString");
             using SqlConnection sqlConnection = new SqlConnection(connectionString);
             sqlConnection.Open();

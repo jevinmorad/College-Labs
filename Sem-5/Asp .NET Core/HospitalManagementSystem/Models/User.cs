@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Transactions;
 
 namespace HospitalManagementSystem.Models
 {
@@ -9,16 +10,16 @@ namespace HospitalManagementSystem.Models
         [Key]
         public int UserID { get; set; }
 
-        [Required, StringLength(100), DisplayName("Full Name")]
+        [Required(ErrorMessage = "Name is required"), StringLength(100, MinimumLength = 3), DisplayName("Full Name")]
         public string UserName { get; set; }
 
-        [Required, StringLength(100), DisplayName("Password")]
+        [Required, StringLength(100, MinimumLength = 6, ErrorMessage = "Enter atleast 6 characters"), DisplayName("Password")]
         public string Password { get; set; }
 
-        [Required, StringLength(100), DisplayName("Email")]
+        [Required(ErrorMessage = "Email is required"), StringLength(100), DisplayName("Email"), EmailAddress(ErrorMessage = "Invalid email format")]
         public string Email { get; set; }
 
-        [Required, StringLength(100), DisplayName("Mobile No")]
+        [Required, StringLength(100, ErrorMessage = "Mobile number is require"), DisplayName("Mobile No"), Phone(ErrorMessage = "Invalid mobile number")]
         public string MobileNo { get; set; }
 
         [Required]

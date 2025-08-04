@@ -27,15 +27,15 @@
                     <input type="hidden" asp-for="UserID" value="1" />
 
                     <div class="mb-3 row">
-                        <label asp-for="DepartmentName" class="col-sm-2 col-form-label"></label>
+                        <label asp-for="DepartmentName" class="col-sm-2 col-form-label">@Html.DisplayNameFor(m => m.DepartmentName)<span class="text-danger">&nbsp;*</span></label>
                         <div class="col-sm-10">
-                            <input asp-for="DepartmentName" class="form-control" placeholder="Enter department name" required />
+                            <input asp-for="DepartmentName" class="form-control" placeholder="Enter department name"  />
                             <span asp-validation-for="DepartmentName" class="text-danger"></span>
                         </div>
                     </div>
 
                     <div class="mb-3 row">
-                        <label asp-for="Description" class="col-sm-2 col-form-label"></label>
+                        <label asp-for="Description" class="col-sm-2 col-form-label">@Html.DisplayNameFor(m => m.Description)<span class="text-danger">&nbsp;*</span></label>
                         <div class="col-sm-10">
                             <textarea asp-for="Description" class="form-control" placeholder="Optional description (max 250 chars)"></textarea>
                             <span asp-validation-for="Description" class="text-danger"></span>
@@ -66,3 +66,9 @@
         </div>
     </section>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -31,6 +31,11 @@ namespace HospitalManagementSystem.Controllers
         [HttpPost]
         public IActionResult Create(Department department)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(department);
+            }
+
             _db.Departments.Add(department);
             _db.SaveChanges();
             return RedirectToAction("List");
@@ -57,6 +62,11 @@ namespace HospitalManagementSystem.Controllers
             var department = _db.Departments.Find(obj.DepartmentID);
             if (department == null)
                 return NotFound();
+            
+            if (!ModelState.IsValid)
+            {
+                return View("Create", obj);
+            }
 
             department.DepartmentName = obj.DepartmentName;
             department.Description = obj.Description;

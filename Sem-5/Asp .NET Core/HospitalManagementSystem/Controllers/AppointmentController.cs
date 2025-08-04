@@ -31,6 +31,10 @@ namespace HospitalManagementSystem.Controllers
         [HttpPost]
         public IActionResult Create(Appointment appointment)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(appointment);
+            }
             _db.Appointments.Add(appointment);
             _db.SaveChanges();
             return RedirectToAction("List");
@@ -57,6 +61,11 @@ namespace HospitalManagementSystem.Controllers
             var appointment = _db.Appointments.Find(obj.AppointmentID);
             if (appointment == null)
                 return NotFound();
+
+            if (!ModelState.IsValid)
+            {
+                return View("Create", obj);
+            }
 
             appointment.DoctorID = obj.DoctorID;
             appointment.PatientID = obj.PatientID;

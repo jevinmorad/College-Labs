@@ -29,9 +29,12 @@ namespace HospitalManagementSystem.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Create(User obj)
         {
+            if (!ModelState.IsValid)
+            {
+                return View("Create", obj);
+            }
             _db.Users.Add(obj);
             _db.SaveChanges();
             return RedirectToAction("List");
@@ -52,7 +55,6 @@ namespace HospitalManagementSystem.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Edit(User obj)
         {
             if (obj.UserID == 0)
@@ -61,6 +63,11 @@ namespace HospitalManagementSystem.Controllers
             var user = _db.Users.Find(obj.UserID);
             if (user == null)
                 return NotFound();
+
+            if(!ModelState.IsValid)
+            {
+                return View("Create", obj);
+            }
 
             user.UserName = obj.UserName;
             user.Email = obj.Email;

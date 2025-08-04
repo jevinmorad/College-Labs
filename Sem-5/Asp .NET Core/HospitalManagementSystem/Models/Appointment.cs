@@ -10,24 +10,24 @@ namespace HospitalManagementSystem.Models
         [Key]
         public int AppointmentID { get; set; }
 
-        [Required, ForeignKey("Doctor")]
+        [Required(ErrorMessage = "Doctor is required"), ForeignKey("Doctor")]
         public int DoctorID { get; set; }
         public Doctor Doctor { get; set; }
 
-        [Required, ForeignKey("Patient")]
+        [Required(ErrorMessage = "Patient is required"), ForeignKey("Patient")]
         public int PatientID { get; set; }
         public Patient Patient { get; set; }
 
-        [Required ,DisplayName("Appoint Date & Time")]
+        [Required(ErrorMessage = "Appointment date is required") ,DisplayName("Appoint Date & Time")]
         public DateTime AppointmentDate { get; set; }
 
-        [Required, StringLength(20), DisplayName("Status")]
+        [Required(ErrorMessage = "Appointment status is required"), StringLength(20), DisplayName("Status")]
         public string AppointmentStatus { get; set; }
 
-        [Required, StringLength(250), DisplayName("Description")]
+        [Required(ErrorMessage = "Appointment description is required"), StringLength(250), DisplayName("Description")]
         public string Description { get; set; }
 
-        [Required, StringLength(100), DisplayName("Special Remarks")]
+        [StringLength(100), DisplayName("Special Remarks")]
         public string SpecialRemarks { get; set; }
 
         public DateTime Created { get; set; } = DateTime.Now;

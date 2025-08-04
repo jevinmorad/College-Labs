@@ -10,22 +10,21 @@ namespace HospitalManagementSystem.Models
         [Key]
         public int DoctorId { get; set; }
 
-        [Required, StringLength(100), DisplayName("Full Name")]
+        [Required(ErrorMessage = "Name is required"), StringLength(100), DisplayName("Full Name")]
         public string Name { get; set; }
 
-        [Required, StringLength(20), DisplayName("Mobile No")]
+        [Required(ErrorMessage = "Mobile number is required"), StringLength(20), DisplayName("Mobile No")]
         public string Phone { get; set; }
 
-        [Required, StringLength(100), DisplayName("Email")]
+        [Required(ErrorMessage = "Email is required"), StringLength(100), DisplayName("Email")]
         public string Email { get; set; }
 
-        [Required, StringLength(100), DisplayName("Qualifiaction")]
+        [Required(ErrorMessage = "Qualification is required"), StringLength(100), DisplayName("Qualifiaction")]
         public string Qualification { get; set; }
 
-        [Required, StringLength(100), DisplayName("Specialization")]
+        [Required(ErrorMessage = "Specialization is required"), StringLength(100), DisplayName("Specialization")]
         public string Specialization { get; set; }
 
-        [Required]
         public bool IsActive { get; set; } = true;
 
         public DateTime Created { get; set; } = DateTime.Now;

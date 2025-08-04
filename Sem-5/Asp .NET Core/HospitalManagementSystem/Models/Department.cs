@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,13 +10,13 @@ namespace HospitalManagementSystem.Models
         [Key]
         public int DepartmentID { get; set; }
 
-        [Required, StringLength(100)]
+        [Required(ErrorMessage = "Department name is required"), StringLength(100), DisplayName("Name")]
         public string DepartmentName { get; set; }
 
-        [StringLength(250)]
+        [Required(ErrorMessage = "Description is required"), StringLength(250), DisplayName("Description")]
         public string? Description { get; set; }
 
-        [Required]
+        [DisplayName("Is Active")]
         public bool IsActive { get; set; } = true;
 
         public DateTime Created { get; set; } = DateTime.Now;

@@ -24,41 +24,41 @@
                     }
                     <input type="hidden" asp-for="UserID" value="1" />
                     <div class="mb-3 row">
-                        <label asp-for="Name" class="col-sm-2 col-form-label"></label>
+                        <label asp-for="Name" class="col-sm-2 col-form-label">@Html.DisplayNameFor(m => m.Name)<span class="text-danger">&nbsp;*</span></label>
                         <div class="col-sm-10">
-                            <input asp-for="Name" class="form-control" placeholder="Enter full name" required />
+                            <input asp-for="Name" class="form-control" placeholder="Enter full name"  />
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
                     </div>
 
                     <div class="mb-3 row">
-                        <label asp-for="Email" class="col-sm-2 col-form-label"></label>
+                        <label asp-for="Email" class="col-sm-2 col-form-label">@Html.DisplayNameFor(m => m.Email)<span class="text-danger">&nbsp;*</span></label>
                         <div class="col-sm-10">
-                            <input asp-for="Email" class="form-control" type="email" placeholder="example@domain.com" required />
+                            <input asp-for="Email" class="form-control" type="email" placeholder="example@domain.com"  />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                     </div>
 
                     <div class="mb-3 row">
-                        <label asp-for="Phone" class="col-sm-2 col-form-label"></label>
+                        <label asp-for="Phone" class="col-sm-2 col-form-label">@Html.DisplayNameFor(m => m.Phone)<span class="text-danger">&nbsp;*</span></label>
                         <div class="col-sm-10">
-                            <input asp-for="Phone" class="form-control" placeholder="e.g. 9876543210" required />
+                            <input asp-for="Phone" class="form-control" placeholder="e.g. 9876543210"  />
                             <span asp-validation-for="Phone" class="text-danger"></span>
                         </div>
                     </div>
 
                     <div class="mb-3 row">
-                        <label asp-for="Qualification" class="col-sm-2 col-form-label"></label>
+                        <label asp-for="Qualification" class="col-sm-2 col-form-label">@Html.DisplayNameFor(m => m.Qualification)<span class="text-danger">&nbsp;*</span></label>
                         <div class="col-sm-10">
-                            <input asp-for="Qualification" class="form-control" placeholder="e.g. MBBS, MD" required />
+                            <input asp-for="Qualification" class="form-control" placeholder="e.g. MBBS, MD"  />
                             <span asp-validation-for="Qualification" class="text-danger"></span>
                         </div>
                     </div>
 
                     <div class="mb-4 row">
-                        <label asp-for="Specialization" class="col-sm-2 col-form-label"></label>
+                        <label asp-for="Specialization" class="col-sm-2 col-form-label">@Html.DisplayNameFor(m => m.Specialization)<span class="text-danger">&nbsp;*</span></label>
                         <div class="col-sm-10">
-                            <input asp-for="Specialization" class="form-control" placeholder="e.g. Cardiologist" required />
+                            <input asp-for="Specialization" class="form-control" placeholder="e.g. Cardiologist"  />
                             <span asp-validation-for="Specialization" class="text-danger"></span>
                         </div>
                     </div>
@@ -77,3 +77,9 @@
         </div>
     </section>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
