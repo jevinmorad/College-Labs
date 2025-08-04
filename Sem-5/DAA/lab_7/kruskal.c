@@ -32,10 +32,8 @@ int find(int i)
     return i;
 }
 
-void unionSet(int i, int j)
+void unionSet(int a, int b)
 {
-    int a = find(i);
-    int b = find(j);
     parent[a] = b;
 }
 
@@ -65,11 +63,14 @@ int main()
         int u = edges[i].u;
         int v = edges[i].v;
 
-        if (find(u) != find(v))
+        int parentU = find(u);
+        int parentV = find(v);
+
+        if (parentU != parentV)
         {
             result[j++] = edges[i];
             cost += edges[i].w;
-            unionSet(u, v);
+            unionSet(parentU, parentV);
         }
     }
 
