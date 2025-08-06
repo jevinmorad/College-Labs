@@ -1,0 +1,138 @@
+﻿@model UserModel
+
+<div class="container py-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">User Registration</h4>
+        </div>
+        <div class="card-body">
+            <form asp-controller="User" asp-action="UserAddEdit" class="row g-3" enctype="multipart/form-data">
+                <div class="col-md-6">
+                    <label asp-for="UserName" class="form-label">Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        @Html.TextBoxFor(m => m.Password, new { @class = "form-control", type = "password" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Phone" class="form-label">Phone</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", type = "tel" })
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="Age" class="form-label">Age</label>
+                    @Html.TextBoxFor(m => m.Age, new { @class = "form-control", type = "number", min = "1", max = "120" })
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label d-block">Gender</label>
+                    <div class="btn-group" role="group">
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(m => m.Gender, "Male", new { @class = "form-check-input", id = "genderMale" })
+                            <label class="form-check-label" for="genderMale">Male</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(m => m.Gender, "Female", new { @class = "form-check-input", id = "genderFemale" })
+                            <label class="form-check-label" for="genderFemale">Female</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(m => m.Gender, "Other", new { @class = "form-check-input", id = "genderOther" })
+                            <label class="form-check-label" for="genderOther">Other</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="Hobbies" class="form-label">Hobbies</label>
+                    @Html.DropDownListFor(m => m.Hobbies,
+                    new SelectList(new[] {
+                        new { Value = "", Text = "-- Select Hobbies --" },
+                        new { Value = "Sports", Text = "Sports" },
+                        new { Value = "Reading", Text = "Reading" },
+                        new { Value = "Gaming", Text = "Gaming" }
+                    }, "Value", "Text"),
+                    new { @class = "form-select" })
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="Image" class="form-label">Profile Image</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-file-image"></i></span>
+                        <input type="file" class="form-control" id="Image" name="Image" accept="image/*" />
+                    </div>
+                </div>
+
+                <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save me-2"></i>Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Registered Users</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Image</th>
+                            <th>Age</th>
+                            <th>Email</th>
+                            <th>Gender</th>
+                            <th>Hobbies</th>
+                            <th>Phone</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.Users != null)
+                        {
+                            foreach (var user in (IEnumerable<ICollection.Models.UserModel>)ViewBag.Users)
+                            {
+                                <tr>
+                                    <td>@user.UserName</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(user.Image))
+                                        {
+                                            <img src="@user.Image" alt="Image" style="width: 100px; height: 130px; object-fit: cover;" />
+                                        }
+                                    </td>
+                                    <td>@user.Age</td>
+                                    <td>@user.Email</td>
+                                    <td>@user.Gender</td>
+                                    <td>@user.Hobbies</td>
+                                    <td>@user.Phone</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
