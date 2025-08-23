@@ -1,44 +1,34 @@
-// Java program to illustrate Client side
-// Implementation using DatagramSocket
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.util.Scanner;
+import java.io.*;
+import java.net.*;
 
-public class Client
-{
-    public static void main(String args[]) throws IOException
-    {
-        Scanner sc = new Scanner(System.in);
+class Client {
+    public static void main(String[] args) {
+        try {
+            BufferedReader user_input = new BufferedReader(new InputStreamReader(System.in));
 
-        // Step 1:Create the socket object for
-        // carrying the data.
-        DatagramSocket ds = new DatagramSocket();
+            DatagramSocket client_socket = new DatagramSocket();
 
-        InetAddress ip = InetAddress.getLocalHost();
-        byte buf[] = null;
+            InetAddress IP_add = InetAddress.getByName("localhost");
 
-        // loop while user not enters "bye"
-        while (true)
-        {
-            String inp = sc.nextLine();
+            byte[] out_data;
+            byte[] in_data = new byte[1024];
 
-            // convert the String input into the byte array.
-            buf = inp.getBytes();
+            System.out.print("Enter message: ");
+            String str = user_input.readLine();
+            out_data = str.getBytes();
 
-            // Step 2 : Create the datagramPacket for sending
-            // the data.
-            DatagramPacket DpSend =
-                  new DatagramPacket(buf, buf.length, ip, 5000);
+            DatagramPacket Packet1 = new DatagramPacket(out_data, out_data.length, IP_add, 1234);
+            client_socket.send(Packet1);
 
-            // Step 3 : invoke the send call to actually send
-            // the data.
-            ds.send(DpSend);
+            DatagramPacket Packet4 = new DatagramPacket(in_data, in_data.length);
+            client_socket.receive(Packet4);
 
-            // break the loop if user enters "bye"
-            if (inp.equals("bye"))
-                break;
+            String receive_str = new String(Packet4.getData(), 0, Packet4.getLength());
+            System.out.println("Server response: " + receive_str);
+
+            client_socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

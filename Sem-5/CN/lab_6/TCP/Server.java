@@ -1,62 +1,61 @@
-// Demonstrating Server-side Programming
 import java.io.*;
 import java.net.*;
 
 public class Server {
-  
-    // Initialize socket and input stream
-    private Socket s = null;
-    private ServerSocket ss = null;
+    private Socket socket = null;
+    private ServerSocket server = null;
     private DataInputStream in = null;
+    private DataOutputStream out = null;
 
-    // Constructor with port
     public Server(int port) {
-      
-        // Starts server and waits for a connection
-        try
-        {
-            ss = new ServerSocket(port);
+        try {
+            server = new ServerSocket(port);
             System.out.println("Server started");
-
             System.out.println("Waiting for a client ...");
 
-            s = ss.accept();
+            socket = server.accept();
             System.out.println("Client accepted");
 
-            // Takes input from the client socket
-            in = new DataInputStream(
-                new BufferedInputStream(s.getInputStream()));
+            in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            out = new DataOutputStream(socket.getOutputStream());
 
-            String m = "";
-
-            // Reads message from client until "Over" is sent
-            while (!m.equals("Over"))
-            {
-                try
-                {
-                    m = in.readUTF();
-                    System.out.println(m);
-
+            // Thread to listen for incoming messages from the client
+            Thread receiveThread = new Thread(() -> {
+                String message;
+                try {
+                    while (true) {
+                        message = in.readUTF();
+                        System.out.println("Client: " + message);
+                    }
+                } catch (IOException e) {
+                    System.out.println("Connection closed.");
                 }
-                catch(IOException i)
-                {
-                    System.out.println(i);
-                }
+            });
+
+            receiveThread.start();
+
+            // Main thread to send messages to the client
+            BufferedReader consoleInput = new BufferedReader(new InputStreamReader(System.in));
+            String message;
+            while (true) {
+                message = consoleInput.readLine();
+                out.writeUTF(message);
             }
-            System.out.println("Closing connection");
 
-            // Close connection
-            s.close();
-            in.close();
-        }
-        catch(IOException i)
-        {
-            System.out.println(i);
+        } catch (IOException e) {
+            System.out.println(e);
+        } finally {
+            try {
+                socket.close();
+                in.close();
+                out.close();
+            } catch (IOException e) {
+                System.out.println(e);
+            }
         }
     }
 
-    public static void main(String args[])
-    {
-        Server s = new Server(5000);
+    public static void main(String[] args) {
+        Server server = new Server(5000);
     }
 }

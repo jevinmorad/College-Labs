@@ -1,63 +1,58 @@
-// Demonstrating Client-side Programming
 import java.io.*;
 import java.net.*;
 
 public class Client {
-  
-    // Initialize socket and input/output streams
-    private Socket s = null;
+    private Socket socket = null;
     private DataInputStream in = null;
     private DataOutputStream out = null;
 
-    // Constructor to put IP address and port
-    public Client(String addr, int port)
-    {
-        // Establish a connection
+    public Client(String address, int port) {
         try {
-            s = new Socket(addr, port);
-            System.out.println("Connected");
+            socket = new Socket(address, port);
+            System.out.println("Connected to the server");
 
-            // Takes input from terminal
-            in = new DataInputStream(System.in);
+            in = new DataInputStream(socket.getInputStream());
+            out = new DataOutputStream(socket.getOutputStream());
 
-            // Sends output to the socket
-            out = new DataOutputStream(s.getOutputStream());
-        }
-        catch (UnknownHostException u) {
+            // Thread to listen for incoming messages from the server
+            Thread receiveThread = new Thread(() -> {
+                String message;
+                try {
+                    while (true) {
+                        message = in.readUTF();
+                        System.out.println("Server: " + message);
+                    }
+                } catch (IOException e) {
+                    System.out.println("Connection closed.");
+                }
+            });
+
+            receiveThread.start();
+
+            // Main thread to send messages to the server
+            BufferedReader consoleInput = new BufferedReader(new InputStreamReader(System.in));
+            String message;
+            while (true) {
+                message = consoleInput.readLine();
+                out.writeUTF(message);
+            }
+
+        } catch (UnknownHostException u) {
             System.out.println(u);
-            return;
-        }
-        catch (IOException i) {
-            System.out.println(i);
-            return;
-        }
-
-        // String to read message from input
-        String m = "";
-
-        // Keep reading until "Over" is input
-        while (!m.equals("Over")) {
+        } catch (IOException e) {
+            System.out.println(e);
+        } finally {
             try {
-                m = in.readLine();
-                out.writeUTF(m);
+                socket.close();
+                in.close();
+                out.close();
+            } catch (IOException e) {
+                System.out.println(e);
             }
-            catch (IOException i) {
-                System.out.println(i);
-            }
-        }
-
-        // Close the connection
-        try {
-            in.close();
-            out.close();
-            s.close();
-        }
-        catch (IOException i) {
-            System.out.println(i);
         }
     }
 
     public static void main(String[] args) {
-        Client c = new Client("127.0.0.1", 5000);
+        Client client = new Client("127.0.0.1", 5000);
     }
 }

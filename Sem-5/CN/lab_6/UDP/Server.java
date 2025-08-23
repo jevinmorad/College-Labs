@@ -1,54 +1,35 @@
-// Java program to illustrate Server side
-// Implementation using DatagramSocket
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
+import java.io.*;
+import java.net.*;
 
-public class Server
-{
-    public static void main(String[] args) throws IOException
-    {
-        // Step 1 : Create a socket to listen at port 1234
-        DatagramSocket ds = new DatagramSocket(5000);
-        byte[] receive = new byte[65535];
+class Server {
+    public static void main(String[] args) {
+        try {
+            DatagramSocket server_socket = new DatagramSocket(1234);
 
-        DatagramPacket DpReceive = null;
-        while (true)
-        {
+            byte[] in_data = new byte[1024];
+            byte[] out_data;
 
-            // Step 2 : create a DatgramPacket to receive the data.
-            DpReceive = new DatagramPacket(receive, receive.length);
+            while (true) {
 
-            // Step 3 : revieve the data in byte buffer.
-            ds.receive(DpReceive);
+                DatagramPacket Packet2 = new DatagramPacket(in_data, in_data.length);
+                server_socket.receive(Packet2);
 
-            System.out.println("Client:-" + data(receive));
+                String str = new String(Packet2.getData(), 0, Packet2.getLength());
+                System.out.println("Received from client: " + str);
 
-            // Exit the server if the client sends "bye"
-            if (data(receive).toString().equals("bye"))
-            {
-                System.out.println("Client sent bye.....EXITING");
-                break;
+                InetAddress IP_add1 = Packet2.getAddress();
+                int port = Packet2.getPort();
+
+                BufferedReader server_input = new BufferedReader(new InputStreamReader(System.in));
+                System.out.print("Enter response: ");
+                String send_str = server_input.readLine();
+                out_data = send_str.getBytes();
+
+                DatagramPacket Packet3 = new DatagramPacket(out_data, out_data.length, IP_add1, port);
+                server_socket.send(Packet3);
             }
-
-            // Clear the buffer after every message.
-            receive = new byte[65535];
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    }
-
-    // A utility method to convert the byte array
-    // data into a string representation.
-    public static StringBuilder data(byte[] a)
-    {
-        if (a == null)
-            return null;
-        StringBuilder ret = new StringBuilder();
-        int i = 0;
-        while (a[i] != 0)
-        {
-            ret.append((char) a[i]);
-            i++;
-        }
-        return ret;
     }
 }
