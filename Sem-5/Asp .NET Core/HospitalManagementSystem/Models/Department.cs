@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -25,6 +26,7 @@ namespace HospitalManagementSystem.Models
 
         [Required, ForeignKey("User")]
         public int UserID { get; set; }
+        [ValidateNever]
         public User User { get; set; }
     }
 }

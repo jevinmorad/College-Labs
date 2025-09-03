@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 
 namespace HospitalManagementSystem.Controllers
 {
+    [CheckAccess]
     public class EmployeeController : Controller
     {
         #region Configuration

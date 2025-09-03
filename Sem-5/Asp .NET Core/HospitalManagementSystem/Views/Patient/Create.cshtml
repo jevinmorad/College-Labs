@@ -3,6 +3,7 @@
 @{
     bool isEdit = Model != null && Model.PatientID > 0;
     string formAction = isEdit ? "Edit" : "Create";
+    int UserId = @CommonVariable.UserID() ?? 1;
 }
 
 <div>
@@ -17,13 +18,13 @@
         <div class="card shadow-sm">
             <div class="card-body p-4">
                 <h5 class="card-title mb-4">Patient Information</h5>
-                <form method="post" asp-controller="Patient" asp-action="@formAction">
+                <form method="post" asp-controller="Patient" asp-action="@formAction" enctype="multipart/form-data">
                     @if (isEdit)
                     {
                         <input type="hidden" asp-for="PatientID" />
                     }
 
-                    <input type="hidden" asp-for="UserID" value="1" />
+                    <input type="hidden" asp-for="UserID" value="@UserId" />
 
                     <div class="mb-3 row">
                         <label asp-for="Name" class="col-sm-2 col-form-label">@Html.DisplayNameFor(m => m.Name)<span class="text-danger">&nbsp;*</span></label>
@@ -32,6 +33,21 @@
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
                     </div>
+
+                    <div class="mb-3 row">
+                        <label asp-for="ProfilePhoto" class="col-sm-2 col-form-label">@Html.DisplayNameFor(m => m.ProfilePhoto)</label>
+                        <div class="col-sm-10">
+                            @if (isEdit && !string.IsNullOrEmpty(Model.ProfilePhoto))
+                            {
+                                <div class="mb-2">
+                                    <img src="@Model.ProfilePhoto" alt="Profile photo"
+                                         style="max-height:100px; border:1px solid #ccc; padding:2px;" />
+                                </div>
+                            }
+                            <input name="ProfilePhoto" class="form-control" type="file" accept="image/*" />
+                        </div>
+                    </div>
+                    <input type="hidden" asp-for="ProfilePhoto" />
 
                     <div class="mb-3 row">
                         <label asp-for="Email" class="col-sm-2 col-form-label">@Html.DisplayNameFor(m => m.Email)<span class="text-danger">&nbsp;*</span></label>

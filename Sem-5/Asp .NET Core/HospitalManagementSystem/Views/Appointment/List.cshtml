@@ -1,130 +1,115 @@
+@using HospitalManagementSystem.Utilities
 @model List<Appointment>
 
-<div>
-    <div class="pagetitle my-4">
-        <h1 class="display-6">Appointment List</h1>
-    </div>
+@{
+    ViewData["Title"] = "Appointment List";
+}
+
+<div class="pagetitle my-4">
+    <h1 class="display-6">Appointment List</h1>
 </div>
+
 <div class="card">
     <h5 class="card-header">All Appointments</h5>
     <div class="table-responsive text-nowrap">
-        <table class="table">
+        <table class="table table-hover">
             <thead class="table-light">
                 <tr>
+                    <th>Patient Name</th>
+
+                    <th>Doctor Name</th>
                     <th>Appointment Date</th>
                     <th>Status</th>
-                    <th>Description</th>
-                    <th>Special Remarks</th>
-                    <th>Total Consulted Amount</th>
                     <th>Actions</th>
                 </tr>
+
             </thead>
             <tbody class="table-border-bottom-0">
                 @foreach (var appt in Model)
                 {
-                    <tr>
+                    <tr data-url="@Url.Action("Details", "Appointment", new { id = appt.AppointmentID })"
+                        class="details-row"
+                        style="cursor: pointer;">
+
+                        <td>@appt.Patient.Name</td>
+                        <td>@appt.Doctor.Name</td>
+
                         <td>@appt.AppointmentDate.ToString("g")</td>
-                        <td>@appt.AppointmentStatus</td>
-                        <td>@appt.Description</td>
-                        <td>@appt.SpecialRemarks</td>
-                        <td>
-                            @(appt.TotalConsultedAmount.HasValue ? appt.TotalConsultedAmount.Value.ToString("C") : "-")
-                        </td>
+                        <td><span class="badge bg-label-primary me-1">@appt.AppointmentStatus</span></td>
                         <td>
                             <div class="dropdown">
+
                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                     <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
+
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" asp-controller="Appointment" asp-action="Edit" asp-route-id="@appt.AppointmentID">
+                                    <a class="dropdown-item" asp-controller="Appointment" asp-action="Edit" asp-route-id="@UrlEncryptor.Encrypt(appt.AppointmentID.ToString())">
+
                                         <i class="bx bx-edit-alt me-1"></i> Edit
                                     </a>
-                                    <form asp-controller="Appointment" asp-action="Delete" asp-route-id="@appt.AppointmentID" method="post" style="display:inline;">
-                                        <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure you want to delete this doctor?');">
+                                    <form asp-controller="Appointment" asp-action="Delete" asp-route-id="@UrlEncryptor.Encrypt(appt.AppointmentID.ToString())" method="post" style="display:inline;">
+
+                                        <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure you want to delete this appointment?');">
                                             <i class="bx bx-trash me-1"></i> Delete
+
                                         </button>
                                     </form>
                                 </div>
+
                             </div>
                         </td>
                     </tr>
                 }
             </tbody>
+
         </table>
     </div>
 </div>
 
+<div class="modal fade" id="appointmentDetailsModal" tabindex="-1" aria-labelledby="appointmentDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="appointmentDetailsModalLabel">Appointment Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-body-content">
+            </div>
+        </div>
+    </div>
+</div>
 
-<a asp-controller="Appointment" asp-action="Create" class="fab-add-user" title="Create new user">
-    <span class="fab-content">
-        <i class="bx bx-user-plus"></i>
-        <span class="text">Create new appointment</span>
-    </span>
-</a>
 
 @section Scripts {
-    <style>
-        .fab-add-user {
-            position: fixed;
-            bottom: 32px;
-            right: 32px;
-            z-index: 999;
-            width: 56px;
-            height: 56px;
-            background: #696cff;
-            color: #fff;
-            border-radius: 28px;
-            font-size: 1.4rem;
-            box-shadow: 0 2px 8px rgba(105, 108, 255, 0.2);
-            transition: width 0.3s ease, background 0.2s ease;
-            overflow: hidden;
-            white-space: nowrap;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    <script>
+        $(document).ready(function () {
+            // When a row with the class 'details-row' is clicked
+            $('.details-row').on('click', function (event) {
+                // Prevent click on dropdown from triggering modal
+                if ($(event.target).closest('.dropdown').length) {
+                    return;
+                }
 
-        .fab-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 0 16px;
-        }
+                var url = $(this).data('url');
+                var modalBody = $('#modal-body-content');
+                var appointmentModal = new bootstrap.Modal(document.getElementById('appointmentDetailsModal'));
 
-        .fab-content i {
-            flex-shrink: 0;
-            font-size: 1.4rem;
-            transition: margin 0.3s ease;
-        }
+                // 1. Show a loading spinner inside the modal body
+                modalBody.html('<div class="d-flex justify-content-center my-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
 
-        .fab-add-user .text {
-            opacity: 0;
-            margin-left: 0;
-            overflow: hidden;
-            max-width: 0;
-            transition: opacity 0.3s ease, max-width 0.3s ease, margin-left 0.3s ease;
-            font-size: 1rem;
-            white-space: nowrap;
-        }
+                // 2. Show the modal
+                appointmentModal.show();
 
-        .fab-add-user:hover {
-            width: 270px;
-            background: #5a5edb;
-        }
-
-        .fab-add-user:hover .text {
-            opacity: 1;
-            margin-left: 12px;
-            max-width: 190px;
-        }
-
-        .fab-add-user i,
-        .fab-add-user .text {
-            color: white;
-            transition: color 0.3s ease;
-        }
-
-    </style>
+                // 3. Fetch the partial view from the controller
+                $.get(url, function (data) {
+                    // 4. On success, replace spinner with the fetched content
+                    modalBody.html(data);
+                }).fail(function() {
+                    // On failure, show an error message
+                    modalBody.html('<div class="alert alert-danger">Could not load appointment details. Please try again.</div>');
+                });
+            });
+        });
+    </script>
 }

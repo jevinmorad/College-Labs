@@ -3,6 +3,7 @@
 @{
     bool isEdit = Model != null && Model.DepartmentID > 0;
     string formAction = isEdit ? "Edit" : "Create";
+    int UserId = @CommonVariable.UserID() ?? 1;
 }
 
 <div>
@@ -24,7 +25,7 @@
                         <input type="hidden" asp-for="DepartmentID" />
                     }
 
-                    <input type="hidden" asp-for="UserID" value="1" />
+                    <input type="hidden" asp-for="UserID" value="@UserId" />
 
                     <div class="mb-3 row">
                         <label asp-for="DepartmentName" class="col-sm-2 col-form-label">@Html.DisplayNameFor(m => m.DepartmentName)<span class="text-danger">&nbsp;*</span></label>

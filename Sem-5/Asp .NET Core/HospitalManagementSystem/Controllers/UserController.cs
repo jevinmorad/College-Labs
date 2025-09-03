@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using HospitalManagementSystem.Data;
 using HospitalManagementSystem.Models;
+using System.Reflection;
 
 namespace HospitalManagementSystem.Controllers
 {
+    [CheckAccess]
     public class UserController : Controller
     {
         #region Configuration
@@ -18,6 +20,10 @@ namespace HospitalManagementSystem.Controllers
         public IActionResult List()
         {
             List<User> users = _db.Users.ToList();
+            if (users == null)
+            {
+                return View("NoDataFound");
+            }
             return View(users);
         }
         #endregion
@@ -29,11 +35,32 @@ namespace HospitalManagementSystem.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(User obj)
+        public IActionResult Create(User obj, IFormFile ProfilePhoto)
         {
             if (!ModelState.IsValid)
             {
                 return View("Create", obj);
+            }
+            if(ProfilePhoto !=null && ProfilePhoto.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ProfilePhoto.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                FileStream stream = new FileStream(filePath, FileMode.CreateNew);
+                ProfilePhoto.CopyTo(stream);
+                stream.Close();
+
+                obj.ProfilePhoto = "/images/" + fileName;
+            } 
+            else
+            {
+                obj.ProfilePhoto = "/images/default-profile.png";
             }
             _db.Users.Add(obj);
             _db.SaveChanges();
@@ -55,25 +82,45 @@ namespace HospitalManagementSystem.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(User obj)
+        public IActionResult Edit(User obj, IFormFile ProfilePhoto)
         {
             if (obj.UserID == 0)
                 return NotFound();
 
-            var user = _db.Users.Find(obj.UserID);
-            if (user == null)
-                return NotFound();
-
-            if(!ModelState.IsValid)
+            ModelState.Remove("ProfilePhoto");
+            if (!ModelState.IsValid)
             {
                 return View("Create", obj);
             }
+
+            var user = _db.Users.Find(obj.UserID);
+
+            if (user == null)
+                return NotFound();
 
             user.UserName = obj.UserName;
             user.Email = obj.Email;
             user.MobileNo = obj.MobileNo;
             user.IsActive = obj.IsActive;
             user.Modified = DateTime.Now;
+
+            if (ProfilePhoto != null && ProfilePhoto.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ProfilePhoto.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                FileStream stream = new FileStream(filePath, FileMode.Create);
+                ProfilePhoto.CopyTo(stream);
+                stream.Close();
+
+                user.ProfilePhoto = "/images/" + fileName;
+            }
 
             _db.SaveChanges();
             return RedirectToAction("List");

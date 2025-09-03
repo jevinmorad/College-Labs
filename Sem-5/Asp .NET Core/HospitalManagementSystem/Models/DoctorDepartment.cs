@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,10 +12,12 @@ namespace HospitalManagementSystem.Models
 
         [Required, ForeignKey("Doctor")]
         public int DoctorID { get; set; }
+        [ValidateNever]
         public Doctor Doctor { get; set; }
 
         [Required, ForeignKey("Department")]
         public int DepartmentID { get; set; }
+        [ValidateNever]
         public Department Department { get; set; }
             
         public DateTime Created { get; set; } = DateTime.Now;
@@ -23,6 +26,7 @@ namespace HospitalManagementSystem.Models
 
         [Required, ForeignKey("User")]
         public int UserID { get; set; }
+        [ValidateNever]
         public User User { get; set; }
     }
 }

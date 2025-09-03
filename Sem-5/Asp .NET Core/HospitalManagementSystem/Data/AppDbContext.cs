@@ -21,9 +21,9 @@ namespace HospitalManagementSystem.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<DoctorDepartment>()
-                .HasOne(dd => dd.Doctor)
-                .WithMany()
-                .HasForeignKey(dd => dd.DoctorID)
+                .HasOne(d => d.Doctor)
+                .WithMany(dd => dd.DoctorDepartments)
+                .HasForeignKey(d => d.DoctorID)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<DoctorDepartment>()

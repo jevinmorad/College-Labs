@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -12,10 +13,12 @@ namespace HospitalManagementSystem.Models
 
         [Required(ErrorMessage = "Doctor is required"), ForeignKey("Doctor")]
         public int DoctorID { get; set; }
+        [ValidateNever]
         public Doctor Doctor { get; set; }
 
         [Required(ErrorMessage = "Patient is required"), ForeignKey("Patient")]
         public int PatientID { get; set; }
+        [ValidateNever]
         public Patient Patient { get; set; }
 
         [Required(ErrorMessage = "Appointment date is required") ,DisplayName("Appoint Date & Time")]
@@ -28,6 +31,7 @@ namespace HospitalManagementSystem.Models
         public string Description { get; set; }
 
         [StringLength(100), DisplayName("Special Remarks")]
+        [ValidateNever]
         public string SpecialRemarks { get; set; }
 
         public DateTime Created { get; set; } = DateTime.Now;
@@ -36,6 +40,7 @@ namespace HospitalManagementSystem.Models
 
         [Required, ForeignKey("User")]
         public int UserID { get; set; }
+        [ValidateNever]
         public User User { get; set; }
 
         [Column(TypeName = "decimal(10,2)"), DisplayName("Total Consulted Amount")]

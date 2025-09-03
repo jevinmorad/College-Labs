@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,6 +15,11 @@ namespace HospitalManagementSystem.Models
         [Required(ErrorMessage = "Name is required"), StringLength(100), DisplayName("Full Name")]
         public string Name { get; set; }
 
+        [DisplayName("Profile photo")]
+        [DefaultValue("/images/default-profile.png")]
+        [ValidateNever]
+        public string ProfilePhoto { get; set; }
+
         [Required(ErrorMessage = "Mobile number is required"), StringLength(20), DisplayName("Mobile No")]
         public string Phone { get; set; }
 
@@ -25,6 +32,9 @@ namespace HospitalManagementSystem.Models
         [Required(ErrorMessage = "Specialization is required"), StringLength(100), DisplayName("Specialization")]
         public string Specialization { get; set; }
 
+        [ValidateNever]
+        public virtual ICollection<DoctorDepartment> DoctorDepartments { get; set; }
+
         public bool IsActive { get; set; } = true;
 
         public DateTime Created { get; set; } = DateTime.Now;
@@ -33,6 +43,7 @@ namespace HospitalManagementSystem.Models
 
         [Required, ForeignKey("User")]
         public int UserID { get; set; }
+        [ValidateNever]
         public User User { get; set; }
     }
 }

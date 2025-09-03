@@ -28,11 +28,19 @@
     <link rel="stylesheet" href="~/assets/vendor/css/core.css" class="template-customizer-core-css" />
     <link rel="stylesheet" href="~/assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
     <link rel="stylesheet" href="~/assets/css/demo.css" />
+    <link rel="stylesheet" href="~/assets/css/custom.css" />
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="~/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
 
     <link rel="stylesheet" href="~/assets/vendor/libs/apex-charts/apex-charts.css" />
+
+    <style>
+        .avatar-circle {
+            border-radius: 100%;
+            object-fit: cover;
+        }
+    </style>
 
     <!-- Page CSS -->
     <!-- Helpers -->
@@ -105,12 +113,12 @@
                 <div class="menu-inner-shadow"></div>
 
                 <ul class="menu-inner py-1">
-                    <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "User" ? "active" : "")">
+                    @* <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "User" ? "active" : "")">
                         <a asp-controller="User" asp-action="List" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-user"></i>
                             <div data-i18n="Analytics">Users</div>
                         </a>
-                    </li>
+                    </li> *@
                     <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Doctor" ? "active" : "")">
                         <a asp-controller="Doctor" asp-action="List" class="menu-link">
                             <i class="menu-icon tf-icons bx-plus-big"></i>
@@ -135,14 +143,14 @@
                             <div data-i18n="Analytics">Appointment</div>
                         </a>
                     </li>
-                    <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Employee" ? "active" : "")">
+                    @* <li class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Employee" ? "active" : "")">
                         <a asp-controller="Employee" asp-action="List" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-user-circle"></i>
                             <div data-i18n="Analytics">Employee</div>
                         </a>
-                    </li>
+                    </li> *@
                 </ul>
-            </aside>
+            </aside> 
 
             <!-- ======= Main ======= -->
             <div class="layout-page">
@@ -168,10 +176,51 @@
                             </div>
                         </div>
                         <!-- /Search -->
+
+                        <ul class="navbar-nav flex-row align-items-center ms-auto">
+                            <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                                    <div class="avatar avatar-online">
+                                        <img src=@CommonVariable.ProfilePhoto() style="width:100%; height:100%; object-fit:cover; border-radius: 50%" />
+                                    </div>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0 me-3">
+                                                    <div class="avatar avatar-online">
+                                                        <img src=@CommonVariable.ProfilePhoto() style="width:100%; height:100%; object-fit:cover; border-radius: 50%" />
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <span class="fw-semibold d-block">@CommonVariable.UserName()</span>
+                                                    <small class="text-muted">@CommonVariable.Email()</small>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <div class="dropdown-divider"></div>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item">
+                                            <i class="bx bx-user me-2"></i>
+                                            <span class="align-middle">My Profile</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Auth" asp-action="Logout">
+                                            <i class="bx bx-power-off me-2"></i>
+                                            <span class="align-middle">Log Out</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
                 </nav>
                 <!-- / Navbar -->
-
 
                 <div class="content-wrapper">
                     <main role="main" class="container-xxl flex-grow-1 container-p-y">
@@ -184,11 +233,86 @@
             <div class="content-backdrop fade"></div>
         </div>
         <!-- Content wrapper -->
-
     </div>
 
+    <div class="modal fade" id="userDetailModal" tabindex="-1" aria-labelledby="userDetailLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="bx bx-user-circle me-2 text-white"></i><span class="text-white">User Details</span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <img id="userPhoto" src="/images/default-user.png"
+                                 alt="Profile Photo"
+                                 class="rounded-circle border border-3 border-primary mb-3"
+                                 style="width: 150px; height: 150px; object-fit: cover;">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label class="fw-bold">Name:</label>
+                                <div id="modalUserName"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="fw-bold">Email:</label>
+                                <div id="modalUserEmail"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="fw-bold">Mobile No:</label>
+                                <div id="modalUserMobile"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a asp-controller="User" asp-action="Edit" asp-route-id="__id__" id="editUserBtn" class="btn btn-primary">
+                        <i class="bx bx-edit-alt me-1"></i> Edit
+                    </a>
+                    <form asp-controller="User" asp-action="Delete" asp-route-id="__id__" id="deleteUserForm" method="post">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?');">
+                            <i class="bx bx-trash me-1"></i> Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const rows = document.querySelectorAll('.user-row');
+            const modal = new bootstrap.Modal(document.getElementById('userDetailModal'));
+            rows.forEach(row => {
+                row.addEventListener('click', function () {
+                    const id = @CommonVariable.UserID();
+                    const name = @CommonVariable.UserName();
+                    const email = @CommonVariable.Email();
+                    const mobile = @CommonVariable.MobileNo();
+                    const photo = @CommonVariable.ProfilePhoto();
+
+                    document.getElementById('modalUserName').textContent = name;
+                    document.getElementById('modalUserEmail').textContent = email;
+                    document.getElementById('modalUserMobile').textContent = mobile;
+                    document.getElementById('userPhoto').src = photo || defaultPhoto;
+
+                    // Update buttons with correct id
+                    const editBtn = document.getElementById('editUserBtn');
+                    const deleteForm = document.getElementById('deleteUserForm');
+
+                    editBtn.href = editBtn.href.replace('__id__', id);
+                    deleteForm.action = deleteForm.action.replace('__id__', id);
+
+                    modal.show();
+                });
+            });
+        });
+    </script>
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->

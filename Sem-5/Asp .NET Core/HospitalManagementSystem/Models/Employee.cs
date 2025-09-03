@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -13,6 +14,11 @@ namespace HospitalManagementSystem.Models
 
         [Required(ErrorMessage = "Last name is required")]
         public String LastName { get; set; }
+
+        [DisplayName("Profile photo")]
+        [DefaultValue("/images/default-profile.png")]
+        [ValidateNever]
+        public string? ProfilePhoto { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
         public String Email { get; set; }

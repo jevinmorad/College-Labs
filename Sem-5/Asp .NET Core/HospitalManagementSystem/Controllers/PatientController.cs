@@ -1,9 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
 using HospitalManagementSystem.Data;
 using HospitalManagementSystem.Models;
+using HospitalManagementSystem.Utilities;
+using Microsoft.AspNetCore.Mvc;
+using System.Numerics;
 
 namespace HospitalManagementSystem.Controllers
 {
+    [CheckAccess]
     public class PatientController : Controller
     {
         #region Configuration
@@ -18,6 +21,10 @@ namespace HospitalManagementSystem.Controllers
         public IActionResult List()
         {
             List<Patient> patients = _db.Patients.ToList();
+            if (patients == null)
+            {
+                return View("NoDataFound");
+            }
             return View(patients);
         }
         #endregion
@@ -25,14 +32,35 @@ namespace HospitalManagementSystem.Controllers
         #region Create
         public IActionResult Create()
         {
-            return View();
+            return View(new Patient());
         }
         [HttpPost]
-        public IActionResult Create(Patient patient)
+        public IActionResult Create(Patient patient, IFormFile ProfilePhoto)
         {
             if(!ModelState.IsValid)
             {
                 return View("Create", patient);
+            }
+            if (ProfilePhoto != null && ProfilePhoto.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ProfilePhoto.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                FileStream stream = new FileStream(filePath, FileMode.CreateNew);
+                ProfilePhoto.CopyTo(stream);
+                stream.Close();
+
+                patient.ProfilePhoto = "/images/" + fileName;
+            }
+            else
+            {
+                patient.ProfilePhoto = "/images/default-profile.png";
             }
             _db.Patients.Add(patient);
             _db.SaveChanges();
@@ -41,30 +69,33 @@ namespace HospitalManagementSystem.Controllers
         #endregion
 
         #region Edit
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(string? id)
         {
             if (id == null)
                 return NotFound();
-            var patient = _db.Patients.Find(id);
+
+            var decryptedId = Convert.ToInt32(UrlEncryptor.Decrypt(id));
+            var patient = _db.Patients.Find(decryptedId);
             if (patient == null)
                 return NotFound();
 
             return View("Create", patient);
         }
         [HttpPost]
-        public IActionResult Edit(Patient obj)
+        public IActionResult Edit(Patient obj, IFormFile ProfilePhoto)
         {
             if (obj.PatientID == 0)
                 return NotFound();
 
-            var patient = _db.Patients.Find(obj.PatientID);
-            if (patient == null)
-                return NotFound();
-
+            ModelState.Remove("ProfilePhoto");
             if (!ModelState.IsValid)
             {
                 return View("Create", obj);
             }
+
+            var patient = _db.Patients.Find(obj.PatientID);
+            if (patient == null)
+                return NotFound();
 
             patient.Name = obj.Name;
             patient.Email = obj.Email;
@@ -75,6 +106,24 @@ namespace HospitalManagementSystem.Controllers
             patient.City = obj.City;
             patient.State = obj.State;
 
+            if (ProfilePhoto != null && ProfilePhoto.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ProfilePhoto.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                FileStream stream = new FileStream(filePath, FileMode.Create);
+                ProfilePhoto.CopyTo(stream);
+                stream.Close();
+
+                patient.ProfilePhoto = "/images/" + fileName;
+            }
+
             _db.SaveChanges();
             return RedirectToAction("List");
         }
@@ -82,9 +131,11 @@ namespace HospitalManagementSystem.Controllers
 
         #region Delete
         [HttpPost]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
-            var patient = _db.Patients.Find(id);
+            var decryptedId = Convert.ToInt32(UrlEncryptor.Decrypt(id));
+            var patient = _db.Patients.Find(decryptedId);
+
             if (patient != null)
             {
                 _db.Patients.Remove(patient);

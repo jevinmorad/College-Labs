@@ -8,22 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwroots\**" />
     <Compile Remove="wwwroot\libs\**" />
-    <Compile Remove="wwwroot\lib\jquery-validation-unobtrusive\**" />
-    <Compile Remove="wwwroot\lib\jquery-validation\**" />
-    <Compile Remove="wwwroot\lib\jquery\**" />
+    <Content Remove="wwroots\**" />
     <Content Remove="wwwroot\libs\**" />
-    <Content Remove="wwwroot\lib\jquery-validation-unobtrusive\**" />
-    <Content Remove="wwwroot\lib\jquery-validation\**" />
-    <Content Remove="wwwroot\lib\jquery\**" />
+    <EmbeddedResource Remove="wwroots\**" />
     <EmbeddedResource Remove="wwwroot\libs\**" />
-    <EmbeddedResource Remove="wwwroot\lib\jquery-validation-unobtrusive\**" />
-    <EmbeddedResource Remove="wwwroot\lib\jquery-validation\**" />
-    <EmbeddedResource Remove="wwwroot\lib\jquery\**" />
+    <None Remove="wwroots\**" />
     <None Remove="wwwroot\libs\**" />
-    <None Remove="wwwroot\lib\jquery-validation-unobtrusive\**" />
-    <None Remove="wwwroot\lib\jquery-validation\**" />
-    <None Remove="wwwroot\lib\jquery\**" />
   </ItemGroup>
 
   <ItemGroup>

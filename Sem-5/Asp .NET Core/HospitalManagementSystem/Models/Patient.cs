@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -12,6 +13,11 @@ namespace HospitalManagementSystem.Models
 
         [Required(ErrorMessage = "Name is required"), StringLength(100), DisplayName("Full Name")]
         public string Name { get; set; }
+
+        [DisplayName("Profile photo")]
+        [DefaultValue("/images/default-profile.png")]
+        [ValidateNever]
+        public string ProfilePhoto { get; set; }
 
         [Required(ErrorMessage = "Birthdate is required"), DisplayName("Date of birth")]
         public DateTime DateOfBirth { get; set; }
@@ -43,6 +49,8 @@ namespace HospitalManagementSystem.Models
 
         [Required(ErrorMessage = "UserId is reuiqred"), ForeignKey("User")]
         public int UserID { get; set; }
+
+        [ValidateNever]
         public User User { get; set; }
     }
 }

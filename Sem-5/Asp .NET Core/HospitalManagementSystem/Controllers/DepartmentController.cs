@@ -1,10 +1,13 @@
-using Microsoft.AspNetCore.Mvc;
 using HospitalManagementSystem.Data;
 using HospitalManagementSystem.Models;
+using HospitalManagementSystem.Utilities;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace HospitalManagementSystem.Controllers
 {
+    [CheckAccess]
     public class DepartmentController : Controller
     {
         #region Configuration
@@ -18,7 +21,12 @@ namespace HospitalManagementSystem.Controllers
         #region List
         public IActionResult List()
         {
+
             List<Department> departments = _db.Departments.ToList();
+            if (departments == null)
+            {
+                return View("NoDataFound");
+            }
             return View(departments);
         }
         #endregion
@@ -43,11 +51,14 @@ namespace HospitalManagementSystem.Controllers
         #endregion
 
         #region Edit
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(string? id)
         {
             if (id == null)
                 return NotFound();
-            var department = _db.Departments.Find(id);
+
+            var decryptedId = Convert.ToInt32(UrlEncryptor.Decrypt(id));
+
+            var department = _db.Departments.Find(decryptedId);
             if (department == null)
                 return NotFound();
 
@@ -79,9 +90,11 @@ namespace HospitalManagementSystem.Controllers
 
         #region Delete
         [HttpPost]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
-            var department = _db.Departments.Find(id);
+            var decryptedId = Convert.ToInt32(UrlEncryptor.Decrypt(id));
+
+            var department = _db.Departments.Find(decryptedId);
             if (department != null)
             {
                 _db.Departments.Remove(department);

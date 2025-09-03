@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "D:\\College-Labs\\Sem-5\\Asp .NET Core\\ICollection\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BB123A37-10E9-42D1-9468-FA431C83B1F3}|ICollection.csproj|d:\\college-labs\\sem-5\\asp .net core\\icollection\\views\\shared\\_validationscriptspartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{BB123A37-10E9-42D1-9468-FA431C83B1F3}|ICollection.csproj|solutionrelative:views\\shared\\_validationscriptspartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{BB123A37-10E9-42D1-9468-FA431C83B1F3}|ICollection.csproj|d:\\college-labs\\sem-5\\asp .net core\\icollection\\models\\usermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB123A37-10E9-42D1-9468-FA431C83B1F3}|ICollection.csproj|solutionrelative:models\\usermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BB123A37-10E9-42D1-9468-FA431C83B1F3}|ICollection.csproj|d:\\college-labs\\sem-5\\asp .net core\\icollection\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -13,10 +13,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{BB123A37-10E9-42D1-9468-FA431C83B1F3}|ICollection.csproj|d:\\college-labs\\sem-5\\asp .net core\\icollection\\views\\user\\useraddedit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{BB123A37-10E9-42D1-9468-FA431C83B1F3}|ICollection.csproj|solutionrelative:views\\user\\useraddedit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{BB123A37-10E9-42D1-9468-FA431C83B1F3}|ICollection.csproj|d:\\college-labs\\sem-5\\asp .net core\\icollection\\models\\usermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{BB123A37-10E9-42D1-9468-FA431C83B1F3}|ICollection.csproj|solutionrelative:models\\usermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -43,27 +39,15 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "_ValidationScriptsPartial.cshtml",
-              "DocumentMoniker": "D:\\College-Labs\\Sem-5\\Asp .NET Core\\ICollection\\Views\\Shared\\_ValidationScriptsPartial.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\_ValidationScriptsPartial.cshtml",
-              "ToolTip": "D:\\College-Labs\\Sem-5\\Asp .NET Core\\ICollection\\Views\\Shared\\_ValidationScriptsPartial.cshtml",
-              "RelativeToolTip": "Views\\Shared\\_ValidationScriptsPartial.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-08-06T14:04:35.937Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
               "Title": "UserModel.cs",
               "DocumentMoniker": "D:\\College-Labs\\Sem-5\\Asp .NET Core\\ICollection\\Models\\UserModel.cs",
               "RelativeDocumentMoniker": "Models\\UserModel.cs",
               "ToolTip": "D:\\College-Labs\\Sem-5\\Asp .NET Core\\ICollection\\Models\\UserModel.cs",
               "RelativeToolTip": "Models\\UserModel.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAsAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-06T06:57:55.751Z"
+              "WhenOpened": "2025-08-06T06:57:55.751Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -87,8 +71,7 @@
               "RelativeToolTip": "Controllers\\UserController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACwAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-05T06:56:53.055Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-05T06:56:53.055Z"
             }
           ]
         }
