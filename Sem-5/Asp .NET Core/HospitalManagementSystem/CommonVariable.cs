@@ -21,14 +21,14 @@
             return _HttpContextAccessor.HttpContext.Session.GetInt32("UserID");
         }
         
-        public static string UserName()
+        public static string FirstName()
         {
-            if (_HttpContextAccessor.HttpContext.Session.GetString("UserName") == null)
+            if (_HttpContextAccessor.HttpContext.Session.GetString("FirstName") == null)
             {
                 return null;
             }
         
-            return _HttpContextAccessor.HttpContext.Session.GetString("UserName");
+            return _HttpContextAccessor.HttpContext.Session.GetString("FirstName");
         }
         
         public static string Email()

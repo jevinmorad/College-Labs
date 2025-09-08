@@ -73,7 +73,7 @@
 
                         <div class="mb-3">
                             <label for="ProfilePhoto" class="col-sm-2 col-form-label">Photo</label>
-                            <input name="ProfilePhoto" id="ProfilePhoto" class="form-control" type="file"/>
+                            <input name="ProfilePhoto" id="ProfilePhoto" class="form-control" type="file" />
                         </div>
 
                         <div class="mb-3">
@@ -90,8 +90,8 @@
                                        class="form-control"
                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                                        aria-describedby="password" />
-                                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                             </div>
+                            <span asp-validation-for="Password" class="text-danger "></span>
                         </div>
 
                         <div class="mb-3">

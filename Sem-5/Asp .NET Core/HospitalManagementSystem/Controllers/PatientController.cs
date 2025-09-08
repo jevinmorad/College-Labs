@@ -64,20 +64,22 @@ namespace HospitalManagementSystem.Controllers
             }
             _db.Patients.Add(patient);
             _db.SaveChanges();
+
+            TempData["success"] = $"Pateint '{patient.Name}' was created";
             return RedirectToAction("List");
         }
         #endregion
 
         #region Edit
-        public IActionResult Edit(string? id)
+        public IActionResult Edit(string id)
         {
-            if (id == null)
-                return NotFound();
-
             var decryptedId = Convert.ToInt32(UrlEncryptor.Decrypt(id));
             var patient = _db.Patients.Find(decryptedId);
             if (patient == null)
+            {
+                TempData["error"] = "Patient not found";
                 return NotFound();
+            }
 
             return View("Create", patient);
         }
@@ -85,8 +87,10 @@ namespace HospitalManagementSystem.Controllers
         public IActionResult Edit(Patient obj, IFormFile ProfilePhoto)
         {
             if (obj.PatientID == 0)
+            {
+                TempData["error"] = "Patient not found";
                 return NotFound();
-
+            }
             ModelState.Remove("ProfilePhoto");
             if (!ModelState.IsValid)
             {
@@ -95,7 +99,10 @@ namespace HospitalManagementSystem.Controllers
 
             var patient = _db.Patients.Find(obj.PatientID);
             if (patient == null)
+            {
+                TempData["error"] = "Patient not found";
                 return NotFound();
+            }
 
             patient.Name = obj.Name;
             patient.Email = obj.Email;
@@ -105,6 +112,7 @@ namespace HospitalManagementSystem.Controllers
             patient.Address = obj.Address;
             patient.City = obj.City;
             patient.State = obj.State;
+            patient.IsActive = obj.IsActive;
 
             if (ProfilePhoto != null && ProfilePhoto.Length > 0)
             {
@@ -125,22 +133,29 @@ namespace HospitalManagementSystem.Controllers
             }
 
             _db.SaveChanges();
+
+            TempData["success"] = $"Patient '{patient.Name}' was edited";
             return RedirectToAction("List");
         }
         #endregion
 
         #region Delete
         [HttpPost]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(int id)
         {
-            var decryptedId = Convert.ToInt32(UrlEncryptor.Decrypt(id));
-            var patient = _db.Patients.Find(decryptedId);
+            var patient = _db.Patients.Find(id);
 
-            if (patient != null)
+            if (patient == null)
             {
-                _db.Patients.Remove(patient);
-                _db.SaveChanges();
+                TempData["error"] = "Patient not found";
+                return RedirectToAction("List");
             }
+            patient.IsActive = false;
+            patient.Modified = DateTime.Now;
+            _db.SaveChanges();
+            
+            TempData["success"] = $"Patient '{patient.Name}' has been successfully deactivated.";
+
             return RedirectToAction("List");
         }
         #endregion

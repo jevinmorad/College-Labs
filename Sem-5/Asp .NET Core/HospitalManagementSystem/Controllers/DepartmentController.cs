@@ -46,6 +46,8 @@ namespace HospitalManagementSystem.Controllers
 
             _db.Departments.Add(department);
             _db.SaveChanges();
+
+            TempData["success"] = $"Department '{department.DepartmentName} created'";
             return RedirectToAction("List");
         }
         #endregion
@@ -54,13 +56,18 @@ namespace HospitalManagementSystem.Controllers
         public IActionResult Edit(string? id)
         {
             if (id == null)
+            {
+                TempData["error"] = "Department Id not found";
                 return NotFound();
-
+            }
             var decryptedId = Convert.ToInt32(UrlEncryptor.Decrypt(id));
 
             var department = _db.Departments.Find(decryptedId);
             if (department == null)
+            {
+                TempData["error"] = $"Department not found";
                 return NotFound();
+            }
 
             return View("Create", department);
         }
@@ -68,11 +75,17 @@ namespace HospitalManagementSystem.Controllers
         public IActionResult Edit(Department obj)
         {
             if (obj.DepartmentID == 0)
+            {
+                TempData["error"] = $"Department not found";
                 return NotFound();
+            }
 
             var department = _db.Departments.Find(obj.DepartmentID);
             if (department == null)
+            {
+                TempData["error"] = $"Department not found";
                 return NotFound();
+            }
             
             if (!ModelState.IsValid)
             {
@@ -84,22 +97,29 @@ namespace HospitalManagementSystem.Controllers
             department.IsActive = obj.IsActive;
 
             _db.SaveChanges();
+
+            TempData["success"] = $"Department '{department.DepartmentName} edited'";
             return RedirectToAction("List");
         }
         #endregion
 
         #region Delete
         [HttpPost]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(int id)
         {
-            var decryptedId = Convert.ToInt32(UrlEncryptor.Decrypt(id));
+            var department = _db.Departments.Find(id);
 
-            var department = _db.Departments.Find(decryptedId);
-            if (department != null)
+            if (department == null)
             {
-                _db.Departments.Remove(department);
-                _db.SaveChanges();
+                TempData["error"] = "Department not found";
+                return RedirectToAction("List");
             }
+            department.IsActive = false;
+            department.Modified = DateTime.Now;
+            _db.SaveChanges();
+
+            TempData["success"] = $"Department '{department.DepartmentName}' has been successfully deactivated.";
+
             return RedirectToAction("List");
         }
         #endregion

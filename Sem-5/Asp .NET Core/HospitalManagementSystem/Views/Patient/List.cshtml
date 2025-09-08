@@ -1,42 +1,89 @@
-@using HospitalManagementSystem.Utilities;
+@using HospitalManagementSystem.Utilities
 @model List<Patient>
 
-<div class="pagetitle my-4">
-    <h1 class="display-6">Patient List</h1>
+@{
+    ViewData["Title"] = "Patient List";
+}
+
+<div class="d-flex justify-content-between align-items-center my-4">
+    <div class="pagitle">
+        <h1 class="display-6 mb-1">Patients</h1>
+        <p class="text-muted mb-0">Manage all patient records.</p>
+    </div>
+    <a asp-controller="Patient" asp-action="Create" class="btn btn-primary">
+        <i class="bx bx-plus me-1"></i> New Patient
+    </a>
 </div>
 
 <div class="card">
-    <h5 class="card-header">All Patients</h5>
     <div class="table-responsive text-nowrap">
-        <table class="table table-hover" id="patientTable">
+        <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Status</th>
+                    <th>Patient Info</th>
+                    <th>Demographics</th>
+                    <th>Contact</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="table-border-bottom-0">
                 @foreach (var patient in Model)
                 {
-                    <tr class="patient-row"
-                        data-id="@UrlEncryptor.Encrypt(patient.PatientID.ToString())"
-                        data-name="@patient.Name"
-                        data-dob="@patient.DateOfBirth.ToShortDateString()"
-                        data-gender="@patient.Gender"
-                        data-email="@patient.Email"
-                        data-phone="@patient.Phone"
-                        data-address="@patient.Address"
-                        data-city="@patient.City"
-                        data-state="@patient.State"
-                        data-status="@(patient.IsActive ? "Active" : "Inactive")"
-                        data-photo="@patient.ProfilePhoto">
-                        <td><strong>@patient.Name</strong></td>
-                        <td>@patient.Phone</td>
+                    var today = DateTime.Today;
+                    var age = today.Year - patient.DateOfBirth.Year;
+                    if (patient.DateOfBirth.Date > today.AddYears(-age))
+                    {
+                        age--;
+                    }
+
+                    <tr class="clickable-row" style="cursor: pointer;" data-modal-target="#modal-@patient.PatientID">
                         <td>
-                            <span class="badge me-1 @(patient.IsActive ? "bg-label-primary" : "bg-secondary")">
-                                @(patient.IsActive ? "Active" : "Inactive")
-                            </span>
+                            <div class="d-flex align-items-center">
+                                <img src="@(string.IsNullOrEmpty(patient.ProfilePhoto) ? "/images/default-profile.png" : patient.ProfilePhoto)"
+                                     alt="Avatar" class="rounded-circle" style="width: 45px; height: 45px; object-fit: cover;" />
+                                <div class="ms-3">
+                                    <div class="fw-bold">@patient.Name</div>
+                                    <small class="text-muted">@patient.Email</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <div class="fw-bold">@age years</div>
+                                <small class="text-muted">@patient.Gender</small>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <div class="fw-bold">@patient.Phone</div>
+                                <small class="text-muted">@patient.City, @patient.State</small>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            @if (patient.IsActive)
+                            {
+                                <span class="badge bg-label-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-label-secondary">Inactive</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="d-inline-flex gap-1">
+                                <a asp-controller="Patient" asp-action="Edit" asp-route-id="@UrlEncryptor.Encrypt(patient.PatientID.ToString())"
+                                   class="btn btn-sm btn-outline-primary" title="Edit">
+                                    <i class="bx bx-pencil"></i>
+                                </a>
+
+                                <form asp-controller="Patient" asp-action="Delete" asp-route-id="@UrlEncryptor.Encrypt(patient.PatientID.ToString())" method="post">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"
+                                            onclick="event.stopPropagation(); return confirm('Are you sure you want to delete this patient?');">
+                                        <i class="bx bx-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 }
@@ -45,128 +92,36 @@
     </div>
 </div>
 
-<a asp-controller="Patient" asp-action="Create" class="fab-add-user" title="Create new patient">
-    <span class="fab-content">
-        <i class="bx bx-user-plus"></i>
-        <span class="text">Create new patient</span>
-    </span>
-</a>
-
-<!-- Patient Detail Modal -->
-<div class="modal fade" id="patientDetailModal" tabindex="-1" aria-labelledby="patientDetailLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">
-                    <i class="bx bx-user-circle me-2 text-white"></i><span class="text-white">Patient Details</span>
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-4">
-                <div class="row">
-                    <div class="col-md-4 text-center">
-                        <img id="patientPhoto" src="/images/default-patient.png"
-                             alt="Profile Photo"
-                             class="rounded-circle border border-3 border-primary mb-3"
-                             style="width: 150px; height: 150px; object-fit: cover;">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="mb-3">
-                            <label class="fw-bold">Name:</label>
-                            <div id="modalPatientName"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="fw-bold">Date of Birth:</label>
-                            <div id="modalPatientDob"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="fw-bold">Gender:</label>
-                            <div id="modalPatientGender"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="fw-bold">Email:</label>
-                            <div id="modalPatientEmail"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="fw-bold">Phone:</label>
-                            <div id="modalPatientPhone"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="fw-bold">Address:</label>
-                            <div id="modalPatientAddress"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="fw-bold">City:</label>
-                            <div id="modalPatientCity"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="fw-bold">State:</label>
-                            <div id="modalPatientState"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="fw-bold">Status:</label>
-                            <span id="modalPatientStatus" class="badge"></span>
-                        </div>
-                    </div>
+@foreach (var patient in Model)
+{
+    <div class="modal fade" id="modal-@patient.PatientID" tabindex="-1" aria-labelledby="modalLabel-@patient.PatientID" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel-@patient.PatientID">Patient Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <a asp-controller="Patient" asp-action="Edit" asp-route-id="__id__" id="editPatientBtn" class="btn btn-primary">
-                    <i class="bx bx-edit-alt me-1"></i> Edit
-                </a>
-                <form asp-controller="Patient" asp-action="Delete" asp-route-id="__id__" id="deletePatientForm" method="post">
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this patient?');">
-                        <i class="bx bx-trash me-1"></i> Delete
-                    </button>
-                </form>
+                <div class="modal-body">
+                    @await Html.PartialAsync("_PatientDetails", patient)
+                </div>
             </div>
         </div>
     </div>
-</div>
+}
 
 @section Scripts {
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const rows = document.querySelectorAll('.patient-row');
-            const modal = new bootstrap.Modal(document.getElementById('patientDetailModal'));
-            const defaultPhoto = '/images/default-patient.png';
+        $(document).ready(function () {
+            $('.clickable-row').on('click', function (e) {
+                // Check if the click target is within a dropdown or a button/link
+                if ($(e.target).closest('.dropdown').length || $(e.target).is('button, a') || $(e.target).closest('button, a').length) {
+                    return; // Do nothing if click is on an interactive element
+                }
 
-            rows.forEach(row => {
-                row.addEventListener('click', function () {
-                    const id = this.dataset.id;
-                    const name = this.dataset.name;
-                    const dob = this.dataset.dob;
-                    const gender = this.dataset.gender;
-                    const email = this.dataset.email;
-                    const phone = this.dataset.phone;
-                    const address = this.dataset.address;
-                    const city = this.dataset.city;
-                    const state = this.dataset.state;
-                    const status = this.dataset.status;
-                    const photo = this.dataset.photo || defaultPhoto;
-
-                    document.getElementById('modalPatientName').textContent = name;
-                    document.getElementById('modalPatientDob').textContent = dob;
-                    document.getElementById('modalPatientGender').textContent = gender;
-                    document.getElementById('modalPatientEmail').textContent = email;
-                    document.getElementById('modalPatientPhone').textContent = phone;
-                    document.getElementById('modalPatientAddress').textContent = address;
-                    document.getElementById('modalPatientCity').textContent = city;
-                    document.getElementById('modalPatientState').textContent = state;
-                    document.getElementById('modalPatientStatus').textContent = status;
-                    document.getElementById('modalPatientStatus').className =
-                        `badge rounded-pill px-3 py-2 ${status === "Active" ? "bg-primary" : "bg-warning"}`;
-                    document.getElementById('patientPhoto').src = photo || defaultPhoto;
-
-                    // Update Edit/Delete buttons
-                    const editBtn = document.getElementById('editPatientBtn');
-                    const deleteForm = document.getElementById('deletePatientForm');
-
-                    editBtn.href = editBtn.href.replace('__id__', id);
-                    deleteForm.action = deleteForm.action.replace('__id__', id);
-
-                    modal.show();
-                });
+                // If not an interactive element, show the modal
+                var modalTarget = $(this).data('modal-target');
+                var modal = new bootstrap.Modal(document.querySelector(modalTarget));
+                modal.show();
             });
         });
     </script>

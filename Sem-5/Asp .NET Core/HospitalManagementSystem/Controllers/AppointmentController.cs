@@ -4,6 +4,7 @@ using HospitalManagementSystem.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Net;
 
@@ -21,27 +22,43 @@ namespace HospitalManagementSystem.Controllers
         #endregion
 
         #region List
-        public IActionResult List()
+        public IActionResult List(string patientName, int? doctorId, DateTime? appointmentDate, string status)
         {
-            List<Appointment> appointments = _db.Appointments
-                                        .Include(a => a.Doctor)
-                                        .Include(a => a.Patient)
-                                        .ToList();
-            return View(appointments);
-        }
-        public IActionResult Details(int id)
-        {
-            var appointment = _db.Appointments
-                                 .Include(a => a.Doctor)
-                                 .Include(a => a.Patient)
-                                 .FirstOrDefault(a => a.AppointmentID == id);
+            var query = _db.Appointments
+                           .Include(a => a.Patient)
+                           .Include(a => a.Doctor)
+                           .AsQueryable();
 
-            if (appointment == null)
+            if (!string.IsNullOrEmpty(patientName))
             {
-                return NotFound();
+                query = query.Where(a => a.Patient.Name.Contains(patientName));
             }
 
-            return PartialView("_AppointmentDetails", appointment);
+            if (doctorId.HasValue)
+            {
+                query = query.Where(a => a.DoctorID == doctorId.Value);
+            }
+
+            if (appointmentDate.HasValue)
+            {
+                query = query.Where(a => a.AppointmentDate.Date == appointmentDate.Value.Date);
+            }
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                query = query.Where(a => a.AppointmentStatus == status);
+            }
+
+            var appointments = query.OrderByDescending(a => a.AppointmentDate).ToList();
+
+            ViewData["PatientNameFilter"] = patientName;
+            ViewData["DoctorIdFilter"] = doctorId;
+            ViewData["AppointmentDateFilter"] = appointmentDate?.ToString("yyyy-MM-dd");
+            ViewData["StatusFilter"] = status;
+
+            ViewBag.Doctors = new SelectList(_db.Doctors.Where(d => d.IsActive), "DoctorId", "Name", doctorId);
+
+            return View(appointments);
         }
         #endregion
 
@@ -59,25 +76,31 @@ namespace HospitalManagementSystem.Controllers
         [HttpPost]
         public IActionResult Create(Appointment appointment)
         {
+            appointment.Doctor = _db.Doctors.Find(appointment.DoctorID);
+            appointment.Patient = _db.Patients.Find(appointment.PatientID);
+            appointment.User = _db.Users.Find(appointment.UserID);
+
             if (!ModelState.IsValid)
             {
                 PopulateDropdowns();
                 return View(appointment);
             }
-            appointment.Doctor = _db.Doctors.Find(appointment.DoctorID);
-            appointment.Patient = _db.Patients.Find(appointment.PatientID);
-            appointment.User = _db.Users.Find(appointment.UserID);
             _db.Appointments.Add(appointment);
             _db.SaveChanges();
+
+            TempData["success"] = "Appointment was created";
             return RedirectToAction("List");
         }
         #endregion
 
         #region Edit
-        public IActionResult Edit(string? id)
+        public IActionResult Edit(string id)
         {
             if (id == null)
+            {
+                TempData["error"] = "Appointment not found";
                 return NotFound();
+            }
 
             var decryptedId = Convert.ToInt32(UrlEncryptor.Decrypt(id));
 
@@ -93,11 +116,20 @@ namespace HospitalManagementSystem.Controllers
         public IActionResult Edit(Appointment obj)
         {
             if (obj.AppointmentID == 0)
+            {
+                TempData["error"] = "Appointment not found";
                 return NotFound();
+            }
 
             var appointment = _db.Appointments.Find(obj.AppointmentID);
             if (appointment == null)
+            {
+                TempData["error"] = "Appointment not found";
                 return NotFound();
+            }
+
+            appointment.Doctor = _db.Doctors.Find(appointment.DoctorID);
+            appointment.Patient = _db.Patients.Find(appointment.PatientID);
 
             if (!ModelState.IsValid)
             {
@@ -112,26 +144,59 @@ namespace HospitalManagementSystem.Controllers
             appointment.Description = obj.Description;
             appointment.SpecialRemarks = obj.SpecialRemarks;
             appointment.TotalConsultedAmount = obj.TotalConsultedAmount;
-            appointment.Doctor = _db.Doctors.Find(appointment.DoctorID);
-            appointment.Patient = _db.Patients.Find(appointment.PatientID);
+
+            TempData["success"] = "Appointment has been updated";
 
             _db.SaveChanges();
+            return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public IActionResult UpdateStatus(int appointmentId, string newStatus, string returnUrl = "")
+        {
+            if (appointmentId == 0 || string.IsNullOrEmpty(newStatus))
+            {
+                TempData["error"] = "Invalid data provided for status update.";
+                return RedirectToAction("List");
+            }
+
+            var appointment = _db.Appointments.Find(appointmentId);
+            if (appointment == null)
+            {
+                TempData["error"] = "Appointment not found.";
+                return NotFound();
+            }
+                
+            appointment.AppointmentStatus = newStatus;
+            appointment.Modified = DateTime.Now;
+            _db.Appointments.Update(appointment);
+            _db.SaveChanges();
+
+            TempData["success"] = "Appointment status updated successfully!";
+
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
             return RedirectToAction("List");
         }
         #endregion
 
         #region Delete
         [HttpPost]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(int id)
         {
-            var decryptedId = Convert.ToInt32(UrlEncryptor.Decrypt(WebUtility.UrlDecode(id)));
-
-            var appointment = _db.Appointments.Find(decryptedId);
-            if (appointment != null)
+            var appointment = _db.Appointments.Find(id);
+            if (appointment == null)
             {
-                _db.Appointments.Remove(appointment);
-                _db.SaveChanges();
+                TempData["error"] = "Appointment not found";
+                return RedirectToAction("List");
             }
+            _db.Appointments.Remove(appointment);
+            _db.SaveChanges();
+
+            TempData["success"] = "Appointment deleted successfully";
             return RedirectToAction("List");
         }
         #endregion

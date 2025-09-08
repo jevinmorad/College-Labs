@@ -32,8 +32,6 @@ namespace HospitalManagementSystem.Utilities
 
         public static string Decrypt(string encryptedText)
         {
-            encryptedText = WebUtility.UrlDecode(encryptedText.TrimEnd(')'));
-            
             using (var aesAlg = Aes.Create())
             {
                 aesAlg.Key = Encoding.UTF8.GetBytes(EncryptionKey);

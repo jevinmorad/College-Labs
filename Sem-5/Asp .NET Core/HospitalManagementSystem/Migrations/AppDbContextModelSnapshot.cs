@@ -60,7 +60,7 @@ namespace HospitalManagementSystem.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<decimal?>("TotalConsultedAmount")
+                    b.Property<decimal>("TotalConsultedAmount")
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<int>("UserID")
@@ -74,7 +74,7 @@ namespace HospitalManagementSystem.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Appointments", (string)null);
+                    b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("HospitalManagementSystem.Models.Department", b =>
@@ -111,7 +111,7 @@ namespace HospitalManagementSystem.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Departments", (string)null);
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("HospitalManagementSystem.Models.Doctor", b =>
@@ -147,6 +147,7 @@ namespace HospitalManagementSystem.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("ProfilePhoto")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Qualification")
@@ -166,7 +167,7 @@ namespace HospitalManagementSystem.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Doctors", (string)null);
+                    b.ToTable("Doctors");
                 });
 
             modelBuilder.Entity("HospitalManagementSystem.Models.DoctorDepartment", b =>
@@ -200,7 +201,7 @@ namespace HospitalManagementSystem.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("DoctorDepartments", (string)null);
+                    b.ToTable("DoctorDepartments");
                 });
 
             modelBuilder.Entity("HospitalManagementSystem.Models.Patient", b =>
@@ -254,6 +255,7 @@ namespace HospitalManagementSystem.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ProfilePhoto")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("State")
@@ -268,7 +270,7 @@ namespace HospitalManagementSystem.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Patients", (string)null);
+                    b.ToTable("Patients");
                 });
 
             modelBuilder.Entity("HospitalManagementSystem.Models.User", b =>
@@ -313,7 +315,7 @@ namespace HospitalManagementSystem.Migrations
 
                     b.HasKey("UserID");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("HospitalManagementSystem.Models.Appointment", b =>
@@ -368,13 +370,13 @@ namespace HospitalManagementSystem.Migrations
             modelBuilder.Entity("HospitalManagementSystem.Models.DoctorDepartment", b =>
                 {
                     b.HasOne("HospitalManagementSystem.Models.Department", "Department")
-                        .WithMany()
+                        .WithMany("DoctorDepartments")
                         .HasForeignKey("DepartmentID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("HospitalManagementSystem.Models.Doctor", "Doctor")
-                        .WithMany()
+                        .WithMany("DoctorDepartments")
                         .HasForeignKey("DoctorID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -401,6 +403,16 @@ namespace HospitalManagementSystem.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HospitalManagementSystem.Models.Department", b =>
+                {
+                    b.Navigation("DoctorDepartments");
+                });
+
+            modelBuilder.Entity("HospitalManagementSystem.Models.Doctor", b =>
+                {
+                    b.Navigation("DoctorDepartments");
                 });
 #pragma warning restore 612, 618
         }

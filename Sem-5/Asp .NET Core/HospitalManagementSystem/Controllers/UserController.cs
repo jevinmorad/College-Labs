@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using HospitalManagementSystem.Data;
+﻿using HospitalManagementSystem.Data;
 using HospitalManagementSystem.Models;
+using HospitalManagementSystem.Utilities;
+using Microsoft.AspNetCore.Mvc;
+using System.Numerics;
 using System.Reflection;
 
 namespace HospitalManagementSystem.Controllers
@@ -28,117 +30,108 @@ namespace HospitalManagementSystem.Controllers
         }
         #endregion
 
-        #region Create
+        public IActionResult Profile()
+        {
+            var userId = CommonVariable.UserID();
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Auth"); // Or handle as needed
+            }
+            return RedirectToAction("Details", new { id = UrlEncryptor.Encrypt(userId.ToString()) });
+        }
+
+        // Displays the user's profile in a read-only view
+        public async Task<IActionResult> Details(string id)
+        {
+            if (id == null) return NotFound();
+            int decryptedId = Convert.ToInt32(UrlEncryptor.Decrypt(id));
+            var user = await _db.Users.FindAsync(decryptedId);
+            if (user == null) return NotFound();
+            return View(user);
+        }
+
+        // GET: Displays the form for creating a new user
         public IActionResult Create()
         {
-            return View();
+            return View(new User());
         }
 
+        // POST: Handles the creation of a new user
         [HttpPost]
-        public IActionResult Create(User obj, IFormFile ProfilePhoto)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(User user, IFormFile ProfilePhotoFile)
         {
-            if (!ModelState.IsValid)
+            ModelState.Remove("ProfilePhoto"); // Remove to allow manual handling
+            if (ModelState.IsValid)
             {
-                return View("Create", obj);
-            }
-            if(ProfilePhoto !=null && ProfilePhoto.Length > 0)
-            {
-                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
-                if (!Directory.Exists(uploadsFolder))
+                if (ProfilePhotoFile != null && ProfilePhotoFile.Length > 0)
                 {
-                    Directory.CreateDirectory(uploadsFolder);
+                    // Logic to save the new profile photo
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ProfilePhotoFile.FileName);
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ProfilePhotoFile.CopyToAsync(stream);
+                    }
+                    user.ProfilePhoto = "/images/" + fileName;
                 }
 
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ProfilePhoto.FileName);
-                var filePath = Path.Combine(uploadsFolder, fileName);
-
-                FileStream stream = new FileStream(filePath, FileMode.CreateNew);
-                ProfilePhoto.CopyTo(stream);
-                stream.Close();
-
-                obj.ProfilePhoto = "/images/" + fileName;
-            } 
-            else
-            {
-                obj.ProfilePhoto = "/images/default-profile.png";
+                await _db.Users.AddAsync(user);
+                await _db.SaveChangesAsync();
+                TempData["success"] = "User created successfully.";
+                return RedirectToAction("List"); // Assuming you have a List view
             }
-            _db.Users.Add(obj);
-            _db.SaveChanges();
-            return RedirectToAction("List");
+            return View(user);
+
         }
-        #endregion
 
-        #region Edit
-        public IActionResult Edit(int? id)
+        // GET: Displays the form for editing an existing user
+        public async Task<IActionResult> Edit(string id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
+            int decryptedId = Convert.ToInt32(UrlEncryptor.Decrypt(id));
+            var user = await _db.Users.FindAsync(decryptedId);
+            if (user == null) return NotFound();
+            return View("Create", user); // Re-uses the Create view for editing
+        }
 
-            var user = _db.Users.Find(id);
-            if (user == null)
-                return NotFound();
+        // POST: Handles the update of an existing user
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(User user, IFormFile ProfilePhotoFile)
+        {
+            ModelState.Remove("ProfilePhoto");
+            ModelState.Remove("Password"); // Password is not updated here
+            if (ModelState.IsValid)
+            {
+                var userToUpdate = await _db.Users.FindAsync(user.UserID);
+                if (userToUpdate == null) return NotFound();
 
+                userToUpdate.UserName = user.UserName;
+                userToUpdate.Email = user.Email;
+                userToUpdate.MobileNo = user.MobileNo;
+                userToUpdate.Modified = DateTime.Now;
+
+                if (ProfilePhotoFile != null && ProfilePhotoFile.Length > 0)
+                {
+                    // Logic to save a new profile photo and update the path
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ProfilePhotoFile.FileName);
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ProfilePhotoFile.CopyToAsync(stream);
+                    }
+                    userToUpdate.ProfilePhoto = "/images/" + fileName;
+                }
+
+                _db.Users.Update(userToUpdate);
+                await _db.SaveChangesAsync();
+                TempData["success"] = "Profile updated successfully.";
+                return RedirectToAction("Details", new { id = UrlEncryptor.Encrypt(user.UserID.ToString()) });
+            }
             return View("Create", user);
         }
-
-        [HttpPost]
-        public IActionResult Edit(User obj, IFormFile ProfilePhoto)
-        {
-            if (obj.UserID == 0)
-                return NotFound();
-
-            ModelState.Remove("ProfilePhoto");
-            if (!ModelState.IsValid)
-            {
-                return View("Create", obj);
-            }
-
-            var user = _db.Users.Find(obj.UserID);
-
-            if (user == null)
-                return NotFound();
-
-            user.UserName = obj.UserName;
-            user.Email = obj.Email;
-            user.MobileNo = obj.MobileNo;
-            user.IsActive = obj.IsActive;
-            user.Modified = DateTime.Now;
-
-            if (ProfilePhoto != null && ProfilePhoto.Length > 0)
-            {
-                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
-                if (!Directory.Exists(uploadsFolder))
-                {
-                    Directory.CreateDirectory(uploadsFolder);
-                }
-
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ProfilePhoto.FileName);
-                var filePath = Path.Combine(uploadsFolder, fileName);
-
-                FileStream stream = new FileStream(filePath, FileMode.Create);
-                ProfilePhoto.CopyTo(stream);
-                stream.Close();
-
-                user.ProfilePhoto = "/images/" + fileName;
-            }
-
-            _db.SaveChanges();
-            return RedirectToAction("List");
-        }
-        #endregion
-
-        #region Delete
-        [HttpPost]
-        public IActionResult Delete(int id)
-        {
-            var user = _db.Users.Find(id);
-            if (user != null)
-            {
-                _db.Users.Remove(user);
-                _db.SaveChanges();
-            }
-            return RedirectToAction("List");
-        }
-        #endregion
     }
 }

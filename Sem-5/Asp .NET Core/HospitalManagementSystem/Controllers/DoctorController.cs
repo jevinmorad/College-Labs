@@ -88,18 +88,23 @@ namespace HospitalManagementSystem.Controllers
             _db.DoctorDepartments.Add(doctorDepartment);
             _db.SaveChanges();
 
+            TempData["success"] = $"Doctor '{doctor.Name}' was created successfully.";
+
             return RedirectToAction("List");
         }
         #endregion
 
         #region Edit
-        public IActionResult Edit(string? id)
+        public IActionResult Edit(string id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                TempData["error"] = "Doctor Id not found";
+                return NotFound();
+            }
 
             int decryptedId = Convert.ToInt32(UrlEncryptor.Decrypt(id));
             var doctor = _db.Doctors.Find(decryptedId);
-            if (doctor == null) return NotFound();
             
             var selectedDepartmentId = _db.DoctorDepartments.FirstOrDefault(dd => dd.DoctorID == decryptedId)?.DepartmentID;
 
@@ -120,13 +125,18 @@ namespace HospitalManagementSystem.Controllers
             }
 
             var doctorToUpdate = _db.Doctors.Find(doctor.DoctorId);
-            if(doctorToUpdate == null) return NotFound();
+            if (doctorToUpdate == null)
+            {
+                TempData["error"] = "Doctor not found";
+                return NotFound();
+            }
 
             doctorToUpdate.Name = doctor.Name;
             doctorToUpdate.Email = doctor.Email;
             doctorToUpdate.Phone = doctor.Phone;
             doctorToUpdate.Qualification = doctor.Qualification;
             doctorToUpdate.Specialization = doctor.Specialization;
+            doctorToUpdate.IsActive = doctor.IsActive;
             doctorToUpdate.Modified = DateTime.Now;
 
             if (ProfilePhoto != null && ProfilePhoto.Length > 0)
@@ -161,43 +171,34 @@ namespace HospitalManagementSystem.Controllers
                 };
                 _db.DoctorDepartments.Add(newDoctorDepartment);
             }
-
             _db.SaveChanges();
+
+            TempData["success"] = $"Doctor '{doctor.Name}' was updated successfully.";
+
             return RedirectToAction("List");
         }
         #endregion
 
         #region Delete
         [HttpPost]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(int id)
         {
+            var doctor = _db.Doctors.Find(id);
 
-            var decryptedId = Convert.ToInt32(UrlEncryptor.Decrypt(id));
-            var doctor = _db.Doctors
-                .Include(d => d.DoctorDepartments)
-                .FirstOrDefault(d => d.DoctorId == decryptedId);
-
-            if (doctor != null)
+            if (doctor == null)
             {
-                if (!string.IsNullOrEmpty(doctor.ProfilePhoto) && doctor.ProfilePhoto != "/images/default-profile.png") 
-                {
-                    var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", doctor.ProfilePhoto.TrimStart('/')); 
-                    if (System.IO.File.Exists(imagePath))
-                    {
-                        System.IO.File.Delete(imagePath); 
-                    }
-                }
-
-                if (doctor.DoctorDepartments.Any())
-                {
-                    _db.DoctorDepartments.RemoveRange(doctor.DoctorDepartments);
-                }
-
-                 _db.Doctors.Remove(doctor); 
-        
-                _db.SaveChanges(); 
+                TempData["error"] = "Doctor not found.";
+                return RedirectToAction("List");
             }
-            return RedirectToAction("List"); 
+
+            doctor.IsActive = false;
+            doctor.Modified = DateTime.Now;
+            _db.Doctors.Update(doctor);
+            _db.SaveChanges();
+
+            TempData["success"] = $"Doctor '{doctor.Name}' has been successfully deactivated.";
+
+            return RedirectToAction("List");
         }
         #endregion
     }

@@ -5,110 +5,207 @@
     ViewData["Title"] = "Appointment List";
 }
 
-<div class="pagetitle my-4">
-    <h1 class="display-6">Appointment List</h1>
+<div class="d-flex justify-content-between align-items-center my-4">
+    <div class="pagetitle">
+        <h1 class="display-6 mb-1">Appointments</h1>
+        <p class="text-muted mb-0">Manage all patient's appoints.</p>
+    </div>
+    <a asp-controller="Appointment" asp-action="Create" class="btn btn-primary">
+        <i class="bx bx-plus me-1"></i> New Appointment
+    </a>
 </div>
 
+<!-- #Search form -->
+<div class="card card-body mb-4">
+    <form asp-controller="Appointment" asp-action="List" method="get">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label">Patient Name</label>
+                <input type="text" name="patientName" class="form-control" placeholder="Search by name..." value="@ViewData["PatientNameFilter"]" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Doctor</label>
+                <select name="doctorId" asp-items="@ViewBag.Doctors" class="form-select">
+                    <option value="">-- Any Doctor --</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Date</label>
+                <input type="date" name="appointmentDate" class="form-control" value="@ViewData["AppointmentDateFilter"]" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Status</label>
+                <select name="status" class="form-select">
+                    <option value="">-- Any Status --</option>
+                    <option value="Scheduled" selected="@("Scheduled".Equals(ViewData["StatusFilter"]?.ToString()))">Scheduled</option>
+                    <option value="Completed" selected="@("Completed".Equals(ViewData["StatusFilter"]?.ToString()))">Completed</option>
+                    <option value="Cancelled" selected="@("Cancelled".Equals(ViewData["StatusFilter"]?.ToString()))">Cancelled</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex">
+                <button type="submit" class="btn btn-primary flex-grow-1">Apply</button>
+                <a asp-action="List" class="btn btn-icon btn-outline-secondary ms-2" title="Clear Filters"><i class="bx bx-revision"></i></a>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- #endregion -->
+
 <div class="card">
-    <h5 class="card-header">All Appointments</h5>
     <div class="table-responsive text-nowrap">
-        <table class="table table-hover">
+        <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>Patient Name</th>
-
-                    <th>Doctor Name</th>
-                    <th>Appointment Date</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Date & Time</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Actions</th>
                 </tr>
-
             </thead>
             <tbody class="table-border-bottom-0">
                 @foreach (var appt in Model)
                 {
-                    <tr data-url="@Url.Action("Details", "Appointment", new { id = appt.AppointmentID })"
-                        class="details-row"
-                        style="cursor: pointer;">
-
-                        <td>@appt.Patient.Name</td>
-                        <td>@appt.Doctor.Name</td>
-
-                        <td>@appt.AppointmentDate.ToString("g")</td>
-                        <td><span class="badge bg-label-primary me-1">@appt.AppointmentStatus</span></td>
+                    <tr class="clickable-row" style="cursor: pointer;" data-modal-target="#modal-@appt.AppointmentID">
                         <td>
-                            <div class="dropdown">
-
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" asp-controller="Appointment" asp-action="Edit" asp-route-id="@UrlEncryptor.Encrypt(appt.AppointmentID.ToString())">
-
-                                        <i class="bx bx-edit-alt me-1"></i> Edit
-                                    </a>
-                                    <form asp-controller="Appointment" asp-action="Delete" asp-route-id="@UrlEncryptor.Encrypt(appt.AppointmentID.ToString())" method="post" style="display:inline;">
-
-                                        <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure you want to delete this appointment?');">
-                                            <i class="bx bx-trash me-1"></i> Delete
-
-                                        </button>
-                                    </form>
+                            <div class="d-flex align-items-center">
+                                <i class="fa-solid fa-circle-user fs-2 text-primary me-2"></i>
+                                <div class="d-flex flex-column">
+                                    <span class="fw-medium">@appt.Patient.Name</span>
+                                    <small class="text-muted">@appt.Patient.Phone</small>
                                 </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <i class="fa-solid fa-stethoscope fs-3 text-info me-2"></i>
+                                <div class="d-flex flex-column">
+                                    <span class="fw-medium">@appt.Doctor.Name</span>
+                                    <small class="text-muted">@appt.Doctor.Specialization</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column">
+                                <span class="fw-medium">@appt.AppointmentDate.ToString("MMM dd, yyyy")</span>
+                                <small class="text-muted">@appt.AppointmentDate.ToString("hh:mm tt")</small>
+                            </div>
+                        </td>
 
+                        <td class="text-center">
+                            @{
+                                var statusText = appt.AppointmentStatus;
+                                var statusIconClass = "";
+                                var statusButtonClass = "";
+
+                                switch (statusText?.ToLower())
+                                {
+                                    case "scheduled":
+                                        statusIconClass = "bx bx-time";
+                                        statusButtonClass = "btn-outline-primary text-primary";
+                                        break;
+                                    case "completed":
+                                        statusIconClass = "bx bx-check-circle";
+                                        statusButtonClass = "btn-outline-success text-success";
+                                        break;
+                                    case "cancelled":
+                                        statusIconClass = "bx bx-x-circle";
+                                        statusButtonClass = "btn-outline-danger text-danger";
+                                        break;
+                                    default:
+                                        statusIconClass = "bx bx-info-circle";
+                                        statusButtonClass = "btn-outline-secondary text-secondary";
+                                        break;
+                                }
+                            }
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-sm dropdown-toggle @statusButtonClass"
+                                        data-bs-toggle="dropdown" aria-expanded="false"
+                                        style="background-color: transparent;">
+                                    <i class="@statusIconClass me-1"></i>
+                                    @statusText
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <form asp-controller="Appointment" asp-action="UpdateStatus" method="post" class="d-inline status-update-form">
+                                            <input type="hidden" name="appointmentId" value="@appt.AppointmentID" />
+                                            <input type="hidden" name="newStatus" value="Scheduled" />
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="$(this).closest('form').submit();">
+                                                <i class="bx bx-time me-1 text-primary"></i> Scheduled
+                                            </a>
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form asp-controller="Appointment" asp-action="UpdateStatus" method="post" class="d-inline status-update-form">
+                                            <input type="hidden" name="appointmentId" value="@appt.AppointmentID" />
+                                            <input type="hidden" name="newStatus" value="Completed" />
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="$(this).closest('form').submit();">
+                                                <i class="bx bx-check-circle me-1 text-success"></i> Completed
+                                            </a>
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form asp-controller="Appointment" asp-action="UpdateStatus" method="post" class="d-inline status-update-form">
+                                            <input type="hidden" name="appointmentId" value="@appt.AppointmentID" />
+                                            <input type="hidden" name="newStatus" value="Cancelled" />
+                                            <a class="dropdown-item" href="javascript:void(0);" onclick="$(this).closest('form').submit();">
+                                                <i class="bx bx-x-circle me-1 text-danger"></i> Cancelled
+                                            </a>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+
+                        <td class="text-center">
+                            <div class="d-inline-flex gap-1">
+                                <a asp-controller="Appointment" asp-action="Edit" asp-route-id="@UrlEncryptor.Encrypt(appt.AppointmentID.ToString())"
+                                   class="btn btn-sm btn-outline-primary" title="Edit">
+                                    <i class="bx bx-pencil"></i>
+                                </a>
+                                <form asp-controller="Appointment" asp-action="Delete" asp-route-id="@appt.AppointmentID" method="post">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"
+                                            onclick="return confirm('Are you sure you want to delete this appointment?');">
+                                        <i class="bx bx-trash"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
                 }
             </tbody>
-
         </table>
     </div>
 </div>
 
-<div class="modal fade" id="appointmentDetailsModal" tabindex="-1" aria-labelledby="appointmentDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="appointmentDetailsModalLabel">Appointment Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="modal-body-content">
+@foreach (var appt in Model)
+{
+    <div class="modal fade" id="modal-@appt.AppointmentID" tabindex="-1" aria-labelledby="modalLabel-@appt.AppointmentID" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel-@appt.AppointmentID">Appointment Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @await Html.PartialAsync("_AppointmentDetails", appt)
+                </div>
             </div>
         </div>
     </div>
-</div>
-
+}
 
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // When a row with the class 'details-row' is clicked
-            $('.details-row').on('click', function (event) {
-                // Prevent click on dropdown from triggering modal
-                if ($(event.target).closest('.dropdown').length) {
+            $('.clickable-row').on('click', function (e) {
+                if ($(e.target).closest('.dropdown').length || $(e.target).is('button, a') || $(e.target).closest('button, a').length) {
                     return;
                 }
 
-                var url = $(this).data('url');
-                var modalBody = $('#modal-body-content');
-                var appointmentModal = new bootstrap.Modal(document.getElementById('appointmentDetailsModal'));
-
-                // 1. Show a loading spinner inside the modal body
-                modalBody.html('<div class="d-flex justify-content-center my-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
-
-                // 2. Show the modal
-                appointmentModal.show();
-
-                // 3. Fetch the partial view from the controller
-                $.get(url, function (data) {
-                    // 4. On success, replace spinner with the fetched content
-                    modalBody.html(data);
-                }).fail(function() {
-                    // On failure, show an error message
-                    modalBody.html('<div class="alert alert-danger">Could not load appointment details. Please try again.</div>');
-                });
+                var modalTarget = $(this).data('modal-target');
+                var modal = new bootstrap.Modal(document.querySelector(modalTarget));
+                modal.show();
             });
         });
     </script>

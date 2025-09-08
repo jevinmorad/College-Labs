@@ -1,0 +1,55 @@
+﻿@using HospitalManagementSystem.Utilities
+@model User
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="user-profile-header d-flex flex-column flex-sm-row text-sm-start text-center mb-4">
+                <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
+                    <img src="@(string.IsNullOrEmpty(Model.ProfilePhoto) ? "/images/default-profile.png" : Model.ProfilePhoto)"
+                         alt="user image"
+                         class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img"
+                         style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #fff;" />
+                </div>
+                <div class="flex-grow-1 mt-3 mt-sm-5">
+                    <div class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-4 flex-md-row flex-column gap-4">
+                        <div class="user-profile-info">
+                            <h4 class="mb-2">@Model.UserName</h4>
+                            <ul class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-2">
+                                <li class="list-inline-item fw-semibold"><i class="bx bx-calendar-alt"></i> Joined @Model.Created.ToString("MMMM yyyy")</li>
+                            </ul>
+                        </div>
+                        <a asp-action="Edit" asp-route-id="@UrlEncryptor.Encrypt(Model.UserID.ToString())" class="btn btn-primary">
+                            <i class="bx bx-edit-alt me-1"></i>Edit Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <small class="text-muted text-uppercase">About</small>
+                <ul class="list-unstyled mb-4 mt-3">
+                    <li class="d-flex align-items-center mb-3"><i class="bx bx-user"></i><span class="fw-semibold mx-2">Full Name:</span> <span>@Model.UserName</span></li>
+                    <li class="d-flex align-items-center mb-3"><i class="bx bx-check"></i><span class="fw-semibold mx-2">Status:</span> <span>@(Model.IsActive ? "Active" : "Inactive")</span></li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <small class="text-muted text-uppercase">Contact</small>
+                <ul class="list-unstyled mb-0 mt-3">
+                    <li class="d-flex align-items-center mb-3"><i class="bx bx-phone"></i><span class="fw-semibold mx-2">Contact:</span> <span>@Model.MobileNo</span></li>
+                    <li class="d-flex align-items-center mb-3"><i class="bx bx-envelope"></i><span class="fw-semibold mx-2">Email:</span> <span>@Model.Email</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

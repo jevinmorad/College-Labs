@@ -8,12 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\NewFolder\**" />
     <Compile Remove="wwroots\**" />
     <Compile Remove="wwwroot\libs\**" />
+    <Content Remove="Views\NewFolder\**" />
     <Content Remove="wwroots\**" />
     <Content Remove="wwwroot\libs\**" />
+    <EmbeddedResource Remove="Views\NewFolder\**" />
     <EmbeddedResource Remove="wwroots\**" />
     <EmbeddedResource Remove="wwwroot\libs\**" />
+    <None Remove="Views\NewFolder\**" />
     <None Remove="wwroots\**" />
     <None Remove="wwwroot\libs\**" />
   </ItemGroup>
@@ -34,6 +38,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
   </ItemGroup>
 
 </Project>

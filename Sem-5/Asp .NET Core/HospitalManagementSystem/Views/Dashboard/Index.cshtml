@@ -1,0 +1,284 @@
+﻿@using System.Globalization
+@model Dashboard
+
+@{
+    ViewData["Title"] = "Hospital Dashboard";
+    int? selectedYear = ViewData["SelectedYear"] as int?;
+    int? selectedMonth = ViewData["SelectedMonth"] as int?;
+
+    string currentPeriodText = "";
+    if (selectedMonth.HasValue)
+    {
+        currentPeriodText = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(selectedMonth.Value) + " " + selectedYear;
+    }
+    else
+    {
+        currentPeriodText = "Year " + selectedYear;
+    }
+}
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-6 col-md-12">
+        <div class="card h-100">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="card-title mb-0">Key Daily Metrics</h5>
+                <small class="text-muted">@DateTime.Today.ToString("dddd, dd MMMM yyyy")</small>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar flex-shrink-0 me-3"><span class="avatar-initial rounded bg-label-success"><i class='bx bx-dollar fs-3'></i></span></div>
+                            <div>
+                                <h6 class="mb-0 text-success">@Model.TodaysRevenue.ToString("C", new System.Globalization.CultureInfo("en-IN"))</h6>
+                                <small class="text-muted">Today's Revenue</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar flex-shrink-0 me-3"><span class="avatar-initial rounded bg-label-primary"><i class='bx bx-calendar-check fs-3'></i></span></div>
+                            <div>
+                                <h6 class="mb-0 text-primary">@Model.ScheduledAppointmentsToday</h6>
+                                <small class="text-muted">Scheduled Today</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar flex-shrink-0 me-3"><span class="avatar-initial rounded bg-label-info"><i class='bx bx-user-plus fs-3'></i></span></div>
+                            <div>
+                                <h6 class="mb-0 text-info">@Model.NewPatientsToday</h6>
+                                <small class="text-muted">New Patients Today</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar flex-shrink-0 me-3"><span class="avatar-initial rounded bg-label-danger"><i class='bx bx-calendar-x fs-3'></i></span></div>
+                            <div>
+                                <h6 class="mb-0 text-danger">@Model.CancelledAppointmentsToday</h6>
+                                <small class="text-muted">Cancelled Today</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 col-md-12">
+        <div class="card h-100">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="card-title mb-0">Appointments Overview</h5>
+                <small class="text-muted">@currentPeriodText</small>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar flex-shrink-0 me-3"><span class="avatar-initial rounded bg-label-secondary"><i class='bx bx-line-chart fs-3'></i></span></div>
+                            <div>
+                                <h6 class="mb-0">@Model.TotalAppointmentsInPeriod</h6>
+                                <small class="text-muted">Total Appointments</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar flex-shrink-0 me-3"><span class="avatar-initial rounded bg-label-success"><i class='bx bx-check-double fs-3'></i></span></div>
+                            <div>
+                                <h6 class="mb-0">@Model.CompletedAppointmentsInPeriod</h6>
+                                <small class="text-muted">Completed</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar flex-shrink-0 me-3"><span class="avatar-initial rounded bg-label-primary"><i class='bx bx-calendar fs-3'></i></span></div>
+                            <div>
+                                <h6 class="mb-0">@Model.ScheduledAppointmentsInPeriod</h6>
+                                <small class="text-muted">Scheduled</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar flex-shrink-0 me-3"><span class="avatar-initial rounded bg-label-danger"><i class='bx bx-error fs-3'></i></span></div>
+                            <div>
+                                <h6 class="mb-0">@Model.CancelledAppointmentsInPeriod</h6>
+                                <small class="text-muted">Cancelled</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between">
+                <h5 class="card-title mb-0">Today's Schedule</h5>
+                <small class="text-muted">@DateTime.Today.ToString("dddd, dd MMMM yyyy")</small>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Time</th>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Contact</th>
+                            <th class="text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        @if (Model.TodaysAppointments.Any())
+                        {
+                            @foreach (var appt in Model.TodaysAppointments)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@appt.AppointmentDate.ToString("hh:mm tt")</td>
+                                    <td>@appt.Patient.Name</td>
+                                    <td>@appt.Doctor.Name</td>
+                                    <td>@appt.Patient.Phone</td>
+                                    <td class="text-center">
+                                        @{
+                                            var statusText = appt.AppointmentStatus;
+                                            var statusIcon = statusText == "Scheduled" ? "bx-time" : (statusText == "Completed" ? "bx-check-circle" : "bx-x-circle");
+                                            var statusClass = statusText == "Scheduled" ? "primary" : (statusText == "Completed" ? "success" : "danger");
+                                        }
+                                        <div class="dropdown">
+                                            <button type="button" class="btn btn-sm btn-outline-@statusClass dropdown-toggle" data-bs-toggle="dropdown">
+                                                <i class="bx @statusIcon me-1"></i> @statusText
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <form asp-controller="Appointment" asp-action="UpdateStatus" method="post" class="d-inline">
+                                                        <input type="hidden" name="appointmentId" value="@appt.AppointmentID" />
+                                                        <input type="hidden" name="returnUrl" value="@Url.Action("Index", "Dashboard")" />
+                                                        <input type="hidden" name="newStatus" value="Scheduled" />
+                                                        <a class="dropdown-item" href="javascript:void(0);" onclick="$(this).closest('form').submit();">Scheduled</a>
+                                                    </form>
+                                                </li>
+                                                <li>
+                                                    <form asp-controller="Appointment" asp-action="UpdateStatus" method="post" class="d-inline">
+                                                        <input type="hidden" name="appointmentId" value="@appt.AppointmentID" />
+                                                        <input type="hidden" name="returnUrl" value="@Url.Action("Index", "Dashboard")" />
+                                                        <input type="hidden" name="newStatus" value="Completed" />
+                                                        <a class="dropdown-item" href="javascript:void(0);" onclick="$(this).closest('form').submit();">Completed</a>
+                                                    </form>
+                                                </li>
+                                                <li>
+                                                    <form asp-controller="Appointment" asp-action="UpdateStatus" method="post" class="d-inline">
+                                                        <input type="hidden" name="appointmentId" value="@appt.AppointmentID" />
+                                                        <input type="hidden" name="returnUrl" value="@Url.Action("Index", "Dashboard")" />
+                                                        <input type="hidden" name="newStatus" value="Cancelled" />
+                                                        <a class="dropdown-item" href="javascript:void(0);" onclick="$(this).closest('form').submit();">Cancelled</a>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="5" class="text-center py-5">No appointments scheduled for today.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Doctor Activity Today</h5>
+            </div>
+            <div class="card-body">
+                <ul class="p-0 m-0">
+                    @if(Model.DoctorAppointmentCounts.Any())
+                    {
+                        @foreach(var doctor in Model.DoctorAppointmentCounts)
+                        {
+                            <li class="d-flex align-items-center mb-3">
+                                <i class="bx bxs-user-md fs-3 text-info me-3"></i>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <h6 class="mb-0">@doctor.Key</h6>
+                                    </div>
+                                    <div class="user-progress">
+                                        <span class="badge bg-label-primary">@doctor.Value Appt(s)</span>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="text-muted">No doctor activity recorded yet today.</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card mt-4">
+            <div class="card-header">
+                <form asp-action="Index" method="get" class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title mb-0">Revenue Report</h5>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <select name="month" class="form-select form-select-sm" asp-items="@ViewBag.MonthFilter" onchange="this.form.submit()">
+                            <option value="">-- All Months --</option>
+                        </select>
+                        <select name="year" class="form-select form-select-sm" asp-items="@ViewBag.YearFilter" onchange="this.form.submit()"></select>
+                    </div>
+                </form>
+            </div>
+            <div class="card-body">
+                <canvas id="revenueChart" class="chartjs" height="120"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Revenue Chart
+            if (@Model.RevenueData.Count > 0) {
+                const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+                new Chart(ctxRevenue, {
+                    type: 'line',
+                    data: {
+                        labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ChartLabels)),
+                        datasets: [{
+                            label: 'Revenue (₹)',
+                            data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.RevenueData)),
+                            backgroundColor: 'rgba(105, 108, 255, 0.1)',
+                            borderColor: 'rgba(105, 108, 255, 1)',
+                            borderWidth: 2, fill: true, tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true, ticks: { callback: (value) => '₹' + value } }, x: { grid: { display: false } } },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            } else {
+                // Display a message if no revenue data
+                const chartContainer = document.getElementById('revenueChart').parentElement;
+                chartContainer.innerHTML = '<div class="text-center py-5 text-muted">No revenue data available for this period.</div>';
+            }
+        });
+    </script>
+}

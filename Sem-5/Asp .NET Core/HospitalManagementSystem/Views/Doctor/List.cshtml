@@ -1,53 +1,78 @@
-﻿@using HospitalManagementSystem.Utilities;
-@using HospitalManagementSystem.Models
+﻿@using HospitalManagementSystem.Utilities
 @model List<Doctor>
 
-<div class="pagetitle my-4">
-    <h1 class="display-6">Doctor List</h1>
+@{
+    ViewData["Title"] = "Doctor List";
+}
+
+<div class="d-flex justify-content-between align-items-center my-4">
+    <div class="pagetitle">
+        <h1 class="display-6 mb-1">Doctors</h1>
+        <p class="text-muted mb-0">Manage all doctor records.</p>
+    </div>
+    <a asp-controller="Doctor" asp-action="Create" class="btn btn-primary">
+        <i class="bx bx-plus me-1"></i> New Doctor
+    </a>
 </div>
 
 <div class="card">
-    <h5 class="card-header">All Doctors</h5>
     <div class="table-responsive text-nowrap">
-        <table class="table table-hover" id="doctorTable">
+        <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Department</th>
-                    <th>Status</th>
+                    <th>Doctor Info</th>
+                    <th>Specialization & Dept.</th>
+                    <th>Contact</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="table-border-bottom-0">
                 @foreach (var doctor in Model)
                 {
-                    var hasDepartments = doctor.DoctorDepartments != null && doctor.DoctorDepartments.Any();
-                    <tr class="doctor-row"
-                        data-id="@UrlEncryptor.Encrypt(doctor.DoctorId.ToString()))"
-                        data-name="@doctor.Name"
-                        data-email="@doctor.Email"
-                        data-phone="@doctor.Phone"
-                        data-qualification="@doctor.Qualification"
-                        data-specialization="@doctor.Specialization"
-                        data-status="@(doctor.IsActive ? "Active" : "Inactive")"
-                        data-photo="@doctor.ProfilePhoto"
-                        data-department="@(hasDepartments ? doctor.DoctorDepartments.FirstOrDefault()?.Department?.DepartmentName : "N/A")">
-                        <td><strong>@doctor.Name</strong></td>
-                        <td>@doctor.Phone</td>
+                    <tr class="clickable-row" style="cursor: pointer;" data-modal-target="#modal-@doctor.DoctorId">
                         <td>
-                            @if (hasDepartments)
+                            <div class="d-flex align-items-center">
+                                <img src="@(string.IsNullOrEmpty(doctor.ProfilePhoto) ? "/images/default-profile.png" : doctor.ProfilePhoto)"
+                                     alt="Avatar" class="rounded-circle" style="width: 45px; height: 45px; object-fit: cover;" />
+                                <div class="ms-3">
+                                    <div class="fw-bold">@doctor.Name</div>
+                                    <small class="text-muted">@doctor.Email</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <div class="fw-bold">@doctor.Specialization</div>
+                                <small class="text-muted">
+                                    @(doctor.DoctorDepartments?.FirstOrDefault()?.Department?.DepartmentName ?? "N/A")
+                                </small>
+                            </div>
+                        </td>
+                        <td>@doctor.Phone</td>
+                        <td class="text-center">
+                            @if (doctor.IsActive)
                             {
-                                @doctor.DoctorDepartments.FirstOrDefault()?.Department?.DepartmentName
+                                <span class="badge bg-label-success">Active</span>
                             }
                             else
                             {
-                                <span>N/A</span>
+                                <span class="badge bg-label-secondary">Inactive</span>
                             }
                         </td>
-                        <td>
-                            <span class="badge me-1 @(doctor.IsActive ? "bg-label-primary" : "bg-secondary")">
-                                @(doctor.IsActive ? "Active" : "Inactive")
-                            </span>
+                        <td class="text-center">
+                            <div class="d-inline-flex gap-1">
+                                <a asp-controller="Doctor" asp-action="Edit" asp-route-id="@UrlEncryptor.Encrypt(doctor.DoctorId.ToString())"
+                                   class="btn btn-sm btn-outline-primary" title="Edit" onclick="event.stopPropagation();">
+                                    <i class="bx bx-pencil"></i>
+                                </a>
+                                <form asp-controller="Doctor" asp-action="Delete" asp-route-id="@doctor.DoctorId" method="post">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"
+                                            onclick="return confirm('Are you sure you want to delete this department?');">
+                                        <i class="bx bx-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 }
@@ -56,114 +81,36 @@
     </div>
 </div>
 
-<a asp-controller="Doctor" asp-action="Create" class="fab-add-user" title="Create new doctor">
-    <span class="fab-content">
-        <i class="bx bx-user-plus"></i>
-        <span class="text">Create new doctor</span>
-    </span>
-</a>
-
-<div class="modal fade" id="doctorDetailModal" tabindex="-1" aria-labelledby="doctorDetailLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">
-                    <i class="bx bx-user-circle me-2 text-white"></i><span class="text-white">Doctor Details</span>
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-4">
-                <div class="row">
-                    <div class="col-md-4 text-center">
-                        <img id="doctorPhoto" src="/images/default-doctor.png"
-                             alt="Profile Photo"
-                             class="rounded-circle border border-3 border-primary mb-3"
-                             style="width: 150px; height: 150px; object-fit: cover;">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="mb-3">
-                            <label class="fw-bold">Name:</label>
-                            <div id="modalDoctorName"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="fw-bold">Email:</label>
-                            <div id="modalDoctorEmail"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="fw-bold">Phone:</label>
-                            <div id="modalDoctorPhone"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="fw-bold">Qualification:</label>
-                            <div id="modalDoctorQualification"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="fw-bold">Specialization:</label>
-                            <div id="modalDoctorSpecialization"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="fw-bold">Department:</label>
-                            <div id="modalDoctorDepartment"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="fw-bold">Status:</label>
-                            <span id="modalDoctorStatus" class="badge"></span>
-                        </div>
-                    </div>
+@foreach (var doctor in Model)
+{
+    <div class="modal fade" id="modal-@doctor.DoctorId" tabindex="-1" aria-labelledby="modalLabel-@doctor.DoctorId" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel-@doctor.DoctorId">Doctor Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <a asp-controller="Doctor" asp-action="Edit" asp-route-id="__id__" id="editDoctorBtn" class="btn btn-primary">
-                    <i class="bx bx-edit-alt me-1"></i> Edit
-                </a>
-                <form asp-controller="Doctor" asp-action="Delete" asp-route-id="__id__" id="deleteDoctorForm" method="post">
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this doctor?');">
-                        <i class="bx bx-trash me-1"></i> Delete
-                    </button>
-                </form>
+                <div class="modal-body">
+                    @await Html.PartialAsync("_DoctorDetails", doctor)
+                </div>
             </div>
         </div>
     </div>
-</div>
+}
 
 @section Scripts {
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const rows = document.querySelectorAll('.doctor-row');
-            const modal = new bootstrap.Modal(document.getElementById('doctorDetailModal'));
-            const defaultPhoto = '/images/default-doctor.png';
+        $(document).ready(function () {
+            $('.clickable-row').on('click', function (e) {
+                // Check if the click target is within a dropdown or a button/link
+                if ($(e.target).closest('.dropdown').length || $(e.target).is('button, a') || $(e.target).closest('button, a').length) {
+                    return; // Do nothing if click is on an interactive element
+                }
 
-            rows.forEach(row => {
-                row.addEventListener('click', function () {
-                    const id = this.dataset.id;
-                    const name = this.dataset.name;
-                    const email = this.dataset.email;
-                    const phone = this.dataset.phone;
-                    const qualification = this.dataset.qualification;
-                    const specialization = this.dataset.specialization;
-                    const status = this.dataset.status;
-                    const photo = this.dataset.photo || defaultPhoto;
-                    const department = this.dataset.department;
-
-                    document.getElementById('modalDoctorName').textContent = name;
-                    document.getElementById('modalDoctorEmail').textContent = email;
-                    document.getElementById('modalDoctorPhone').textContent = phone;
-                    document.getElementById('modalDoctorQualification').textContent = qualification;
-                    document.getElementById('modalDoctorSpecialization').textContent = specialization;
-                    document.getElementById('modalDoctorDepartment').textContent = department;
-                    document.getElementById('modalDoctorStatus').textContent = status;
-                    document.getElementById('modalDoctorStatus').className =
-                        `badge rounded-pill px-3 py-2 ${status === "Active" ? "bg-primary" : "bg-warning"}`;
-                    document.getElementById('doctorPhoto').src = photo || defaultPhoto;
-
-                    const editBtn = document.getElementById('editDoctorBtn');
-                    const deleteForm = document.getElementById('deleteDoctorForm');
-
-                    editBtn.href = editBtn.href.replace('__id__', id);
-                    deleteForm.action = deleteForm.action.replace('__id__', id);
-
-                    modal.show();
-                });
+                // If not an interactive element, show the modal
+                var modalTarget = $(this).data('modal-target');
+                var modal = new bootstrap.Modal(document.querySelector(modalTarget));
+                modal.show();
             });
         });
     </script>

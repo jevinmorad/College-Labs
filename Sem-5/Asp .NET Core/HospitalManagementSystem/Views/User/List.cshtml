@@ -67,7 +67,7 @@
                     <div class="col-md-8">
                         <div class="mb-3">
                             <label class="fw-bold">Name:</label>
-                            <div id="modalUserName"></div>
+                            <div id="modalFirstName"></div>
                         </div>
                         <div class="mb-3">
                             <label class="fw-bold">Email:</label>
@@ -114,7 +114,7 @@
                     const status = this.dataset.status;
                     const photo = this.dataset.photo || defaultPhoto;
 
-                    document.getElementById('modalUserName').textContent = name;
+                    document.getElementById('modalFirstName').textContent = name;
                     document.getElementById('modalUserEmail').textContent = email;
                     document.getElementById('modalUserMobile').textContent = mobile;
                     document.getElementById('modalUserStatus').textContent = status;

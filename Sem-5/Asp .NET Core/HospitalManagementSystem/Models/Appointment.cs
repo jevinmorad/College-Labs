@@ -44,6 +44,6 @@ namespace HospitalManagementSystem.Models
         public User User { get; set; }
 
         [Column(TypeName = "decimal(10,2)"), DisplayName("Total Consulted Amount")]
-        public decimal? TotalConsultedAmount { get; set; }
+        public decimal TotalConsultedAmount { get; set; }
     }
 }

@@ -30,11 +30,11 @@ namespace HospitalManagementSystem.Controllers
                 return View(user);
             }
             HttpContext.Session.SetInt32("UserID", userData.UserID);
-            HttpContext.Session.SetString("UserName", userData.UserName);
+            HttpContext.Session.SetString("FirstName", userData.UserName);
             HttpContext.Session.SetString("Email", userData.Email);
             HttpContext.Session.SetString("ProfilePhoto", userData.ProfilePhoto ?? "/images/default-profile.png");
             HttpContext.Session.SetString("MobileNo", userData.MobileNo);
-            return RedirectToAction("List", "User");
+            return RedirectToAction("Index", "Dashboard");
         }
         public IActionResult Register()
         {
@@ -73,11 +73,11 @@ namespace HospitalManagementSystem.Controllers
             _db.SaveChanges();
 
             HttpContext.Session.SetInt32("UserID", obj.UserID);
-            HttpContext.Session.SetString("UserName", obj.UserName);
+            HttpContext.Session.SetString("FirstName", obj.UserName);
             HttpContext.Session.SetString("Email", obj.Email);
             HttpContext.Session.SetString("ProfilePhoto", obj.ProfilePhoto ?? "/images/default-profile.png");
             HttpContext.Session.SetString("MobileNo", obj.MobileNo);
-            return RedirectToAction("List", "User");
+            return RedirectToAction("Index", "Dashboard");
         }
         public IActionResult Logout()
         {

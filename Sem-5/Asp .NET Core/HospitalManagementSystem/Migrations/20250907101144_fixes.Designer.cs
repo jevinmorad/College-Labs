@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HospitalManagementSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250809104248_add_profile_photo")]
-    partial class add_profile_photo
+    [Migration("20250907101144_fixes")]
+    partial class fixes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,7 +63,7 @@ namespace HospitalManagementSystem.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<decimal?>("TotalConsultedAmount")
+                    b.Property<decimal>("TotalConsultedAmount")
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<int>("UserID")
@@ -309,7 +309,6 @@ namespace HospitalManagementSystem.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ProfilePhoto")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
@@ -374,13 +373,13 @@ namespace HospitalManagementSystem.Migrations
             modelBuilder.Entity("HospitalManagementSystem.Models.DoctorDepartment", b =>
                 {
                     b.HasOne("HospitalManagementSystem.Models.Department", "Department")
-                        .WithMany()
+                        .WithMany("DoctorDepartments")
                         .HasForeignKey("DepartmentID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("HospitalManagementSystem.Models.Doctor", "Doctor")
-                        .WithMany()
+                        .WithMany("DoctorDepartments")
                         .HasForeignKey("DoctorID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -407,6 +406,16 @@ namespace HospitalManagementSystem.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HospitalManagementSystem.Models.Department", b =>
+                {
+                    b.Navigation("DoctorDepartments");
+                });
+
+            modelBuilder.Entity("HospitalManagementSystem.Models.Doctor", b =>
+                {
+                    b.Navigation("DoctorDepartments");
                 });
 #pragma warning restore 612, 618
         }

@@ -20,8 +20,10 @@ namespace HospitalManagementSystem.Models
         [DisplayName("Is Active")]
         public bool IsActive { get; set; } = true;
 
-        public DateTime Created { get; set; } = DateTime.Now;
+        [ValidateNever]
+        public virtual ICollection<DoctorDepartment> DoctorDepartments { get; set; }
 
+        public DateTime Created { get; set; } = DateTime.Now;
         public DateTime Modified { get; set; } = DateTime.Now;
 
         [Required, ForeignKey("User")]
