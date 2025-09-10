@@ -16,8 +16,7 @@ namespace HospitalManagementSystem.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ExportToCsv(List<string> selectedModels)
+        public IActionResult ExportToCsv(List<string> selectedModels)
         {
             if (selectedModels == null || !selectedModels.Any())
             {
@@ -36,7 +35,7 @@ namespace HospitalManagementSystem.Controllers
                     switch (model)
                     {
                         case "Patients":
-                            var patients = await _db.Patients.ToListAsync();
+                            var patients = _db.Patients.ToList();
                             var sbPatients = new StringBuilder();
                             sbPatients.AppendLine("PatientID,Name,Email,Phone,DateOfBirth,Gender,Address,City,State,IsActive");
                             foreach (var p in patients)
@@ -48,7 +47,7 @@ namespace HospitalManagementSystem.Controllers
                             break;
 
                         case "Doctors":
-                            var doctors = await _db.Doctors.ToListAsync();
+                            var doctors = _db.Doctors.ToList();
                             var sbDoctors = new StringBuilder();
                             sbDoctors.AppendLine("DoctorId,Name,Email,Phone,Qualification,Specialization,IsActive");
                             foreach (var d in doctors)
@@ -60,7 +59,7 @@ namespace HospitalManagementSystem.Controllers
                             break;
 
                         case "Departments":
-                            var departments = await _db.Departments.ToListAsync();
+                            var departments = _db.Departments.ToList();
                             var sbDepartments = new StringBuilder();
                             sbDepartments.AppendLine("DepartmentID,DepartmentName,Description,IsActive");
                             foreach (var dep in departments)
@@ -72,7 +71,7 @@ namespace HospitalManagementSystem.Controllers
                             break;
 
                         case "Appointments":
-                            var appointments = await _db.Appointments.Include(a => a.Patient).Include(a => a.Doctor).ToListAsync();
+                            var appointments = _db.Appointments.Include(a => a.Patient).Include(a => a.Doctor).ToList();
                             var sbAppointments = new StringBuilder();
                             sbAppointments.AppendLine("AppointmentID,PatientName,DoctorName,AppointmentDate,Status,Description,Fee");
                             foreach (var a in appointments)
